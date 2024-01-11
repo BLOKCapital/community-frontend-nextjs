@@ -1,0 +1,42 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*body {
+  background: rgba(1, 31, 84);
+  color: #fff;
+  font-family: sans-serif;
+}*/
+body {
+  background: black;
+  color: #fff;
+  font-family: sans-serif;
+}
+
+.absolute {
+  transform: translateY(-21px) scale(0.75);
+  transition: 0.3s;
+}
+
+/* Add styles for the hover state */
+.absolute.hovered {
+  transform: translateY(0) scale(1);
+}
+
+/*custom scrollbar in wallet.jsx*/
+::-webkit-scrollbar-thumb {
+  background: rgb(69, 89, 221, 255);
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(69, 89, 221, 255);
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
