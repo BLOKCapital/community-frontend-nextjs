@@ -53,7 +53,7 @@ const Navbar = () => {
                 {/* Items to be displayed on hover */}
                 <div
                   className={`absolute w-36  top-full left-0 transform 
-                   -translate-x-1/2 mt-1 p-5 bg-gray-400 bg-opacity-55  rounded-md shadow-md transition-all duration-300 z-10 ${
+                   -translate-x-1/2 mt-1 p-5 bg-slate-700 bg-opacity-55 rounded-md shadow-md transition-all duration-300 z-10 ${
                      isHovered ? "hovered" : ""
                    }`}
                 >

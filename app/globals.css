@@ -11,6 +11,7 @@ body {
   background: black;
   color: #fff;
   font-family: sans-serif;
+  user-select: none;
 }
 
 .absolute {

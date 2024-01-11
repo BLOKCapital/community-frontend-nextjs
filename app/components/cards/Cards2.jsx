@@ -3,7 +3,7 @@ import React from "react";
 const Cards2 = () => {
   const questionData = [
     {
-      question: "BLOK DAO",
+      question: "What is BLOKC?",
       date: "Apr'23",
       color: "green",
     },
