@@ -48,6 +48,30 @@ const Latest = () => {
       days: "6d",
       color: "red",
     },
+    {
+      question: "General & Product Announcement goes here.",
+      maintitle: "Box 2",
+      image: G,
+      date: "Apr'24",
+      days: "4d",
+      color: "yellow",
+    },
+    {
+      question: "Your Box 1 question goes here.",
+      maintitle: "Box 3",
+      image: E,
+      date: "Apr'24",
+      days: "6s",
+      color: "green",
+    },
+    {
+      question: "Your Box 1 question goes here.",
+      maintitle: "Box 4",
+      image: O,
+      date: "Apr'24",
+      days: "6d",
+      color: "blue",
+    },
     // Add more objects as needed
   ];
   return (
@@ -62,7 +86,7 @@ const Latest = () => {
         >
           <div className="bg-slate-800 bg-opacity-90 rounded-xl flex justify-between items-center gap-2 p-2">
             <div className="flex items-center space-x-2 space-y-2">
-              <div className="">
+              <div className="px-2">
                 {item.image && (
                   <Image
                     src={item.image}
@@ -89,7 +113,7 @@ const Latest = () => {
                 </div>
               </div>
             </div>
-            <div className="flex flex-col items-center text-slate-300 text-sm space-y-2">
+            <div className="flex flex-col items-center text-slate-300 text-sm space-y-2 px-2">
               <p>{item.date}</p>
               <p>{item.days}</p>
             </div>
