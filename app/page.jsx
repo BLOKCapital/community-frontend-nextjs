@@ -8,7 +8,8 @@ import Cards2 from "./components/cards/Cards2";
 import Dashbord from "./components/Dashbord/Dashbord";
 export default function Home() {
   const [searchInput, setSearchInput] = useState("");
-
+  const [selectedCategory, setSelectedCategory] = useState(0);
+  console.log("selectedCategory-->", selectedCategory);
   const handleInputChange = (e) => {
     setSearchInput(e.target.value);
   };
@@ -19,8 +20,8 @@ export default function Home() {
   return (
     <>
       <div className="">
-        <div className="bg-gradient-to-r from-indigo-500  via-black to-pink-500 rounded-xl">
-          <div className="py-10 flex flex-col justify-center items-center space-y-8">
+        <div className="bg-gradient-to-r from-indigo-500  via-black to-pink-500 rounded-xl mb-5">
+          <div className="py-14 flex flex-col justify-center items-center space-y-8">
             <div className="flex flex-col justify-center items-center space-y-3">
               <h1 className="text-3xl font-extrabold">
                 Welcome to BLOK Capital Community
@@ -47,12 +48,21 @@ export default function Home() {
             </div>
           </div>
         </div>
-        <div className="flex space-x-10 my-8 ">
+
+        <div
+          className={`flex space-x-10 my-8 ${
+            selectedCategory === 0 ? `block` : `hidden`
+          }`}
+        >
           <Cards />
           <Cards2 />
         </div>
+
         <div>
-          <Dashbord />
+          <Dashbord
+            selectedCategory={selectedCategory}
+            setSelectedCategory={setSelectedCategory}
+          />
         </div>
       </div>
     </>

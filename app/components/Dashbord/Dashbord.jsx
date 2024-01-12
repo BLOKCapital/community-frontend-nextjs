@@ -1,11 +1,10 @@
 import React, { useState, useRef, useEffect } from "react";
 import { MdOutlineArrowRight } from "react-icons/md";
 import { RiSearchLine } from "react-icons/ri";
-import Categorise from "../Categories/Categorise";
+import Mainpage from "../Categories/Mainpage";
 import Latest from "../Latest/Latest";
 import Top from "../Top/Top";
-const Dashbord = () => {
-  const [selectedCategory, setSelectedCategory] = useState(0);
+const Dashbord = ({ setSelectedCategory, selectedCategory }) => {
   const [showAllCategoriesPopup, setShowAllCategoriesPopup] = useState(false);
   const [showTagsPopup, setShowTagsPopup] = useState(false);
   const popupRef = useRef();
@@ -28,7 +27,7 @@ const Dashbord = () => {
   const tagsButtonRef = useRef(null);
 
   const handleClick = (index) => {
-    setSelectedCategory(index === selectedCategory ? null : index);
+    setSelectedCategory(index === selectedCategory ? index : index);
   };
 
   const handleAllCategoriesClick = () => {
@@ -86,7 +85,9 @@ const Dashbord = () => {
                     ? "bg-indigo-500  text-white rounded-md bg-opacity-80"
                     : ""
                 }`}
-                onClick={() => handleClick(index)}
+                onClick={() => {
+                  handleClick(index);
+                }}
               >
                 {category}
               </p>
@@ -105,7 +106,7 @@ const Dashbord = () => {
 
           {showAllCategoriesPopup && (
             <div
-              className={`absolute mt-5 bg-zinc-800 right-72  p-4 ${
+              className={`absolute mt-5 bg-zinc-800 right-72  rounded-md  p-4 ${
                 calculatePopupPosition(allCategoriesButtonRef) === "above"
                   ? "bottom-24"
                   : ""
@@ -126,6 +127,7 @@ const Dashbord = () => {
                   <p
                     key={index}
                     className="text-white px-2 py-1 cursor-pointer hover:bg-slate-500 hover:bg-opacity-20 hover:rounded"
+                    onClick={handleAllCategoriesClick}
                   >
                     {word}
                   </p>
@@ -166,6 +168,7 @@ const Dashbord = () => {
                   <p
                     key={index}
                     className="text-white px-2 py-1 cursor-pointer hover:bg-slate-500 hover:bg-opacity-20 hover:rounded"
+                    onClick={handleTagsClick}
                   >
                     {word}
                   </p>
@@ -176,7 +179,7 @@ const Dashbord = () => {
         </div>
       </div>
       <div className="py-5">
-        {selectedCategory === 0 && <Categorise />}
+        {selectedCategory === 0 && <Mainpage />}
         {selectedCategory === 1 && <Latest />}
         {selectedCategory === 2 && <Top />}
       </div>

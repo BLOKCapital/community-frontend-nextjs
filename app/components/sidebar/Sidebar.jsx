@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { SiDatabricks } from "react-icons/si";
 import { PiDotsThreeOutlineVerticalFill } from "react-icons/pi";
 import { MdKeyboardArrowDown } from "react-icons/md";
@@ -15,7 +15,7 @@ const Sidebar = () => {
   const [isCategoriesOpen, setIsCategoriesOpen] = useState(true);
   const [istagOpen, setIstagOpen] = useState(false);
   const [openmore, setOpenmore] = useState(false);
-
+  const popupRef = useRef();
   const tagData = [
     { icon: <PiInfoDuotone size={22} />, name: "About" },
     { icon: <PiQuestionDuotone size={22} />, name: "FAQ" },
@@ -41,8 +41,18 @@ const Sidebar = () => {
     setOpenmore(!openmore);
   };
 
+  const handleBackgroundClick = (e) => {
+    if (popupRef.current === e.target) {
+      setIstagOpen(false);
+    }
+  };
+
   return (
-    <div className="bg-gray-500 bg-opacity-20 rounded-3xl border-t-4 border-[#3e4cc9] h-[82vh]">
+    <div
+      className="bg-gray-500 bg-opacity-20 rounded-3xl border-t-4 border-[#3e4cc9] h-[82vh]"
+      ref={popupRef}
+      onClick={handleBackgroundClick}
+    >
       <div className="py-5">
         <div className="  bg-slate-500 bg-opacity-20 text-base cursor-pointer">
           <div className="flex items-center space-x-2 mx-5 py-1">
@@ -68,6 +78,7 @@ const Sidebar = () => {
                 <div
                   key={index}
                   className="px-5 py-1  cursor-pointer hover:bg-slate-500 hover:bg-opacity-20 hover:rounded "
+                  onClick={() => toggleTags()}
                 >
                   <div className="flex items-center gap-2 text-xl py-2">
                     {tag.icon} {tag.name}

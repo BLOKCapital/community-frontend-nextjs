@@ -43,8 +43,10 @@ const Cards = () => {
               </div>
             ))}
           </div>
-          <div className="flex justify-end text-[#6ca5f0] cursor-pointer hover:text-white hover:font-semibold">
-            View More
+          <div className="flex justify-end text-[#6ca5f0]  ">
+            <p className="hover:text-white hover:font-semibold cursor-pointer">
+              View More
+            </p>
           </div>
         </div>
       </div>
