@@ -49,7 +49,7 @@ const Sidebar = () => {
 
   return (
     <div
-      className="bg-gray-500 bg-opacity-20 rounded-3xl border-t-4 border-[#3e4cc9] h-[82vh]"
+      className="bg-gray-500 bg-opacity-20 rounded-3xl border-t-4 border-[#3e4cc9] h-[82vh] md:block hidden"
       ref={popupRef}
       onClick={handleBackgroundClick}
     >

@@ -72,7 +72,7 @@ const Dashbord = ({ setSelectedCategory, selectedCategory }) => {
   return (
     <div>
       <div
-        className="flex justify-between items-center"
+        className="flex flex-col md:flex-row gap-5 md:justify-between items-center"
         ref={popupRef}
         onClick={handleBackgroundClick}
       >

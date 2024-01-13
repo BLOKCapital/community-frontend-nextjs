@@ -45,9 +45,9 @@ const Latest = () => {
     // Add more objects as needed
   ];
   return (
-    <div className="border-t-4 border-blue-500 rounded-xl w-full">
-      <div className="bg-slate-800 bg-opacity-90 rounded-xl">
-        <div className="p-8 text-white space-y-3 ">
+    <div className="border-t-4 border-blue-500  rounded-xl w-full">
+      <div className="bg-slate-800 bg-opacity-90 rounded-xl overflow-x-auto">
+        <div className="md:p-8 p-3 text-white space-y-3 ">
           <div className=" space-y-5">
             <div className="flex justify-between text-base cursor-pointer text-gray-400 py-3 border-b-2 border-zinc-500 border-opacity-45 ">
               <div>
@@ -75,11 +75,11 @@ const Latest = () => {
                     <p>{item.question}</p>
                   </div>
                   <div className="flex justify-center  font-light">
-                    <div className="px-3 py-1 w-16"> {item.replies}</div>
-                    <div className="px-3 py-1 w-16"> {item.views}</div>
+                    <div className="px-3 py-1 md:w-16"> {item.replies}</div>
+                    <div className="px-3 py-1 md:w-16"> {item.views}</div>
 
-                    <div className="px-3 py-1 w-16"> {item.vote}</div>
-                    <div className="px-3 py-1 w-16"> {item.date}</div>
+                    <div className="px-3 py-1 md:w-16"> {item.vote}</div>
+                    <div className="px-3 py-1 md:w-16"> {item.date}</div>
                   </div>
                 </div>
                 <div className="flex gap-2 items-center text-sm font-light py-3">

@@ -9,7 +9,7 @@ import Dashbord from "./components/Dashbord/Dashbord";
 export default function Home() {
   const [searchInput, setSearchInput] = useState("");
   const [selectedCategory, setSelectedCategory] = useState(0);
-  console.log("selectedCategory-->", selectedCategory);
+
   const handleInputChange = (e) => {
     setSearchInput(e.target.value);
   };
@@ -20,18 +20,18 @@ export default function Home() {
   return (
     <>
       <div className="">
-        <div className="bg-gradient-to-r from-indigo-500  via-black to-pink-500 rounded-xl mb-5">
+        <div className="bg-gradient-to-r from-indigo-500  via-black to-pink-500 rounded-xl mb-5 ">
           <div className="py-14 flex flex-col justify-center items-center space-y-8">
             <div className="flex flex-col justify-center items-center space-y-3">
-              <h1 className="text-3xl font-extrabold">
+              <h1 className="text-3xl font-extrabold text-center">
                 Welcome to BLOK Capital Community
               </h1>
-              <p>
+              <p className="text-center">
                 We're happy to have you here 💖 If you need help, please search
                 before posting a new topic.
               </p>
             </div>
-            <div className="flex items-center justify-between w-[60%] py-2 bg-white text-black rounded-md">
+            <div className="flex items-center justify-between md:w-[60%] py-2 bg-white text-black rounded-md">
               <input
                 type="text"
                 placeholder="Search..."
@@ -50,7 +50,7 @@ export default function Home() {
         </div>
 
         <div
-          className={`flex space-x-10 my-8 ${
+          className={`md:flex md:space-x-6 space-y-8 gap-5 my-8 ${
             selectedCategory === 0 ? `block` : `hidden`
           }`}
         >

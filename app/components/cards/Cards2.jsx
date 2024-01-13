@@ -18,7 +18,7 @@ const Cards2 = () => {
   return (
     <div className="border-t-4 border-green-500 rounded-xl w-full">
       <div className="bg-slate-800 bg-opacity-90 rounded-xl">
-        <div className="p-8 text-white space-y-3 ">
+        <div className="md:p-6 p-3 text-white space-y-3 ">
           <div className="space-y-5">
             <div className="">
               <p className="text-2xl font-semibold">Announcements</p>

@@ -33,18 +33,18 @@ const Categorise = () => {
       </div>
       {questionData.map((item, index) => (
         <div
-          className={`border-l-4 ${item.borderColor}  rounded-xl  mb-5`}
+          className={`border-l-4 ${item.borderColor}   rounded-xl  mb-5`}
           key={index}
         >
-          <div className="bg-slate-800 bg-opacity-90 rounded-xl">
+          <div className="bg-slate-800 bg-opacity-90 rounded-xl cursor-pointer ">
             <div className="p-5 text-white space-y-3 ">
               <div className="space-y-2">
                 <div className="">
                   <p className="text-xl font-semibold">{item.maintitle}</p>
                 </div>
-                <div className="cursor-pointer  space-y-3">
+                <div className=" space-y-3">
                   <div
-                    className={`cursor-pointer  space-y-3 ${
+                    className={`  space-y-3 ${
                       item.title
                         ? "border-b border-zinc-500 border-opacity-45 py-2"
                         : ""
