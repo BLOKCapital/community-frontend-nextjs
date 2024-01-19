@@ -4,6 +4,7 @@ import "./globals.css";
 import Navbar from "./components/navbar/Navbar";
 import Sidebar from "./components/sidebar/Sidebar.jsx";
 import { Web3AuthSignerProvider } from "./context/web3-auth-signer";
+
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {

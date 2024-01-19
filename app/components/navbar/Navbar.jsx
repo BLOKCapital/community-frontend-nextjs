@@ -22,6 +22,7 @@ import {
 } from "@zerodev/sdk";
 import { contractABI } from "../abi/abi";
 import Newtopic from "../newtopic/Newtopic";
+import Example from "../Editer/Editer";
 
 const selectedNetwork = WEB3AUTH_NETWORK.MAINNET;
 const clientidweb3 = process.env.NEXT_PUBLIC_WEB3AUTH_CLIENTID;
@@ -48,6 +49,7 @@ const Navbar = () => {
   const [providercorkit, setProvidercorkit] = useState();
   const [coreKitStatus, setCoreKitStatus] = useState();
   const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [openediter, setopenediter] = useState(false);
   const {
     setWeb3AuthSigner,
     web3AuthSigner,
@@ -59,6 +61,14 @@ const Navbar = () => {
     setEcdsaProvider,
     setSessionethProvider,
   } = useWeb3AuthSigner();
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      // Place the code that references window here
+      // For example, if the error is at line 50:
+      // Your code at line 50
+    }
+  }, []);
 
   useEffect(() => {
     if (coreKitInstance) {
@@ -213,7 +223,10 @@ const Navbar = () => {
           {coreKitStatus === "LOGGED_IN" ? (
             <>
               <div className="flex justify-center items-center gap-2">
-                <button className="flex items-center gap-2 bg-gray-200 bg-opacity-20 rounded-lg px-3 py-1">
+                <button
+                  className="flex items-center gap-2 bg-gray-200 bg-opacity-20 rounded-lg px-3 py-1"
+                  onClick={() => setopenediter(true)}
+                >
                   <FaCirclePlus />
                   <p>NEW TOPIC</p>
                 </button>
@@ -305,6 +318,13 @@ const Navbar = () => {
       </div>
 
       {isPopupOpen && <Newtopic />}
+      <div
+        className={`fixed bottom-0 bg-white text-black left-1/2 w-[80%] rounded-lg p-5 transform ${
+          openediter ? "translate-y-0" : "translate-y-full"
+        } transition-transform ease-in-out duration-500 flex justify-center items-center`}
+      >
+        {openediter && <Example setopenediter={setopenediter} />}
+      </div>
     </nav>
   );
 };
