@@ -49,7 +49,7 @@ const Navbar = () => {
   const [providercorkit, setProvidercorkit] = useState();
   const [coreKitStatus, setCoreKitStatus] = useState();
   const [isPopupOpen, setIsPopupOpen] = useState(false);
-  const [openediter, setopenediter] = useState(false);
+
   const {
     setWeb3AuthSigner,
     web3AuthSigner,
@@ -60,6 +60,8 @@ const Navbar = () => {
     userinfo,
     setEcdsaProvider,
     setSessionethProvider,
+    openediter,
+    setopenediter,
   } = useWeb3AuthSigner();
 
   useEffect(() => {
@@ -96,21 +98,11 @@ const Navbar = () => {
   }, [setUserinfo, web3AuthSigner]);
 
   useEffect(() => {
-    if (providercorkit) {
-      const web3 = new Web3(providercorkit);
-      console.log("web3-->", web3);
-
+    if (web3AuthSigner) {
+      const web3 = new Web3(web3AuthSigner);
       setWeb3(web3);
-      if (web3) {
-        console.log("chainid");
-        const chianid = async () => {
-          const chainId = await web3.eth.getChainId();
-          console.log("chainid--->", chainId);
-        };
-        chianid();
-      }
     }
-  }, [providercorkit]);
+  }, [web3AuthSigner]);
 
   const login = async () => {
     try {
@@ -142,6 +134,21 @@ const Navbar = () => {
       console.error(error);
     }
   };
+
+  useEffect(() => {
+    if (web3) {
+      const getChainID = async () => {
+        if (!web3) {
+          console.log("web3 not initialized yet");
+          return;
+        }
+        const chainId = await web3.eth.getChainId();
+        console.log("chainid--->", chainId);
+        return chainId;
+      };
+      getChainID();
+    }
+  }, [web3]);
 
   const logout = async () => {
     if (!coreKitInstance) {
@@ -211,7 +218,7 @@ const Navbar = () => {
   ]);
 
   return (
-    <nav className="bg-black p-5">
+    <nav className="bg-black p-5  text-white">
       <div className="container mx-auto  sm:px-6 lg:px-8 flex justify-between items-center">
         <div className="flex justify-center items-center space-x-3">
           <Link href="/">
@@ -295,19 +302,21 @@ const Navbar = () => {
             <>
               <div className="flex justify-center items-center gap-2">
                 <button className="" onClick={() => router.push("/about")}>
-                  <Image
-                    src={userinfo?.profileImage}
-                    width={38}
-                    height={38}
-                    alt="Picture of the author"
-                    className="rounded-full"
-                  />
+                  {userinfo?.profileImage && (
+                    <Image
+                      src={userinfo?.profileImage}
+                      width={38}
+                      height={38}
+                      alt="Picture of the author"
+                      className="rounded-full"
+                    />
+                  )}
                 </button>
               </div>
             </>
           ) : (
             <button
-              className="hidden lg:flex justify-center items-center space-x-3 text-white cursor-pointer bg-gray-200 bg-opacity-20 rounded-3xl px-8 py-3"
+              className="hidden lg:flex justify-center  items-center space-x-3 text-white cursor-pointer bg-gray-200 bg-opacity-20 rounded-3xl px-8 py-3"
               onClick={() => login()}
             >
               <PiUserBold size={20} />
@@ -316,14 +325,16 @@ const Navbar = () => {
           )}
         </div>
       </div>
-
       {isPopupOpen && <Newtopic />}
+
       <div
-        className={`fixed bottom-0 bg-white text-black left-1/2 w-[80%] rounded-lg p-5 transform ${
+        className={`fixed bottom-0 left-0 w-full  flex  justify-center items-end p-6 transition-transform ease-in-out duration-500  ${
           openediter ? "translate-y-0" : "translate-y-full"
-        } transition-transform ease-in-out duration-500 flex justify-center items-center`}
+        }`}
       >
-        {openediter && <Example setopenediter={setopenediter} />}
+        <div className="bg-gray-900 p-5 !text-black md:w-4/5 w-3/5 h-96  overflow-auto rounded-xl border-t-4 border-rose-400">
+          <Example />
+        </div>
       </div>
     </nav>
   );

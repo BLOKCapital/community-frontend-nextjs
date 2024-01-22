@@ -1,39 +1,33 @@
-import React, { useState, useRef, useMemo } from "react";
+import React, { useState, useRef } from "react";
 import JoditEditor from "jodit-react";
-import "./editor-styles.css";
-import ReactQuill from "react-quill";
-import "react-quill/dist/quill.snow.css";
 import { SlArrowDown } from "react-icons/sl";
-const Example = ({ setopenediter }) => {
-  //const editor = useRef(null);
-  //const [content, setContent] = useState("");
+import { useWeb3AuthSigner } from "@/app/context/web3-auth-signer";
+import "./editor-styles.css"; // Import your CSS file
 
-  // Wrap the config object inside a function
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const [value, setValue] = useState("");
+const Example = () => {
+  const editor = useRef(null);
+  const { setopenediter } = useWeb3AuthSigner();
+  const [BlogsData, setBlogsData] = useState({
+    title: "",
+    title_1: "",
+    content: "",
+  });
 
-  const quillStyles = {
-    height: "200px", // Set the desired height
-    backgroundColor: "#f5f5f5", // Set the desired background color
-  };
   return (
-    //<div>
-    //  <div className=" rounded-md lg:w-[1080px] sm:w-[380px] disabled text-black bg-black">
-    //    <JoditEditor ref={editor} value={content} />
-    //  </div>
-    //  {/* {content} */}
-    //</div>
-    <div className="w-full flex flex-col gap-2">
-      <div onClick={() => setopenediter(false)} className="cursor-pointer">
-        <SlArrowDown />
+    <div className="space-y-2">
+      <div className="cursor-pointer text-lg text-white flex justify-between">
+        <p>Create a new Topic</p>
+        <SlArrowDown onClick={() => setopenediter(false)} />
       </div>
-
-      <ReactQuill
-        theme="snow"
-        value={value}
-        onChange={setValue}
-        style={quillStyles}
-      />
+      <div className="overflow-auto  flex flex-col gap-2 rounded-md  ">
+        <JoditEditor
+          ref={editor}
+          value={BlogsData?.content}
+          onChange={(newContent) =>
+            setBlogsData({ ...BlogsData, content: newContent })
+          }
+        />
+      </div>
     </div>
   );
 };

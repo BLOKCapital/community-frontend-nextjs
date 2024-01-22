@@ -47,6 +47,10 @@ h6 {
   opacity: 0.65;
 }
 
+.custom-editor-wrapper {
+  height: 400px; /* Set your desired height here */
+}
+
 /* .editor-style p strong span,
 .editor-style strong p span {
   color: white !important;

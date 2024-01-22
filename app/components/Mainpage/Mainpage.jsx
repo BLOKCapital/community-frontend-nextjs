@@ -22,7 +22,7 @@ export default function Mainpage() {
   return (
     <>
       <div className="">
-        <div className="bg-gradient-to-r from-indigo-500  via-black to-pink-500 rounded-xl mb-5 ">
+        <div className="bg-gradient-to-r from-indigo-500  via-black to-pink-500 rounded-xl mb-5  text-white">
           <div className="py-14 flex flex-col justify-center items-center space-y-8">
             <div className="flex flex-col justify-center items-center space-y-3">
               <h1 className="text-3xl font-extrabold text-center">

@@ -45,7 +45,7 @@ const Latest = () => {
     // Add more objects as needed
   ];
   return (
-    <div className="border-t-4 border-blue-500  rounded-xl w-full">
+    <div className="border-t-4 border-blue-500  rounded-xl w-full text-white">
       <div className="bg-slate-800 bg-opacity-90 rounded-xl overflow-x-auto">
         <div className="md:p-8 p-3 text-white space-y-3 ">
           <div className=" space-y-5">

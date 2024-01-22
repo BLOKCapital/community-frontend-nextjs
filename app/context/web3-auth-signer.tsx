@@ -43,6 +43,9 @@ export interface Web3AuthSignerContext {
   ecdsaProvider: any | null;
   setEcdsaProvider: React.Dispatch<React.SetStateAction<any | null>>;
   // Correct variable name
+
+  openediter: boolean;
+  setopenediter: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export const Web3AuthSigner = createContext<Web3AuthSignerContext | null>(null);
@@ -73,7 +76,7 @@ export function Web3AuthSignerProvider({
   const [userinfo, setUserinfo] = useState<Wallet1 | null>(null);
 
   const [ecdsaProvider, setEcdsaProvider] = useState<any | null>(null);
-
+  const [openediter, setopenediter] = useState<boolean>(false);
   return (
     <Web3AuthSigner.Provider
       value={{
@@ -87,6 +90,8 @@ export function Web3AuthSignerProvider({
         userinfo,
         ecdsaProvider,
         setEcdsaProvider,
+        openediter,
+        setopenediter,
       }}
     >
       {children}
