@@ -1,7 +1,8 @@
 "use client";
 import { type SafeEventEmitterProvider } from "@web3auth/base";
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import React from "react";
+import axiosInstanceAuth from "../components/apiInstances/axiosInstanceAuth";
 export interface Wallet1 {
   email: string;
   name: string;
@@ -46,6 +47,15 @@ export interface Web3AuthSignerContext {
 
   openediter: boolean;
   setopenediter: React.Dispatch<React.SetStateAction<boolean>>;
+
+  registerUser: any;
+  setRegisterUser: React.Dispatch<React.SetStateAction<any>>;
+
+  viewPostByUser: any;
+  SetViewPostByUser: React.Dispatch<React.SetStateAction<any>>;
+
+  viewPosts: any;
+  SetViewPosts: React.Dispatch<React.SetStateAction<any>>;
 }
 
 export const Web3AuthSigner = createContext<Web3AuthSignerContext | null>(null);
@@ -77,6 +87,43 @@ export function Web3AuthSignerProvider({
 
   const [ecdsaProvider, setEcdsaProvider] = useState<any | null>(null);
   const [openediter, setopenediter] = useState<boolean>(false);
+  const [registerUser, setRegisterUser] = useState<any>();
+  const [viewPostByUser, SetViewPostByUser] = useState<any>();
+  const [viewPosts, SetViewPosts] = useState<any>();
+
+  useEffect(() => {
+    if (registerUser) {
+      const sendApiRequest = async () => {
+        try {
+          await axiosInstanceAuth.get(`viewPostByUser`).then((response) => {
+            console.log(
+              "viewPostByUser API Response:",
+              response.data.data.data
+            );
+            SetViewPostByUser(response.data.data.data);
+          });
+        } catch (error) {
+          console.error("viewPostByUser API Error:", error);
+        }
+      };
+      sendApiRequest();
+    }
+  }, [registerUser]);
+
+  useEffect(() => {
+    const sendApiRequest = async () => {
+      try {
+        await axiosInstanceAuth.get(`viewPosts`).then((response) => {
+          console.log("viewPosts API Response:", response.data.data.posts);
+          SetViewPosts(response.data.data.posts);
+        });
+      } catch (error) {
+        console.error("viewPosts API Error:", error);
+      }
+    };
+    sendApiRequest();
+  }, []);
+
   return (
     <Web3AuthSigner.Provider
       value={{
@@ -92,6 +139,12 @@ export function Web3AuthSignerProvider({
         setEcdsaProvider,
         openediter,
         setopenediter,
+        registerUser,
+        setRegisterUser,
+        viewPostByUser,
+        SetViewPostByUser,
+        SetViewPosts,
+        viewPosts,
       }}
     >
       {children}

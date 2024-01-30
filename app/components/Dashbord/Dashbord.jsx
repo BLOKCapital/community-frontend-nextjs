@@ -70,7 +70,7 @@ const Dashbord = ({ setSelectedCategory, selectedCategory }) => {
   };
 
   return (
-    <div>
+    <>
       <div
         className="flex flex-col md:flex-row gap-5 md:justify-between items-center text-white"
         ref={popupRef}
@@ -100,13 +100,13 @@ const Dashbord = ({ setSelectedCategory, selectedCategory }) => {
             className="flex items-center space-x-2 cursor-pointer px-2 py-1 border-dashed bg-slate-700 bg-opacity-55 rounded-lg"
             onClick={handleAllCategoriesClick}
           >
-            <p>All categories</p>
+            <p className="hidden md:block">All categories</p>
             <MdOutlineArrowRight size={22} />
           </div>
 
           {showAllCategoriesPopup && (
             <div
-              className={`absolute mt-5 bg-zinc-800 right-72  rounded-md  p-4 ${
+              className={`absolute mt-5 bg-zinc-800 right-0 md:right-72  rounded-md  p-4 ${
                 calculatePopupPosition(allCategoriesButtonRef) === "above"
                   ? "bottom-24"
                   : ""
@@ -141,7 +141,7 @@ const Dashbord = ({ setSelectedCategory, selectedCategory }) => {
             className="flex items-center space-x-2 cursor-pointer px-2 py-1 border-dashed bg-slate-700 bg-opacity-55 rounded-lg"
             onClick={handleTagsClick}
           >
-            <p>Tags</p>
+            <p className="hidden md:block">Tags</p>
             <MdOutlineArrowRight size={22} />
           </div>
 
@@ -183,7 +183,7 @@ const Dashbord = ({ setSelectedCategory, selectedCategory }) => {
         {selectedCategory === 1 && <Latest />}
         {selectedCategory === 2 && <Top />}
       </div>
-    </div>
+    </>
   );
 };
 

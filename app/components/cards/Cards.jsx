@@ -18,7 +18,7 @@ const Cards = () => {
   return (
     <div className="border-t-4 border-green-500 rounded-xl w-full">
       <div className="bg-slate-800 bg-opacity-90 rounded-xl">
-        <div className="md:p-6 p-3 text-white space-y-3 ">
+        <div className="md:p-6 p-3 text-white space-y-3">
           <div className="space-y-5">
             <div className="">
               <p className="text-2xl font-semibold">Getting Started</p>
@@ -28,8 +28,8 @@ const Cards = () => {
                 key={index}
                 className="cursor-pointer border-b border-zinc-500 border-opacity-45"
               >
-                <div className="flex justify-between text-base">
-                  <div className="font-semibold">
+                <div className="flex flex-col md:flex-row justify-between text-base">
+                  <div className="font-semibold mb-2 md:mb-0 md:mr-4">
                     <p>{item.question}</p>
                   </div>
                   <div className="font-light">
@@ -43,7 +43,7 @@ const Cards = () => {
               </div>
             ))}
           </div>
-          <div className="flex justify-end text-[#6ca5f0]  ">
+          <div className="flex justify-end text-[#6ca5f0]">
             <p className="hover:text-white hover:font-semibold cursor-pointer">
               View More
             </p>

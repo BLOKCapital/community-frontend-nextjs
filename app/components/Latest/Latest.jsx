@@ -1,49 +1,61 @@
 import React from "react";
+import { useWeb3AuthSigner } from "@/app/context/web3-auth-signer";
 
 const Latest = () => {
-  const questionData = [
-    {
-      question: "What to do if you’re not able to access the community portal?",
-      date: "Apr'24",
-      vote: "25",
-      replies: "8",
-      views: "2",
-      days: "2h",
-    },
-    {
-      question: "General & Product Announcement goes here.",
-      date: "Apr'24",
-      vote: "25",
-      replies: "8",
-      views: "4",
-      days: "4d",
-    },
-    {
-      question: "Your Box 1 question goes here.",
-      date: "Apr'24",
-      vote: "25",
-      replies: "8",
-      views: "8",
-      days: "6s",
-    },
-    {
-      question: "Your Box 1 question goes here.",
-      date: "Apr'24",
-      vote: "25",
-      replies: "8",
-      views: "23",
-      days: "6d",
-    },
-    {
-      question: "Your Box 1 question goes here.",
-      date: "Apr'24",
-      vote: "25",
-      replies: "8",
-      views: "2",
-      days: "6d",
-    },
-    // Add more objects as needed
-  ];
+  const { viewPosts } = useWeb3AuthSigner();
+  //const questionData = [
+  //  {
+  //    question: "What to do if you’re not able to access the community portal?",
+  //    date: "Apr'24",
+  //    vote: "25",
+  //    replies: "8",
+  //    views: "2",
+  //    days: "2h",
+  //  },
+  //  {
+  //    question: "General & Product Announcement goes here.",
+  //    date: "Apr'24",
+  //    vote: "25",
+  //    replies: "8",
+  //    views: "4",
+  //    days: "4d",
+  //  },
+  //  {
+  //    question: "Your Box 1 question goes here.",
+  //    date: "Apr'24",
+  //    vote: "25",
+  //    replies: "8",
+  //    views: "8",
+  //    days: "6s",
+  //  },
+  //  {
+  //    question: "Your Box 1 question goes here.",
+  //    date: "Apr'24",
+  //    vote: "25",
+  //    replies: "8",
+  //    views: "23",
+  //    days: "6d",
+  //  },
+  //  {
+  //    question: "Your Box 1 question goes here.",
+  //    date: "Apr'24",
+  //    vote: "25",
+  //    replies: "8",
+  //    views: "2",
+  //    days: "6d",
+  //  },
+  //  // Add more objects as needed
+  //];
+
+  const formatDate = (dateString) => {
+    const options = { day: "numeric", month: "short" };
+    const formattedDate = new Date(dateString).toLocaleDateString(
+      "en-US",
+      options
+    );
+    return formattedDate;
+  };
+
   return (
     <div className="border-t-4 border-blue-500  rounded-xl w-full text-white">
       <div className="bg-slate-800 bg-opacity-90 rounded-xl overflow-x-auto">
@@ -68,26 +80,37 @@ const Latest = () => {
                 </div>
               </div>
             </div>
-            {questionData.map((item, index) => (
-              <div key={index} className="cursor-pointer ">
-                <div className="flex justify-between text-base">
-                  <div className="font-semibold">
-                    <p>{item.question}</p>
-                  </div>
-                  <div className="flex justify-center  font-light">
-                    <div className="px-3 py-1 md:w-16"> {item.replies}</div>
-                    <div className="px-3 py-1 md:w-16"> {item.views}</div>
 
-                    <div className="px-3 py-1 md:w-16"> {item.vote}</div>
-                    <div className="px-3 py-1 md:w-16"> {item.date}</div>
+            {viewPosts ? (
+              <>
+                {viewPosts.map((item, index) => (
+                  <div key={index} className="cursor-pointer ">
+                    <div className="flex justify-between text-base">
+                      <div className="font-semibold break-words">
+                        <p>{item.title}</p>
+                      </div>
+                      <div className="flex justify-center  font-light">
+                        <div className="px-3 py-1 md:w-16"> 5</div>
+                        <div className="px-3 py-1 md:w-16"> 10</div>
+
+                        <div className="px-3 py-1 md:w-16"> 30</div>
+                        <div className="px-3 py-1 md:w-18">
+                          {formatDate(item.createdAt)}
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex gap-2 items-center text-sm font-light py-3">
+                      <span className="bg-[#1C64F2] p-1.5 rounded-full"></span>
+                      {item.userData && item.userData.length > 0 && (
+                        <p>{item.userData[0].username}</p>
+                      )}
+                    </div>
                   </div>
-                </div>
-                <div className="flex gap-2 items-center text-sm font-light py-3">
-                  <span className="bg-[#1C64F2] p-1.5 rounded-full"></span>
-                  <p>BLOK Capital Community</p>
-                </div>
-              </div>
-            ))}
+                ))}
+              </>
+            ) : (
+              <p>Loding...</p>
+            )}
           </div>
           <div className="flex justify-end text-[#6ca5f0]  ">
             <p className="hover:text-white hover:font-semibold cursor-pointer">

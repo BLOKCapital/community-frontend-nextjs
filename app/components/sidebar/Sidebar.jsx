@@ -10,11 +10,15 @@ import { PiQuestionDuotone } from "react-icons/pi";
 import { LuBadge } from "react-icons/lu";
 import { AiFillSetting } from "react-icons/ai";
 import { CiKeyboard } from "react-icons/ci";
+import { BsPersonWorkspace } from "react-icons/bs";
+import { useRouter } from "next/navigation";
 
 const Sidebar = () => {
+  const router = useRouter();
   const [isCategoriesOpen, setIsCategoriesOpen] = useState(true);
   const [istagOpen, setIstagOpen] = useState(false);
   const [openmore, setOpenmore] = useState(false);
+
   const popupRef = useRef();
   const tagData = [
     { icon: <PiInfoDuotone size={22} />, name: "About" },
@@ -49,22 +53,42 @@ const Sidebar = () => {
 
   return (
     <div
-      className="bg-gray-500 bg-opacity-20 rounded-3xl text-white border-t-4 border-[#3e4cc9] h-[82vh] md:block hidden"
+      className={`bg-gray-500 bg-opacity-20 rounded-3xl text-white border-t-4  border-t-[#3e4cc9] h-[82vh] md:block hidden`}
       ref={popupRef}
       onClick={handleBackgroundClick}
     >
-      <div className="py-5">
-        <div className="  bg-slate-500 bg-opacity-20 text-base cursor-pointer">
+      <div className="py-5 space-y-2">
+        <div
+          className={`hover:bg-slate-500 hover:bg-opacity-20 text-base cursor-pointer ${
+            router.pathname === "/serviceworker/redirect"
+              ? "bg-slate-500 bg-opacity-20"
+              : ""
+          }`}
+          onClick={() => router.push("/serviceworker/redirect")}
+        >
           <div className="flex items-center space-x-2 mx-5 py-1">
             <SiDatabricks />
-            <p>Topics</p>
+            <p>All Topics</p>
+          </div>
+        </div>
+        <div
+          className={`hover:bg-slate-500 hover:bg-opacity-20 text-base cursor-pointer ${
+            router.pathname === "/my-posts" ? "bg-slate-500  bg-opacity-20" : ""
+          }`}
+          onClick={() => router.push("/my-posts")}
+        >
+          <div className="flex items-center space-x-2 mx-5 py-1">
+            <BsPersonWorkspace />
+            <p>My Posts</p>
           </div>
         </div>
       </div>
       <div className="space-y-3">
         <div className="">
           <div
-            className="hover:bg-slate-500 hover:bg-opacity-20 hover:rounded text-base cursor-pointer"
+            className={`hover:bg-slate-500 hover:bg-opacity-20 hover:rounded text-base cursor-pointer ${
+              istagOpen ? "active" : ""
+            }`}
             onClick={() => toggleTags()}
           >
             <div className="flex items-center space-x-2 mx-5 py-1">
@@ -77,7 +101,9 @@ const Sidebar = () => {
               {tagData.map((tag, index) => (
                 <div
                   key={index}
-                  className="px-5 py-1  cursor-pointer hover:bg-slate-500 hover:bg-opacity-20 hover:rounded "
+                  className={`px-5 py-1  cursor-pointer hover:bg-slate-500 hover:bg-opacity-20 hover:rounded ${
+                    istagOpen ? "active" : ""
+                  }`}
                   onClick={() => toggleTags()}
                 >
                   <div className="flex items-center gap-2 text-xl py-2">
@@ -90,7 +116,9 @@ const Sidebar = () => {
         </div>
         <div className="">
           <div
-            className={`hover:bg-slate-500 hover:bg-opacity-20 hover:rounded text-base cursor-pointer `}
+            className={`hover:bg-slate-500 hover:bg-opacity-20 hover:rounded text-base cursor-pointer ${
+              isCategoriesOpen ? "active" : ""
+            }`}
             onClick={() => toggleCategories()}
           >
             <div className="flex items-center space-x-2 mx-5 py-1">
@@ -105,7 +133,9 @@ const Sidebar = () => {
               {colorData.map((box, index) => (
                 <div
                   key={index}
-                  className="flex gap-2 items-center hover:bg-slate-500 hover:bg-opacity-20 hover:rounded cursor-pointer"
+                  className={`flex gap-2 items-center hover:bg-slate-500 hover:bg-opacity-20 hover:rounded cursor-pointer ${
+                    isCategoriesOpen ? "active" : ""
+                  }`}
                 >
                   <p
                     className="w-1"
@@ -120,7 +150,11 @@ const Sidebar = () => {
                 </div>
               ))}
             </div>
-            <div className="py-1 px-2 flex items-center space-x-2 hover:bg-slate-500 hover:bg-opacity-20 hover:rounded cursor-pointer">
+            <div
+              className={`py-1 px-2 flex items-center space-x-2 hover:bg-slate-500 hover:bg-opacity-20 hover:rounded cursor-pointer ${
+                isCategoriesOpen ? "active" : ""
+              }`}
+            >
               <TfiMenuAlt />
               <p>All categories</p>
             </div>

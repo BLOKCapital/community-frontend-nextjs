@@ -63,3 +63,7 @@ h6 {
   color:white !important;
   font-size: 18px !important;
 } */
+.jodit-workplace {
+  height: 250px !important;
+  overflow: auto;
+}

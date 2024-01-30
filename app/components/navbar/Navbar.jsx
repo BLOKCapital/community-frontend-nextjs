@@ -23,6 +23,10 @@ import {
 import { contractABI } from "../abi/abi";
 import Newtopic from "../newtopic/Newtopic";
 import Example from "../Editer/Editer";
+import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import axiosInstanceAuth from "../apiInstances/axiosInstanceAuth";
 
 const selectedNetwork = WEB3AUTH_NETWORK.MAINNET;
 const clientidweb3 = process.env.NEXT_PUBLIC_WEB3AUTH_CLIENTID;
@@ -49,6 +53,7 @@ const Navbar = () => {
   const [providercorkit, setProvidercorkit] = useState();
   const [coreKitStatus, setCoreKitStatus] = useState();
   const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [openprofile, setOpenprofile] = useState(false);
 
   const {
     setWeb3AuthSigner,
@@ -62,6 +67,7 @@ const Navbar = () => {
     setSessionethProvider,
     openediter,
     setopenediter,
+    setRegisterUser,
   } = useWeb3AuthSigner();
 
   useEffect(() => {
@@ -151,6 +157,7 @@ const Navbar = () => {
   }, [web3]);
 
   const logout = async () => {
+    console.log("logout");
     if (!coreKitInstance) {
       throw new Error("coreKitInstance not found");
     }
@@ -217,12 +224,39 @@ const Navbar = () => {
     web3AuthSigner,
   ]);
 
+  useEffect(() => {
+    if (accountAddress) {
+      const sendApiRequest = async () => {
+        const dataToSend = {
+          wallet: accountAddress,
+          email: userinfo?.email,
+          username: userinfo?.name,
+        };
+        console.log("dataToSend--->", dataToSend);
+
+        try {
+          await axiosInstanceAuth
+            .post(`registerUser`, dataToSend)
+            .then((response) => {
+              console.log("API Response:", response);
+              //console.log("message-->", response.data.data.checkUser);
+              localStorage.setItem("Token", response.data.data.token);
+              setRegisterUser(response.data.data.userData);
+              toast.success(response.data.message);
+            });
+        } catch (error) {
+          console.error("RegisterUser API Error:", error);
+        }
+      };
+      sendApiRequest();
+    }
+  }, [accountAddress, setRegisterUser, userinfo?.email, userinfo?.name]);
   return (
-    <nav className="bg-black p-5  text-white">
-      <div className="container mx-auto  sm:px-6 lg:px-8 flex justify-between items-center">
+    <nav className="bg-black text-white">
+      <div className="container mx-auto sm:px-6 py-2 lg:px-8 flex justify-between items-center">
         <div className="flex justify-center items-center space-x-3">
           <Link href="/">
-            <Image src={logo} height={60} alt="Picture of the author " />
+            <Image src={logo} height={55} alt="Logo" />
           </Link>
         </div>
 
@@ -245,7 +279,7 @@ const Navbar = () => {
               <input
                 type="text"
                 placeholder="Search..."
-                className="w-full md:px-2 px-1 py-1 bg-transparent outline-none"
+                className="w-48 md:px-2 px-1 py-1 bg-transparent outline-none"
               />
               <div className="md:pr-1.5">
                 <RiSearchLine size={20} />
@@ -254,13 +288,13 @@ const Navbar = () => {
           </div>
 
           <div
-            className="relative lg:hidden"
+            className="relative lg:block hidden"
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
           >
             <HiMenu size={20} />
             {isHovered && (
-              <div className="absolute top-full md:left-0 right-0 mt-1 p-5 bg-slate-700 bg-opacity-55 rounded-md shadow-md transition-all duration-300 z-10">
+              <div className="absolute top-full md:left-0 right-0 mt-1 p-5 w-40 bg-slate-700 bg-opacity-55 rounded-md shadow-md transition-all duration-300 z-40">
                 <ul className="space-y-2">
                   <li>
                     <a
@@ -301,38 +335,41 @@ const Navbar = () => {
           {coreKitStatus === "LOGGED_IN" ? (
             <>
               <div className="flex justify-center items-center gap-2">
-                <button className="" onClick={() => router.push("/about")}>
+                <button className="" onClick={() => logout()}>
                   {userinfo?.profileImage && (
                     <Image
                       src={userinfo?.profileImage}
                       width={38}
                       height={38}
-                      alt="Picture of the author"
+                      alt="Profile"
                       className="rounded-full"
                     />
                   )}
                 </button>
+                {/*{openprofile && <Profilepopup />}*/}
               </div>
             </>
           ) : (
             <button
-              className="hidden lg:flex justify-center  items-center space-x-3 text-white cursor-pointer bg-gray-200 bg-opacity-20 rounded-3xl px-8 py-3"
+              className="hidden lg:flex justify-center items-center space-x-3 text-white cursor-pointer bg-gray-200 bg-opacity-20 rounded-3xl px-8 py-3"
               onClick={() => login()}
             >
               <PiUserBold size={20} />
               <p> LOGIN </p>
             </button>
           )}
+          <ToastContainer />
         </div>
       </div>
+
       {isPopupOpen && <Newtopic />}
 
       <div
-        className={`fixed bottom-0 left-0 w-full  flex  justify-center items-end p-6 transition-transform ease-in-out duration-500  ${
+        className={`fixed bottom-0 left-0 w-full flex justify-center items-end p-6 transition-transform ease-in-out duration-700 ${
           openediter ? "translate-y-0" : "translate-y-full"
         }`}
       >
-        <div className="bg-gray-900 p-5 !text-black md:w-4/5 w-3/5 h-96  overflow-auto rounded-xl border-t-4 border-rose-400">
+        <div className="bg-gray-900 p-5 !text-black md:w-4/5 w-3/5 rounded-xl border-t-4 border-rose-400">
           <Example />
         </div>
       </div>
