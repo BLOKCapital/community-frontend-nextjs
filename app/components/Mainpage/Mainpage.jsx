@@ -12,7 +12,7 @@ import axiosInstanceAuth from "../apiInstances/axiosInstanceAuth";
 export default function Mainpage() {
   const [searchInput, setSearchInput] = useState("");
   const [selectedCategory, setSelectedCategory] = useState(0);
-
+  console.log("selectedCategory--> ", selectedCategory);
   const handleInputChange = (e) => {
     setSearchInput(e.target.value);
   };
@@ -53,7 +53,11 @@ export default function Mainpage() {
           </div>
         </div>
 
-        <div className="md:flex md:space-x-6 gap-5 my-8">
+        <div
+          className={`gap-5 my-8 ${
+            selectedCategory === 0 ? "md:flex md:space-x-6 " : "hidden"
+          }`}
+        >
           <Cards />
           <Cards2 />
         </div>

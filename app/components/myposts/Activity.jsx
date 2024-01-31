@@ -1,23 +1,39 @@
 import React, { useState } from "react";
 import All from "./All";
 const Activity = () => {
-  const [selectedButton, setSelectedButton] = useState("All");
+  const [selectedButton, setSelectedButton] = useState("Topics");
 
   const handleButtonClick = (label) => {
     setSelectedButton(label);
   };
 
   const contentMap = {
-    All: <All />,
-    Topics: <div>Topics content goes here</div>,
-    Likes: <div>Likes content goes here</div>,
-    Bookmarks: <div>Bookmarks content goes here</div>,
-    Solved: <div>Solved content goes here</div>,
+    Topics: <All />,
+    Likes: (
+      <div className="flex justify-center items-center text-2xl font-bold text-yellow-500">
+        <span className="underline text-purple-500">Coming Soon</span>
+      </div>
+    ),
+    Bookmarks: (
+      <div className="flex justify-center items-center text-2xl font-bold text-red-500">
+        <span className="underline text-indigo-500">Coming Soon</span>
+      </div>
+    ),
+    Solved: (
+      <div className="flex justify-center items-center text-2xl font-bold text-orange-500">
+        <span className="underline text-pink-500">Coming Soon</span>
+      </div>
+    ),
+    Vote: (
+      <div className="flex justify-center items-center text-2xl font-bold text-blue-500   ">
+        <span className="underline text-green-500">Coming Soon</span>
+      </div>
+    ),
   };
 
   return (
     <div>
-      <div className="flex space-x-4 w-full bg-gray-600 bg-opacity-40 rounded-md">
+      <div className="flex space-x-4 w-full bg-gray-600 bg-opacity-40 rounded-md ">
         {Object.keys(contentMap).map((label, index) => (
           <button
             key={index}

@@ -1,51 +1,9 @@
 import React from "react";
 import { useWeb3AuthSigner } from "@/app/context/web3-auth-signer";
+import Link from "next/link";
 
 const Latest = () => {
-  const { viewPosts } = useWeb3AuthSigner();
-  //const questionData = [
-  //  {
-  //    question: "What to do if you’re not able to access the community portal?",
-  //    date: "Apr'24",
-  //    vote: "25",
-  //    replies: "8",
-  //    views: "2",
-  //    days: "2h",
-  //  },
-  //  {
-  //    question: "General & Product Announcement goes here.",
-  //    date: "Apr'24",
-  //    vote: "25",
-  //    replies: "8",
-  //    views: "4",
-  //    days: "4d",
-  //  },
-  //  {
-  //    question: "Your Box 1 question goes here.",
-  //    date: "Apr'24",
-  //    vote: "25",
-  //    replies: "8",
-  //    views: "8",
-  //    days: "6s",
-  //  },
-  //  {
-  //    question: "Your Box 1 question goes here.",
-  //    date: "Apr'24",
-  //    vote: "25",
-  //    replies: "8",
-  //    views: "23",
-  //    days: "6d",
-  //  },
-  //  {
-  //    question: "Your Box 1 question goes here.",
-  //    date: "Apr'24",
-  //    vote: "25",
-  //    replies: "8",
-  //    views: "2",
-  //    days: "6d",
-  //  },
-  //  // Add more objects as needed
-  //];
+  const { viewPosts, setShowcontent } = useWeb3AuthSigner();
 
   const formatDate = (dateString) => {
     const options = { day: "numeric", month: "short" };
@@ -54,6 +12,16 @@ const Latest = () => {
       options
     );
     return formattedDate;
+  };
+
+  const Opencontent = (e) => {
+    setShowcontent(e);
+    localStorage.setItem("_id", e);
+  };
+
+  const formatTitle = (title) => {
+    // Your implementation here
+    return title.toLowerCase().replace(/\s+/g, "-");
   };
 
   return (
@@ -83,30 +51,38 @@ const Latest = () => {
 
             {viewPosts ? (
               <>
-                {viewPosts.map((item, index) => (
-                  <div key={index} className="cursor-pointer ">
-                    <div className="flex justify-between text-base">
-                      <div className="font-semibold break-words">
-                        <p>{item.title}</p>
-                      </div>
-                      <div className="flex justify-center  font-light">
-                        <div className="px-3 py-1 md:w-16"> 5</div>
-                        <div className="px-3 py-1 md:w-16"> 10</div>
+                {viewPosts
+                  .slice()
+                  .reverse()
+                  .map((item, index) => (
+                    <div key={index} className="cursor-pointer ">
+                      <div className="flex justify-between text-base">
+                        <Link href={`/${formatTitle(item.title)}`}>
+                          <div
+                            className="font-semibold break-words"
+                            onClick={() => Opencontent(item._id)}
+                          >
+                            <p>{item.title}</p>
+                          </div>
+                        </Link>
+                        <div className="flex justify-center  font-light">
+                          <div className="px-3 py-1 md:w-16"> 5</div>
+                          <div className="px-3 py-1 md:w-16"> 10</div>
 
-                        <div className="px-3 py-1 md:w-16"> 30</div>
-                        <div className="px-3 py-1 md:w-18">
-                          {formatDate(item.createdAt)}
+                          <div className="px-3 py-1 md:w-16"> 30</div>
+                          <div className="px-3 py-1 md:w-18">
+                            {formatDate(item.createdAt)}
+                          </div>
                         </div>
                       </div>
+                      <div className="flex gap-2 items-center text-sm font-light">
+                        <span className="bg-[#1C64F2] p-1.5 rounded-full"></span>
+                        {item.userData && item.userData.length > 0 && (
+                          <p>{item.userData[0].username}</p>
+                        )}
+                      </div>
                     </div>
-                    <div className="flex gap-2 items-center text-sm font-light py-3">
-                      <span className="bg-[#1C64F2] p-1.5 rounded-full"></span>
-                      {item.userData && item.userData.length > 0 && (
-                        <p>{item.userData[0].username}</p>
-                      )}
-                    </div>
-                  </div>
-                ))}
+                  ))}
               </>
             ) : (
               <p>Loding...</p>

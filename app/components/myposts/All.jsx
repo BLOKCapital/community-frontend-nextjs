@@ -5,6 +5,7 @@ import Link from "next/link";
 
 const All = () => {
   const { viewPostByUser } = useWeb3AuthSigner();
+
   const formatDate = (dateString) => {
     const options = { day: "numeric", month: "short", year: "numeric" };
     const formattedDate = new Date(dateString).toLocaleDateString(
@@ -61,20 +62,17 @@ const All = () => {
                       </div>
                       <div className="">
                         <div
-                          className={`cursor-pointer space-y-3 font-semibold text-xl`}
+                          className={`cursor-pointer space-y-3 font-semibold text-lg`}
                         >
                           <p>{item.title}</p>
                         </div>
-                        <div className="flex items-center">
-                          {/*<p
-                        style={{
-                          backgroundColor: item.color,
-                          padding: "6px",
-                          margin: "10px",
-                          color: "white",
-                        }}
-                      ></p>*/}
-                          {/*<div dangerouslySetInnerHTML={{ __html: item.content }} />*/}
+                        <div className="flex items-center gap-2 py-1">
+                          <span className="bg-[#1C64F2] p-1.5 rounded-full"></span>
+                          {item.userData && item.userData.length > 0 && (
+                            <p className="text-sm  font-light">
+                              {item.userData[0].username}
+                            </p>
+                          )}
                         </div>
                       </div>
                     </div>

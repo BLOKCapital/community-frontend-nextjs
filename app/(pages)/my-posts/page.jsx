@@ -4,13 +4,22 @@ import React, { useEffect, useState } from "react";
 import { GoSidebarExpand } from "react-icons/go";
 import Image from "next/image";
 import { useWeb3AuthSigner } from "@/app/context/web3-auth-signer";
-
+import clipboardCopy from "clipboard-copy";
 import DashboardHeader from "../../components/myposts/Buttonspage";
+import { MdDone } from "react-icons/md";
+import { BsCopy } from "react-icons/bs";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const page = () => {
   const { accountAddress, userinfo, registerUser } = useWeb3AuthSigner();
   const [profiledetails, setProfiledetails] = useState(false);
+  const [copy, setcopy] = useState(false);
+
   const imageSize = profiledetails ? 120 : 60;
+  const storedData = sessionStorage.getItem("UserData");
+  const storedData1 = storedData ? JSON.parse(storedData) : null;
+  //console.log("storedData-->", storedData);
 
   const opendetails = () => {
     setProfiledetails(!profiledetails);
@@ -25,8 +34,18 @@ const page = () => {
     return formattedDate;
   };
 
+  const notify = () => {
+    if (accountAddress) {
+      void clipboardCopy(accountAddress);
+      toast.success("Address Copied!");
+      setcopy(true);
+      setTimeout(() => {
+        setcopy(false);
+      }, 100);
+    }
+  };
   return (
-    <div className="text-white bg-gray-500 bg-opacity-20 rounded-t-3xl w-full  border-t-4 border-[#84AD69]">
+    <div className="text-white bg-gray-500 bg-opacity-20 rounded-t-3xl w-full h-screen  border-t-4 border-[#84AD69]">
       <div className="p-5">
         <div className="flex justify-between items-center py-3">
           <div className="flex items-center space-x-3">
@@ -70,26 +89,32 @@ const page = () => {
         </div>
         {profiledetails && (
           <>
-            {registerUser ? (
-              <div className="border-spacing-1 border-t border-b border-slate-300 border-opacity-25 ">
-                <div className="flex space-x-2 items-center py-1">
+            <div className="border-spacing-1 border-t border-b border-slate-300 border-opacity-25 ">
+              <div className="flex space-x-2 items-center py-1">
+                <div className="flex gap-2">
                   <div className="flex gap-1">
                     <p className=" font-semibold">AA wallet:</p>
-                    <p className="font-light">{registerUser.wallet}</p>
+                    <p className="font-light">{storedData1.wallet}</p>
                   </div>
-                  <div className="flex gap-1">
-                    <p className=" font-semibold">Joined:</p>
-                    <p className="font-light">
-                      {formatDate(registerUser.createdAt)}
-                    </p>
-                  </div>
-                  <div className="flex gap-1">
-                    <p className=" font-semibold">Role:</p>
-                    <p className="font-light">{registerUser.role}</p>
+                  <div>
+                    <button onClick={notify} className="">
+                      {copy ? <MdDone size={15} /> : <BsCopy size={15} />}
+                    </button>
+                    {/*<ToastContainer />*/}
                   </div>
                 </div>
+                <div className="flex gap-1">
+                  <p className=" font-semibold">Joined:</p>
+                  <p className="font-light">
+                    {formatDate(storedData1.createdAt)}
+                  </p>
+                </div>
+                <div className="flex gap-1">
+                  <p className=" font-semibold">Role:</p>
+                  <p className="font-light">{storedData1.role}</p>
+                </div>
               </div>
-            ) : null}
+            </div>
           </>
         )}
         <div>

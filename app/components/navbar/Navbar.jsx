@@ -54,7 +54,7 @@ const Navbar = () => {
   const [coreKitStatus, setCoreKitStatus] = useState();
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [openprofile, setOpenprofile] = useState(false);
-
+  const Token = localStorage.getItem("Token");
   const {
     setWeb3AuthSigner,
     web3AuthSigner,
@@ -225,7 +225,7 @@ const Navbar = () => {
   ]);
 
   useEffect(() => {
-    if (accountAddress) {
+    if (!Token && accountAddress) {
       const sendApiRequest = async () => {
         const dataToSend = {
           wallet: accountAddress,
@@ -242,6 +242,10 @@ const Navbar = () => {
               //console.log("message-->", response.data.data.checkUser);
               localStorage.setItem("Token", response.data.data.token);
               setRegisterUser(response.data.data.userData);
+              sessionStorage.setItem(
+                "UserData",
+                JSON.stringify(response.data.data.userData)
+              );
               toast.success(response.data.message);
             });
         } catch (error) {
@@ -250,7 +254,7 @@ const Navbar = () => {
       };
       sendApiRequest();
     }
-  }, [accountAddress, setRegisterUser, userinfo?.email, userinfo?.name]);
+  }, [Token, accountAddress, setRegisterUser, userinfo?.email, userinfo?.name]);
   return (
     <nav className="bg-black text-white">
       <div className="container mx-auto sm:px-6 py-2 lg:px-8 flex justify-between items-center">

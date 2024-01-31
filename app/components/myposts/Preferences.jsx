@@ -1,9 +1,11 @@
-import React from 'react'
+import React from "react";
 
 const Preferences = () => {
   return (
-    <div>Preferences</div>
-  )
-}
+    <div className="flex justify-center items-center text-2xl font-bold text-orange-500">
+      <span className="">Coming Soon</span>
+    </div>
+  );
+};
 
-export default Preferences
+export default Preferences;

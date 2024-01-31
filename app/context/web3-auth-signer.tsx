@@ -56,6 +56,15 @@ export interface Web3AuthSignerContext {
 
   viewPosts: any;
   SetViewPosts: React.Dispatch<React.SetStateAction<any>>;
+
+  viewsinglePosts: any;
+  SetViewsinglePosts: React.Dispatch<React.SetStateAction<any>>;
+
+  showcontent: any;
+  setShowcontent: React.Dispatch<React.SetStateAction<any>>;
+
+  viewPostByUsers: () => Promise<void>;
+  sendApiRequest: () => Promise<void>;
 }
 
 export const Web3AuthSigner = createContext<Web3AuthSignerContext | null>(null);
@@ -84,45 +93,62 @@ export function Web3AuthSignerProvider({
   >(undefined);
   const [sessionKeyProvider, setSessionKeyProvider] = useState<any>();
   const [userinfo, setUserinfo] = useState<Wallet1 | null>(null);
-
   const [ecdsaProvider, setEcdsaProvider] = useState<any | null>(null);
   const [openediter, setopenediter] = useState<boolean>(false);
   const [registerUser, setRegisterUser] = useState<any>();
   const [viewPostByUser, SetViewPostByUser] = useState<any>();
   const [viewPosts, SetViewPosts] = useState<any>();
-
-  useEffect(() => {
-    if (registerUser) {
-      const sendApiRequest = async () => {
-        try {
-          await axiosInstanceAuth.get(`viewPostByUser`).then((response) => {
-            console.log(
-              "viewPostByUser API Response:",
-              response.data.data.data
-            );
-            SetViewPostByUser(response.data.data.data);
-          });
-        } catch (error) {
-          console.error("viewPostByUser API Error:", error);
-        }
-      };
-      sendApiRequest();
+  const [viewsinglePosts, SetViewsinglePosts] = useState<any>();
+  const [showcontent, setShowcontent] = useState<any>();
+  const Token = localStorage.getItem("Token");
+  const viewPostByUsers = async () => {
+    try {
+      await axiosInstanceAuth.get(`viewPostByUser`).then((response) => {
+        console.log("viewPostByUser API Response:", response.data.data.data);
+        SetViewPostByUser(response.data.data.data);
+      });
+    } catch (error) {
+      console.error("viewPostByUser API Error:", error);
     }
-  }, [registerUser]);
+  };
+    const getid = localStorage.getItem("_id");
+
+  const sendApiRequest = async () => {
+    try {
+      await axiosInstanceAuth.get(`viewPosts`).then((response) => {
+        console.log("viewPosts API Response:", response.data.data.posts);
+        SetViewPosts(response.data.data.posts);
+      });
+    } catch (error) {
+      console.error("viewPosts API Error:", error);
+    }
+  };
+
+  const viewSinglePost = async () => {
+    try {
+      await axiosInstanceAuth
+        .get(`viewSinglePost/${getid}`)
+        .then((response) => {
+          console.log("viewSinglePost API Response:", response.data.data.post);
+          SetViewsinglePosts(response.data.data.post);
+        });
+    } catch (error) {
+      console.error("viewSinglePost API Error:", error);
+    }
+  };
 
   useEffect(() => {
-    const sendApiRequest = async () => {
-      try {
-        await axiosInstanceAuth.get(`viewPosts`).then((response) => {
-          console.log("viewPosts API Response:", response.data.data.posts);
-          SetViewPosts(response.data.data.posts);
-        });
-      } catch (error) {
-        console.error("viewPosts API Error:", error);
-      }
-    };
+    if ( getid) {
+      viewSinglePost();
+    }
+  }, [showcontent]);
+
+  useEffect(() => {
     sendApiRequest();
-  }, []);
+    if (Token) {
+      viewPostByUsers();
+    }
+  }, [Token]);
 
   return (
     <Web3AuthSigner.Provider
@@ -145,6 +171,12 @@ export function Web3AuthSignerProvider({
         SetViewPostByUser,
         SetViewPosts,
         viewPosts,
+        viewPostByUsers,
+        sendApiRequest,
+        showcontent,
+        setShowcontent,
+        viewsinglePosts,
+        SetViewsinglePosts,
       }}
     >
       {children}

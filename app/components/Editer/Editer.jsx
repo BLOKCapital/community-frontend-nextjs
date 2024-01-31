@@ -11,7 +11,13 @@ import axiosInstanceAuth from "../apiInstances/axiosInstanceAuth";
 
 const Example = () => {
   const editor = useRef(null);
-  const { setopenediter, userinfo, registerUser } = useWeb3AuthSigner();
+  const {
+    setopenediter,
+    userinfo,
+    registerUser,
+    viewPostByUsers,
+    sendApiRequest,
+  } = useWeb3AuthSigner();
   const [BlogsData, setBlogsData] = useState({
     title: "",
     content: "",
@@ -31,22 +37,29 @@ const Example = () => {
     };
     console.log("dataToSend--->", dataToSend);
     try {
-      await axiosInstanceAuth.post(`addPost`, dataToSend).then((response) => {
-        console.log("Createpremises API Response:", response);
-        toast.success(response.data.message);
-        if (response) {
-          setBlogsData({
-            title: "",
-            content: "",
-          });
-          setopenediter(false);
-        }
-      });
+      await axiosInstanceAuth
+        .post(`addPost`, dataToSend)
+        .then(async (response) => {
+          console.log("Createpremises API Response:", response);
+          toast.success(response.data.message);
+          if (response) {
+            setBlogsData({
+              title: "",
+              content: "",
+            });
+
+            await viewPostByUsers();
+            await sendApiRequest();
+
+            setopenediter(false);
+          }
+        });
     } catch (error) {
       console.error("Createpremises API Error:", error);
       toast.error("Error creating premises");
     }
   };
+
   return (
     <>
       <div className="space-y-4">
