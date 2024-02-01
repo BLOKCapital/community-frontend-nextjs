@@ -94,7 +94,7 @@ const Dashbord = ({ setSelectedCategory, selectedCategory }) => {
             </div>
           ))}
         </div>
-        <div className="flex space-x-5">
+        {/*<div className="flex space-x-5">
           <div
             ref={allCategoriesButtonRef}
             className="flex items-center space-x-2 cursor-pointer px-2 py-1 border-dashed bg-slate-700 bg-opacity-55 rounded-lg"
@@ -176,7 +176,7 @@ const Dashbord = ({ setSelectedCategory, selectedCategory }) => {
               </div>
             </div>
           )}
-        </div>
+        </div>*/}
       </div>
       <div className="py-5">
         {selectedCategory === 0 && <Mainpage />}

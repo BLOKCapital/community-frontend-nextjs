@@ -18,7 +18,7 @@ const Sidebar = () => {
   const [isCategoriesOpen, setIsCategoriesOpen] = useState(true);
   const [istagOpen, setIstagOpen] = useState(false);
   const [openmore, setOpenmore] = useState(false);
-
+  const Token = localStorage.getItem("Token");
   const popupRef = useRef();
   const tagData = [
     { icon: <PiInfoDuotone size={22} />, name: "About" },
@@ -71,17 +71,21 @@ const Sidebar = () => {
             <p>All Topics</p>
           </div>
         </div>
-        <div
-          className={`hover:bg-slate-500 hover:bg-opacity-20 text-base cursor-pointer ${
-            router.pathname === "/my-posts" ? "bg-slate-500  bg-opacity-20" : ""
-          }`}
-          onClick={() => router.push("/my-posts")}
-        >
-          <div className="flex items-center space-x-2 mx-5 py-1">
-            <BsPersonWorkspace />
-            <p>My Posts</p>
+        {Token ? (
+          <div
+            className={`hover:bg-slate-500 hover:bg-opacity-20 text-base cursor-pointer ${
+              router.pathname === "/my-posts"
+                ? "bg-slate-500  bg-opacity-20"
+                : ""
+            }`}
+            onClick={() => router.push("/my-posts")}
+          >
+            <div className="flex items-center space-x-2 mx-5 py-1">
+              <BsPersonWorkspace />
+              <p>My Posts</p>
+            </div>
           </div>
-        </div>
+        ) : null}
       </div>
       <div className="space-y-3">
         <div className="">

@@ -111,7 +111,7 @@ export function Web3AuthSignerProvider({
       console.error("viewPostByUser API Error:", error);
     }
   };
-    const getid = localStorage.getItem("_id");
+  const getid = localStorage.getItem("_id");
 
   const sendApiRequest = async () => {
     try {
@@ -138,17 +138,14 @@ export function Web3AuthSignerProvider({
   };
 
   useEffect(() => {
-    if ( getid) {
-      viewSinglePost();
-    }
-  }, [showcontent]);
-
-  useEffect(() => {
     sendApiRequest();
     if (Token) {
       viewPostByUsers();
     }
-  }, [Token]);
+    if (getid) {
+      viewSinglePost();
+    }
+  }, [Token, getid]);
 
   return (
     <Web3AuthSigner.Provider
