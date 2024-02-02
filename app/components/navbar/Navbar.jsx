@@ -27,6 +27,9 @@ import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axiosInstanceAuth from "../apiInstances/axiosInstanceAuth";
+import { MdDone } from "react-icons/md";
+import { BsCopy } from "react-icons/bs";
+import clipboardCopy from "clipboard-copy";
 
 const selectedNetwork = WEB3AUTH_NETWORK.MAINNET;
 const clientidweb3 = process.env.NEXT_PUBLIC_WEB3AUTH_CLIENTID;
@@ -51,10 +54,11 @@ const Navbar = () => {
   const [isHovered, setIsHovered] = useState(false);
   const [web3, setWeb3] = useState();
   const [providercorkit, setProvidercorkit] = useState();
-  const [coreKitStatus, setCoreKitStatus] = useState();
   const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [openPopup, setOpenPopup] = useState(false);
   const [openprofile, setOpenprofile] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [copy, setcopy] = useState(false);
   const Token = localStorage.getItem("Token");
   const {
     setWeb3AuthSigner,
@@ -69,7 +73,32 @@ const Navbar = () => {
     openediter,
     setopenediter,
     setRegisterUser,
+    coreKitStatus,
+    setCoreKitStatus,
+    setNewpremises,
   } = useWeb3AuthSigner();
+  const storedData = sessionStorage.getItem("UserData");
+  const storedData1 = storedData ? JSON.parse(storedData) : null;
+
+  const formatDate = (dateString) => {
+    const options = { day: "numeric", month: "short", year: "numeric" };
+    const formattedDate = new Date(dateString).toLocaleDateString(
+      "en-US",
+      options
+    );
+    return formattedDate;
+  };
+
+  const notify = () => {
+    if (accountAddress) {
+      void clipboardCopy(accountAddress);
+      toast.success("Address Copied!");
+      setcopy(true);
+      setTimeout(() => {
+        setcopy(false);
+      }, 100);
+    }
+  };
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -104,7 +133,7 @@ const Navbar = () => {
       };
       init();
     }
-  }, [setWeb3AuthSigner]);
+  }, [setCoreKitStatus, setWeb3AuthSigner]);
 
   useEffect(() => {
     if (web3AuthSigner) {
@@ -174,6 +203,10 @@ const Navbar = () => {
     }
     await coreKitInstance.logout();
     localStorage.clear();
+    setOpenPopup(false);
+    router.push("/");
+    setCoreKitStatus(undefined);
+    setNewpremises(false);
   };
 
   useEffect(() => {
@@ -289,18 +322,6 @@ const Navbar = () => {
               </div>
             </>
           ) : null}
-          <div className="relative">
-            <button className="text-white bg-slate-400 bg-opacity-20 px-2 py-1 rounded-xl flex justify-center items-center gap-2">
-              <input
-                type="text"
-                placeholder="Search..."
-                className="w-48 md:px-2 px-1 py-1 bg-transparent outline-none"
-              />
-              <div className="md:pr-1.5">
-                <RiSearchLine size={20} />
-              </div>
-            </button>
-          </div>
 
           <div
             className="relative lg:block hidden"
@@ -309,8 +330,8 @@ const Navbar = () => {
           >
             <HiMenu size={20} />
             {isHovered && (
-              <div className="absolute top-full md:left-0 right-0 mt-1 p-5 w-40 bg-slate-700 bg-opacity-55 rounded-md shadow-md transition-all duration-300 z-40">
-                <ul className="space-y-2">
+              <div className="absolute top-full md:left-0 right-0 mt-5 p-5 w-40 bg-slate-700 bg-opacity-20 rounded-md shadow-md transition-all duration-300 z-40">
+                <ul className="space-y-2 text-lg">
                   <li>
                     <a
                       href="https://blokcapital.io"
@@ -346,11 +367,24 @@ const Navbar = () => {
             )}
           </div>
 
+          <div className="relative">
+            <button className="text-white bg-slate-400 bg-opacity-20 px-2 py-1 rounded-xl flex justify-center items-center gap-2">
+              <input
+                type="text"
+                placeholder="Search..."
+                className="w-48 md:px-2 px-1 py-1 bg-transparent outline-none"
+              />
+              <div className="md:pr-1.5">
+                <RiSearchLine size={20} />
+              </div>
+            </button>
+          </div>
+
           {/* Search Bar Icon */}
           {coreKitStatus === "LOGGED_IN" ? (
             <>
               <div className="flex justify-center items-center gap-2">
-                <button className="" onClick={() => logout()}>
+                <button className="" onClick={() => setOpenPopup(true)}>
                   {userinfo?.profileImage && (
                     <Image
                       src={userinfo?.profileImage}
@@ -359,6 +393,66 @@ const Navbar = () => {
                       alt="Profile"
                       className="rounded-full"
                     />
+                  )}
+                  {openPopup && (
+                    <div className="fixed top-0 right-0 w-full h-full flex xl:items-start items-center md:items-start z-10 xl:justify-end md:justify-end justify-center ">
+                      <div className="bg-gray-700 rounded-3xl px-10 py-10 xl:mr-24 mr-0 md:mr-5 md:mt-20 xl:mt-20 mt-0">
+                        <div className="flex flex-col space-y-1 justify-center items-center pb-8">
+                          <Image
+                            src={userinfo?.profileImage}
+                            width={100}
+                            height={100}
+                            alt="Profile"
+                            className="rounded-full"
+                          />
+                          <p className="font-bold text-lg">{userinfo?.name}</p>
+
+                          <div className="flex gap-2">
+                            <div className="flex gap-2">
+                              <p>AA wallet: </p>
+                              <p>
+                                {accountAddress.slice(0, 3) +
+                                  "...." +
+                                  accountAddress.slice(-3)}
+                              </p>
+                            </div>
+                            {/*accountAddress.slice(0, 3) + "...." + accountAddress.slice(-3)*/}
+                            <div>
+                              <button onClick={notify} className="">
+                                {copy ? (
+                                  <MdDone size={15} />
+                                ) : (
+                                  <BsCopy size={15} />
+                                )}
+                              </button>
+                            </div>
+                          </div>
+                          <p className="text-sm ">{userinfo?.email}</p>
+                          <p className="text-xs ">
+                            Last Update:
+                            <span className="text-xm ">
+                              {" "}
+                              {formatDate(storedData1.createdAt)}
+                            </span>{" "}
+                          </p>
+                        </div>
+                        <hr />
+                        <Link href="/account">
+                          <div className="flex flex-row items-center justify-between cursor-pointer hover:scale-105 py-4">
+                            <div className="flex flex-row gap-2 items-center">
+                              <p className="hover:font-bold">Account</p>
+                            </div>
+                          </div>
+                        </Link>
+                        <hr />
+                        <div
+                          onClick={() => logout()}
+                          className="flex flex-row gap-2 items-center py-4 disconnect cursor-pointer"
+                        >
+                          <p className="text-[#FF4085]">Disconnect</p>
+                        </div>
+                      </div>
+                    </div>
                   )}
                 </button>
                 {/*{openprofile && <Profilepopup />}*/}
@@ -373,7 +467,7 @@ const Navbar = () => {
                 <div className=" ">
                   <svg
                     aria-hidden="true"
-                    class="w-5 h-5 text-gray-200 animate-spin dark:text-white fill-blue-600"
+                    className="w-5 h-5 text-gray-200 animate-spin dark:text-white fill-blue-600"
                     viewBox="0 0 100 101"
                     fill="none"
                     xmlns="http://www.w3.org/2000/svg"

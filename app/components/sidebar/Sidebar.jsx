@@ -1,5 +1,5 @@
 "use client";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { SiDatabricks } from "react-icons/si";
 import { PiDotsThreeOutlineVerticalFill } from "react-icons/pi";
 import { MdKeyboardArrowDown } from "react-icons/md";
@@ -12,13 +12,17 @@ import { AiFillSetting } from "react-icons/ai";
 import { CiKeyboard } from "react-icons/ci";
 import { BsPersonWorkspace } from "react-icons/bs";
 import { useRouter } from "next/navigation";
+import { useWeb3AuthSigner } from "@/app/context/web3-auth-signer";
 
 const Sidebar = () => {
   const router = useRouter();
   const [isCategoriesOpen, setIsCategoriesOpen] = useState(true);
   const [istagOpen, setIstagOpen] = useState(false);
   const [openmore, setOpenmore] = useState(false);
-  const Token = localStorage.getItem("Token");
+  const { newpremises, coreKitStatus } = useWeb3AuthSigner();
+  const [istoken, setIstoken] = useState();
+  console.log("newpremises--->", newpremises);
+
   const popupRef = useRef();
   const tagData = [
     { icon: <PiInfoDuotone size={22} />, name: "About" },
@@ -71,7 +75,7 @@ const Sidebar = () => {
             <p>All Topics</p>
           </div>
         </div>
-        {Token ? (
+        {newpremises ? (
           <div
             className={`hover:bg-slate-500 hover:bg-opacity-20 text-base cursor-pointer ${
               router.pathname === "/my-posts"

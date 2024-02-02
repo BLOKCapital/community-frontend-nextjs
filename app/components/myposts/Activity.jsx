@@ -19,11 +19,7 @@ const Activity = () => {
         <span className="underline text-indigo-500">Coming Soon</span>
       </div>
     ),
-    Solved: (
-      <div className="flex justify-center items-center text-2xl font-bold text-orange-500">
-        <span className="underline text-pink-500">Coming Soon</span>
-      </div>
-    ),
+
     Vote: (
       <div className="flex justify-center items-center text-2xl font-bold text-blue-500   ">
         <span className="underline text-green-500">Coming Soon</span>

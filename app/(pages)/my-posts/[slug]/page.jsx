@@ -7,13 +7,13 @@ import { IoBookmarkOutline } from "react-icons/io5";
 import { IoBookmark } from "react-icons/io5";
 import { RiDeleteBin6Fill } from "react-icons/ri";
 import { GrLink } from "react-icons/gr";
-import axiosInstanceAuth from "../../components/apiInstances/axiosInstanceAuth";
-import { ToastContainer, toast } from "react-toastify";
+import axiosInstanceAuth from "../../../components/apiInstances/axiosInstanceAuth";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useRouter } from "next/navigation";
+//import { useRouter } from "next/router";
 //import * as XLSX from "xlsx";
 //import axios from "axios";
-
 export const datatitle = () => {
   return {
     title: ".gggggsdgsdgdsgsdg..",
@@ -49,13 +49,12 @@ const Page = () => {
   }, [viewsinglePosts]);
 
   const handleDeleteClick = () => {
-    console.log("deleet");
     setIsDeletePopupVisible(true);
   };
 
   const handleDeleteConfirm = () => {
-    SingledeletePost();
     // Handle deletion logic here
+    SingledeletePost();
     setIsDeletePopupVisible(false);
   };
 
@@ -122,15 +121,16 @@ const Page = () => {
 
   const SingledeletePost = async () => {
     try {
-      await axiosInstanceAuth.post(`deletePost/${getid}`).then((response) => {
-        console.log("SinglelikePost API Response:", response);
+      await axiosInstanceAuth.delete(`deletePost/${getid}`).then((response) => {
+        console.log("SingledeletePost API Response:", response);
         toast.success(response.data.message);
+        localStorage.removeItem("_id");
         viewPostByUsers();
         sendApiRequest();
         router.push("/my-posts");
       });
     } catch (error) {
-      console.error("SinglelikePost API Error:", error);
+      console.error("SingledeletePost API Error:", error);
     }
   };
   return (

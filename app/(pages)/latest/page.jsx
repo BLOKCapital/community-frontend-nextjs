@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import Image from "next/image";
 import { useWeb3AuthSigner } from "@/app/context/web3-auth-signer";

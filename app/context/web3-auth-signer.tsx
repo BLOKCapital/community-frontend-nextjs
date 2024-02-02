@@ -63,6 +63,15 @@ export interface Web3AuthSignerContext {
   showcontent: any;
   setShowcontent: React.Dispatch<React.SetStateAction<any>>;
 
+  coreKitStatus: any;
+  setCoreKitStatus: React.Dispatch<React.SetStateAction<any>>;
+
+  bookmark: any;
+  SetBookmark: React.Dispatch<React.SetStateAction<any>>;
+
+  newpremises: boolean;
+  setNewpremises: React.Dispatch<React.SetStateAction<boolean>>;
+
   viewPostByUsers: () => Promise<void>;
   sendApiRequest: () => Promise<void>;
 }
@@ -98,8 +107,11 @@ export function Web3AuthSignerProvider({
   const [registerUser, setRegisterUser] = useState<any>();
   const [viewPostByUser, SetViewPostByUser] = useState<any>();
   const [viewPosts, SetViewPosts] = useState<any>();
+  const [bookmark, SetBookmark] = useState<any>();
   const [viewsinglePosts, SetViewsinglePosts] = useState<any>();
   const [showcontent, setShowcontent] = useState<any>();
+  const [coreKitStatus, setCoreKitStatus] = useState<any>();
+  const [newpremises, setNewpremises] = useState<boolean>(false);
   const Token = localStorage.getItem("Token");
   const viewPostByUsers = async () => {
     try {
@@ -137,15 +149,29 @@ export function Web3AuthSignerProvider({
     }
   };
 
+  const viewSavedPostByUser = async () => {
+    try {
+      await axiosInstanceAuth.get(`viewSavedPostByUser`).then((response) => {
+        console.log("viewSavedPostByUser API Response:", response);
+      });
+    } catch (error) {
+      console.error("viewSavedPostByUser API Error:", error);
+    }
+  };
+
   useEffect(() => {
     sendApiRequest();
+    viewSavedPostByUser();
     if (Token) {
       viewPostByUsers();
     }
     if (getid) {
       viewSinglePost();
     }
-  }, [Token, getid]);
+    if (coreKitStatus === "LOGGED_IN" && Token) {
+      setNewpremises(true);
+    }
+  }, [Token, getid, coreKitStatus]);
 
   return (
     <Web3AuthSigner.Provider
@@ -174,6 +200,12 @@ export function Web3AuthSignerProvider({
         setShowcontent,
         viewsinglePosts,
         SetViewsinglePosts,
+        coreKitStatus,
+        setCoreKitStatus,
+        newpremises,
+        setNewpremises,
+        bookmark,
+        SetBookmark,
       }}
     >
       {children}

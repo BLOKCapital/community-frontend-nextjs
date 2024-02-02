@@ -2,10 +2,15 @@ import React from "react";
 import { useWeb3AuthSigner } from "@/app/context/web3-auth-signer";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/router";
 
 const All = () => {
-  const { viewPostByUser } = useWeb3AuthSigner();
 
+  const { viewPostByUser, setShowcontent } = useWeb3AuthSigner();
+  const formatTitle = (title) => {
+    // Your implementation here
+    return title.toLowerCase().replace(/\s+/g, "-");
+  };
   const formatDate = (dateString) => {
     const options = { day: "numeric", month: "short", year: "numeric" };
     const formattedDate = new Date(dateString).toLocaleDateString(
@@ -13,6 +18,11 @@ const All = () => {
       options
     );
     return formattedDate;
+  };
+
+  const Opencontent = (e) => {
+    setShowcontent(e);
+    localStorage.setItem("_id", e);
   };
   return (
     <>
@@ -61,11 +71,14 @@ const All = () => {
                         )}
                       </div>
                       <div className="">
-                        <div
-                          className={`cursor-pointer space-y-3 font-semibold text-lg`}
-                        >
-                          <p>{item.title}</p>
-                        </div>
+                        <Link href={`/my-posts/${formatTitle(item.title)}`}>
+                          <div
+                            className={`cursor-pointer space-y-3 font-semibold text-lg`}
+                            onClick={() => Opencontent(item._id)}
+                          >
+                            <p>{item.title}</p>
+                          </div>
+                        </Link>
                         <div className="flex items-center gap-2 py-1">
                           <span className="bg-[#1C64F2] p-1.5 rounded-full"></span>
                           {item.userData && item.userData.length > 0 && (

@@ -43,15 +43,13 @@ const Example = () => {
           console.log("Createpremises API Response:", response);
           toast.success(response.data.message);
           if (response) {
+            setopenediter(false);
             setBlogsData({
               title: "",
               content: "",
             });
-
             await viewPostByUsers();
             await sendApiRequest();
-
-            setopenediter(false);
           }
         });
     } catch (error) {
