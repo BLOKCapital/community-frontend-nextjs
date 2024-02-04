@@ -46,7 +46,7 @@ const Latest = () => {
                   >
                     <div className="flex items-center space-x-2 space-y-2">
                       <div className="px-2">
-                        {item.images && (
+                        {item.images && !Array.isArray(item.images) ? (
                           <Image
                             src={item.images}
                             alt="Image"
@@ -54,6 +54,19 @@ const Latest = () => {
                             width={50}
                             className="rounded-full bg-white"
                           />
+                        ) : (
+                          // Handle array of images
+                          Array.isArray(item.images) &&
+                          item.images.map((image, imageIndex) => (
+                            <Image
+                              key={imageIndex}
+                              src={image}
+                              alt={`Image ${imageIndex}`}
+                              height={50}
+                              width={50}
+                              className="rounded-full bg-white"
+                            />
+                          ))
                         )}
                       </div>
                       <div className="">

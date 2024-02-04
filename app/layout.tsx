@@ -65,7 +65,7 @@ export default function RootLayout({
           <div className="fixed top-0 w-full z-50">
             <Navbar />
           </div>
-          <div className="container mx-auto  sm:px-6 md:px-5 pt-16 sm:pt-24 md:pt-32">
+          <div className="container mx-auto  sm:px-6 md:px-5 pt-16 sm:pt-16 md:pt-24">
             <div className="flex flex-col px-5 sm:flex-row space-y-6 sm:space-y-0 sm:space-x-10 w-full">
               <div className="fixed w-72">
                 <Sidebar />

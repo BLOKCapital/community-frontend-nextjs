@@ -29,6 +29,8 @@ const Page = () => {
     userinfo,
     viewPostByUsers,
     sendApiRequest,
+    viewSinglePost,
+    coreKitStatus,
   } = useWeb3AuthSigner();
   const [isLiked, setIsLiked] = useState(false);
   const [ioBookmark, setIoBookmark] = useState(false);
@@ -103,6 +105,7 @@ const Page = () => {
       await axiosInstanceAuth.post(`likePost/${getid}`).then((response) => {
         console.log("SinglelikePost API Response:", response);
         toast.success(response.data.message);
+        viewSinglePost();
       });
     } catch (error) {
       console.error("SinglelikePost API Error:", error);
@@ -191,7 +194,7 @@ const Page = () => {
                       <div className="flex justify-end items-center text-2xl space-x-5">
                         <div className="cursor-pointer">
                           <button onClick={handleLikeClick}>
-                            {isLiked ? "❤️" : "🤍"}
+                            {post.likeCount === 0 ? "🤍" : "❤️"}
                           </button>
                         </div>
                         <div

@@ -29,8 +29,10 @@ const Page = () => {
     userinfo,
     viewPostByUsers,
     sendApiRequest,
+    isLiked,
+    setIsLiked,
   } = useWeb3AuthSigner();
-  const [isLiked, setIsLiked] = useState(false);
+
   const [ioBookmark, setIoBookmark] = useState(false);
   const [isDeletePopupVisible, setIsDeletePopupVisible] = useState(false);
   const [userEmail, setUserEmail] = useState("");
@@ -65,7 +67,6 @@ const Page = () => {
 
   const handleLikeClick = () => {
     SinglelikePost();
-    setIsLiked(!isLiked);
   };
 
   const Bookmark = () => {
@@ -150,7 +151,7 @@ const Page = () => {
                   <div>
                     {post.images && (
                       <Image
-                        src={post.images}
+                        src={post.images[0]}
                         alt="Image"
                         height={60}
                         width={60}

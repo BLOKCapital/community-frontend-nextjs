@@ -17,7 +17,7 @@ const page = () => {
   const [copy, setcopy] = useState(false);
 
   const imageSize = profiledetails ? 120 : 60;
-  const storedData = sessionStorage.getItem("UserData");
+  const storedData = localStorage.getItem("UserData");
   const storedData1 = storedData ? JSON.parse(storedData) : null;
   //console.log("storedData-->", storedData);
 
@@ -45,7 +45,6 @@ const page = () => {
     }
   };
 
-  
   return (
     <div className="text-white bg-gray-500 bg-opacity-20  rounded-t-3xl w-full h-screen  border-t-4 border-[#84AD69]">
       <div className="p-5">
@@ -78,7 +77,7 @@ const page = () => {
                 <div className="flex gap-1">
                   <p className=" font-semibold">AA wallet:</p>
                   <div className="flex gap-2">
-                    <p className="font-light">{storedData1.wallet}</p>
+                    <p className="font-light">{accountAddress}</p>
                     <div>
                       <button onClick={notify} className="">
                         {copy ? <MdDone size={15} /> : <BsCopy size={15} />}
@@ -92,12 +91,14 @@ const page = () => {
               <div className="flex gap-1">
                 <p className=" font-semibold">Joined:</p>
                 <p className="font-light">
-                  {formatDate(storedData1.createdAt)}
+                  {storedData1 ? formatDate(storedData1.createdAt) : null}
                 </p>
               </div>
               <div className="flex gap-1">
                 <p className=" font-semibold">Role:</p>
-                <p className="font-light">{storedData1.role}</p>
+                <p className="font-light">
+                  {storedData1 ? storedData1.role : null}
+                </p>
               </div>
             </div>
             {/*<div>

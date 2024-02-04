@@ -5,7 +5,6 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 
 const All = () => {
-
   const { viewPostByUser, setShowcontent } = useWeb3AuthSigner();
   const formatTitle = (title) => {
     // Your implementation here
@@ -60,14 +59,27 @@ const All = () => {
                   <div className="bg-slate-800 bg-opacity-90 rounded-xl flex flex-col md:flex-row justify-between items-center gap-2 p-2">
                     <div className="flex items-center space-x-2 space-y-2">
                       <div className="px-2">
-                        {item.images && (
+                        {item.images && !Array.isArray(item.images) ? (
                           <Image
                             src={item.images}
-                            alt="Question Image"
+                            alt="Image"
                             height={50}
                             width={50}
                             className="rounded-full bg-white"
                           />
+                        ) : (
+                          // Handle array of images
+                          Array.isArray(item.images) &&
+                          item.images.map((image, imageIndex) => (
+                            <Image
+                              key={imageIndex}
+                              src={image}
+                              alt={`Image ${imageIndex}`}
+                              height={50}
+                              width={50}
+                              className="rounded-full bg-white"
+                            />
+                          ))
                         )}
                       </div>
                       <div className="">

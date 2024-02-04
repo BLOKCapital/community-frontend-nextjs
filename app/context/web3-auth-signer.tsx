@@ -48,6 +48,9 @@ export interface Web3AuthSignerContext {
   openediter: boolean;
   setopenediter: React.Dispatch<React.SetStateAction<boolean>>;
 
+  isLiked: boolean;
+  setIsLiked: React.Dispatch<React.SetStateAction<boolean>>;
+
   registerUser: any;
   setRegisterUser: React.Dispatch<React.SetStateAction<any>>;
 
@@ -112,6 +115,7 @@ export function Web3AuthSignerProvider({
   const [showcontent, setShowcontent] = useState<any>();
   const [coreKitStatus, setCoreKitStatus] = useState<any>();
   const [newpremises, setNewpremises] = useState<boolean>(false);
+  const [isLiked, setIsLiked] = useState<boolean>(false);
   const Token = localStorage.getItem("Token");
   const viewPostByUsers = async () => {
     try {
@@ -143,6 +147,7 @@ export function Web3AuthSignerProvider({
         .then((response) => {
           console.log("viewSinglePost API Response:", response.data.data.post);
           SetViewsinglePosts(response.data.data.post);
+          setIsLiked(!isLiked);
         });
     } catch (error) {
       console.error("viewSinglePost API Error:", error);
@@ -152,7 +157,10 @@ export function Web3AuthSignerProvider({
   const viewSavedPostByUser = async () => {
     try {
       await axiosInstanceAuth.get(`viewSavedPostByUser`).then((response) => {
-        console.log("viewSavedPostByUser API Response:", response);
+        console.log(
+          "viewSavedPostByUser API Response:",
+          response.data.data.savedPost
+        );
       });
     } catch (error) {
       console.error("viewSavedPostByUser API Error:", error);
@@ -206,6 +214,8 @@ export function Web3AuthSignerProvider({
         setNewpremises,
         bookmark,
         SetBookmark,
+        isLiked,
+        setIsLiked,
       }}
     >
       {children}

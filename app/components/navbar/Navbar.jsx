@@ -1,7 +1,6 @@
 "use client";
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import { RiSearchLine } from "react-icons/ri";
+import { useEffect, useRef, useState } from "react";
+import { RiAccountPinCircleFill, RiSearchLine } from "react-icons/ri";
 import { HiMenu } from "react-icons/hi";
 import { PiUserBold } from "react-icons/pi";
 import Image from "next/image";
@@ -23,13 +22,15 @@ import {
 import { contractABI } from "../abi/abi";
 import Newtopic from "../newtopic/Newtopic";
 import Example from "../Editer/Editer";
-import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axiosInstanceAuth from "../apiInstances/axiosInstanceAuth";
 import { MdDone } from "react-icons/md";
 import { BsCopy } from "react-icons/bs";
 import clipboardCopy from "clipboard-copy";
+import { FaAngleRight } from "react-icons/fa6";
+import { useRouter } from "next/navigation";
+import { TbLogout } from "react-icons/tb";
 
 const selectedNetwork = WEB3AUTH_NETWORK.MAINNET;
 const clientidweb3 = process.env.NEXT_PUBLIC_WEB3AUTH_CLIENTID;
@@ -77,7 +78,7 @@ const Navbar = () => {
     setCoreKitStatus,
     setNewpremises,
   } = useWeb3AuthSigner();
-  const storedData = sessionStorage.getItem("UserData");
+  const storedData = localStorage.getItem("UserData");
   const storedData1 = storedData ? JSON.parse(storedData) : null;
 
   const formatDate = (dateString) => {
@@ -202,11 +203,18 @@ const Navbar = () => {
       throw new Error("coreKitInstance not found");
     }
     await coreKitInstance.logout();
-    localStorage.clear();
-    setOpenPopup(false);
     router.push("/");
-    setCoreKitStatus(undefined);
     setNewpremises(false);
+    setWeb3AuthSigner(undefined);
+    setAccountAddress(undefined);
+    setCoreKitStatus(undefined);
+    setOpenPopup(false);
+    localStorage.clear();
+  };
+
+  const settingpage = () => {
+    setOpenPopup(false);
+    router.push("/account");
   };
 
   useEffect(() => {
@@ -269,39 +277,57 @@ const Navbar = () => {
   ]);
 
   useEffect(() => {
-    if (!Token && accountAddress) {
-      const sendApiRequest = async () => {
-        const dataToSend = {
-          wallet: accountAddress,
-          email: userinfo?.email,
-          username: userinfo?.name,
-        };
-        console.log("dataToSend--->", dataToSend);
+    if (!Token) {
+      if (accountAddress) {
+        const sendApiRequest = async () => {
+          const dataToSend = {
+            wallet: accountAddress,
+            email: userinfo?.email,
+            username: userinfo?.name,
+          };
+          console.log("dataToSend--->", dataToSend);
 
-        try {
-          await axiosInstanceAuth
-            .post(`registerUser`, dataToSend)
-            .then((response) => {
-              console.log("API Response:", response);
-              //console.log("message-->", response.data.data.checkUser);
-              localStorage.setItem("Token", response.data.data.token);
-              setRegisterUser(response.data.data.userData);
-              sessionStorage.setItem(
-                "UserData",
-                JSON.stringify(response.data.data.userData)
-              );
-              toast.success(response.data.message);
-            });
-        } catch (error) {
-          console.error("RegisterUser API Error:", error);
-        }
-      };
-      sendApiRequest();
+          try {
+            await axiosInstanceAuth
+              .post(`registerUser`, dataToSend)
+              .then((response) => {
+                console.log("API Response:", response);
+                //console.log("message-->", response.data.data.checkUser);
+                localStorage.setItem("Token", response.data.data.token);
+                setRegisterUser(response.data.data.userData);
+                localStorage.setItem(
+                  "UserData",
+                  JSON.stringify(response.data.data.userData)
+                );
+                toast.success(response.data.message);
+              });
+          } catch (error) {
+            console.error("RegisterUser API Error:", error);
+          }
+        };
+        sendApiRequest();
+      }
     }
-  }, [Token, accountAddress, setRegisterUser, userinfo?.email, userinfo?.name]);
+  }, [Token, accountAddress]);
+
+  const popupRef = useRef();
+
+  useEffect(() => {
+    const handleOutsideClick = (e) => {
+      if (popupRef.current && !popupRef.current.contains(e.target)) {
+        setOpenPopup(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleOutsideClick);
+
+    return () => {
+      document.removeEventListener("mousedown", handleOutsideClick);
+    };
+  }, [popupRef]);
   return (
     <nav className="bg-black text-white">
-      <div className="container mx-auto sm:px-6 py-2 lg:px-8 flex justify-between items-center">
+      <div className="container mx-auto sm:px-6 py-2 lg:px-5 flex justify-between items-center">
         <div className="flex justify-center items-center space-x-3">
           <Link href="/">
             <Image src={logo} height={55} alt="Logo" />
@@ -328,10 +354,12 @@ const Navbar = () => {
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
           >
-            <HiMenu size={20} />
+            <div className="bg-gray-200 bg-opacity-20 px-2 py-2 rounded-full">
+              <HiMenu size={20} />
+            </div>
             {isHovered && (
-              <div className="absolute top-full md:left-0 right-0 mt-5 p-5 w-40 bg-slate-700 bg-opacity-20 rounded-md shadow-md transition-all duration-300 z-40">
-                <ul className="space-y-2 text-lg">
+              <div className="absolute top-full md:left-0 right-10 mt-3 p-5 w-40 bg-gray-700 rounded-md shadow-md transition-all duration-300 z-40">
+                <ul className="space-y-2 text-xl">
                   <li>
                     <a
                       href="https://blokcapital.io"
@@ -396,7 +424,10 @@ const Navbar = () => {
                   )}
                   {openPopup && (
                     <div className="fixed top-0 right-0 w-full h-full flex xl:items-start items-center md:items-start z-10 xl:justify-end md:justify-end justify-center ">
-                      <div className="bg-gray-700 rounded-3xl px-10 py-10 xl:mr-24 mr-0 md:mr-5 md:mt-20 xl:mt-20 mt-0">
+                      <div
+                        className="bg-gray-700 rounded-3xl px-10 py-10 xl:mr-24 mr-0 md:mr-5 md:mt-20 xl:mt-20 mt-0"
+                        ref={popupRef}
+                      >
                         <div className="flex flex-col space-y-1 justify-center items-center pb-8">
                           <Image
                             src={userinfo?.profileImage}
@@ -409,11 +440,13 @@ const Navbar = () => {
 
                           <div className="flex gap-2">
                             <div className="flex gap-2">
-                              <p>AA wallet: </p>
+                              <p className="font-semibold">AA wallet: </p>
                               <p>
-                                {accountAddress.slice(0, 3) +
-                                  "...." +
-                                  accountAddress.slice(-3)}
+                                {accountAddress
+                                  ? accountAddress.slice(0, 3) +
+                                    "...." +
+                                    accountAddress.slice(-3)
+                                  : null}
                               </p>
                             </div>
                             {/*accountAddress.slice(0, 3) + "...." + accountAddress.slice(-3)*/}
@@ -437,19 +470,29 @@ const Navbar = () => {
                           </p>
                         </div>
                         <hr />
-                        <Link href="/account">
-                          <div className="flex flex-row items-center justify-between cursor-pointer hover:scale-105 py-4">
-                            <div className="flex flex-row gap-2 items-center">
-                              <p className="hover:font-bold">Account</p>
+                        <Link href="/account" onClick={() => settingpage()}>
+                          <div className="flex flex-row items-center justify-between cursor-pointer hover:scale-105 py-4 hover:font-bold">
+                            <div className="flex flex-row gap-2 items-center justify-between ">
+                              <RiAccountPinCircleFill size={20} />
+                              <p className="">Account</p>
+                            </div>
+                            <div>
+                              <FaAngleRight size={20} />
                             </div>
                           </div>
                         </Link>
                         <hr />
                         <div
                           onClick={() => logout()}
-                          className="flex flex-row gap-2 items-center py-4 disconnect cursor-pointer"
+                          className="flex flex-row gap-2 items-center justify-between py-4 disconnect cursor-pointer hover:font-bold hover:scale-105"
                         >
-                          <p className="text-[#FF4085]">Disconnect</p>
+                          <div className="flex flex-row gap-2 items-center justify-between ">
+                            <TbLogout size={20} />
+                            <p className="text-[#FF4085]">Disconnect</p>
+                          </div>
+                          <div>
+                            <FaAngleRight size={20} />
+                          </div>
                         </div>
                       </div>
                     </div>
