@@ -77,6 +77,7 @@ export interface Web3AuthSignerContext {
 
   viewPostByUsers: () => Promise<void>;
   sendApiRequest: () => Promise<void>;
+  viewSinglePost: () => Promise<void>;
 }
 
 export const Web3AuthSigner = createContext<Web3AuthSignerContext | null>(null);
@@ -216,6 +217,7 @@ export function Web3AuthSignerProvider({
         SetBookmark,
         isLiked,
         setIsLiked,
+        viewSinglePost,
       }}
     >
       {children}

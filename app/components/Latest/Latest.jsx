@@ -4,7 +4,7 @@ import Link from "next/link";
 
 const Latest = () => {
   const { viewPosts, setShowcontent } = useWeb3AuthSigner();
-
+  console.log("viewPosts------------------------", viewPosts);
   const formatDate = (dateString) => {
     const options = { day: "numeric", month: "short" };
     const formattedDate = new Date(dateString).toLocaleDateString(
@@ -35,7 +35,7 @@ const Latest = () => {
               </div>
               <div className="flex  ">
                 <div className="hover:bg-slate-400 hover:bg-opacity-45 hover:text-white px-3 py-1 rounded-md">
-                  Replies
+                  Like
                 </div>
                 <div className="hover:bg-slate-400 hover:bg-opacity-45 hover:text-white px-3 py-1 rounded-md">
                   Views
@@ -66,7 +66,9 @@ const Latest = () => {
                           </div>
                         </Link>
                         <div className="flex justify-center  font-light">
-                          <div className="px-3 py-1 md:w-16"> 5</div>
+                          <div className="px-3 py-1 md:w-16">
+                            {item.likeCount}
+                          </div>
                           <div className="px-3 py-1 md:w-16"> 10</div>
 
                           <div className="px-3 py-1 md:w-16"> 30</div>

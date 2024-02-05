@@ -7,13 +7,14 @@ import { IoBookmarkOutline } from "react-icons/io5";
 import { IoBookmark } from "react-icons/io5";
 import { RiDeleteBin6Fill } from "react-icons/ri";
 import { GrLink } from "react-icons/gr";
-import axiosInstanceAuth from "../../../components/apiInstances/axiosInstanceAuth";
-import { toast } from "react-toastify";
+
+import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useRouter } from "next/navigation";
-//import { useRouter } from "next/router";
+import axiosInstanceAuth from "@/app/components/apiInstances/axiosInstanceAuth";
 //import * as XLSX from "xlsx";
 //import axios from "axios";
+
 export const datatitle = () => {
   return {
     title: ".gggggsdgsdgdsgsdg..",
@@ -29,10 +30,10 @@ const Page = () => {
     userinfo,
     viewPostByUsers,
     sendApiRequest,
-    isLiked,
-    setIsLiked,
+    viewSinglePost,
+    coreKitStatus,
   } = useWeb3AuthSigner();
-
+  const [isLiked, setIsLiked] = useState(false);
   const [ioBookmark, setIoBookmark] = useState(false);
   const [isDeletePopupVisible, setIsDeletePopupVisible] = useState(false);
   const [userEmail, setUserEmail] = useState("");
@@ -51,12 +52,13 @@ const Page = () => {
   }, [viewsinglePosts]);
 
   const handleDeleteClick = () => {
+    console.log("deleet");
     setIsDeletePopupVisible(true);
   };
 
   const handleDeleteConfirm = () => {
-    // Handle deletion logic here
     SingledeletePost();
+    // Handle deletion logic here
     setIsDeletePopupVisible(false);
   };
 
@@ -66,12 +68,21 @@ const Page = () => {
   };
 
   const handleLikeClick = () => {
-    SinglelikePost();
+    if (coreKitStatus === "LOGGED_IN") {
+      SinglelikePost();
+      setIsLiked(!isLiked);
+    } else {
+      toast.error("please Login!");
+    }
   };
 
   const Bookmark = () => {
-    setIoBookmark(!ioBookmark);
-    SinglesavePost();
+    if (coreKitStatus === "LOGGED_IN") {
+      setIoBookmark(!ioBookmark);
+      SinglesavePost();
+    } else {
+      toast.error("please Login!");
+    }
   };
 
   const formatDate = (dateString) => {
@@ -103,6 +114,8 @@ const Page = () => {
       await axiosInstanceAuth.post(`likePost/${getid}`).then((response) => {
         console.log("SinglelikePost API Response:", response);
         toast.success(response.data.message);
+        viewSinglePost();
+        sendApiRequest();
       });
     } catch (error) {
       console.error("SinglelikePost API Error:", error);
@@ -122,16 +135,17 @@ const Page = () => {
 
   const SingledeletePost = async () => {
     try {
-      await axiosInstanceAuth.delete(`deletePost/${getid}`).then((response) => {
-        console.log("SingledeletePost API Response:", response);
+      await axiosInstanceAuth.post(`deletePost/${getid}`).then((response) => {
+        console.log("SinglelikePost API Response:", response);
         toast.success(response.data.message);
-        localStorage.removeItem("_id");
+
         viewPostByUsers();
         sendApiRequest();
         router.push("/my-posts");
+        localStorage.removeItem("_id");
       });
     } catch (error) {
-      console.error("SingledeletePost API Error:", error);
+      console.error("SinglelikePost API Error:", error);
     }
   };
   return (
@@ -151,7 +165,7 @@ const Page = () => {
                   <div>
                     {post.images && (
                       <Image
-                        src={post.images[0]}
+                        src={post.images}
                         alt="Image"
                         height={60}
                         width={60}
@@ -189,10 +203,20 @@ const Page = () => {
                           __html: post.content,
                         }}
                       />
-                      <div className="flex justify-end items-center text-2xl space-x-5">
-                        <div className="cursor-pointer">
-                          <button onClick={handleLikeClick}>
-                            {isLiked ? "❤️" : "🤍"}
+                      <div className="flex justify-end items-center text-xl space-x-5">
+                        <div className="cursor-pointer flex gap-2 justify-center items-center">
+                          {post.likeCount > 0 ? (
+                            <p
+                              className={`text-base ${
+                                post.likeCount > 0 ? "delay-75" : ""
+                              } `}
+                            >
+                              {post.likeCount}
+                            </p>
+                          ) : null}
+
+                          <button onClick={() => handleLikeClick()}>
+                            {userinfo?.email ? "❤️" : "🤍"}
                           </button>
                         </div>
                         <div

@@ -67,13 +67,21 @@ const Page = () => {
   };
 
   const handleLikeClick = () => {
-    SinglelikePost();
-    setIsLiked(!isLiked);
+    if (coreKitStatus === "LOGGED_IN") {
+      SinglelikePost();
+      setIsLiked(!isLiked);
+    } else {
+      toast.error("please Login!");
+    }
   };
 
   const Bookmark = () => {
-    setIoBookmark(!ioBookmark);
-    SinglesavePost();
+    if (coreKitStatus === "LOGGED_IN") {
+      setIoBookmark(!ioBookmark);
+      SinglesavePost();
+    } else {
+      toast.error("please Login!");
+    }
   };
 
   const formatDate = (dateString) => {
@@ -106,6 +114,7 @@ const Page = () => {
         console.log("SinglelikePost API Response:", response);
         toast.success(response.data.message);
         viewSinglePost();
+        sendApiRequest();
       });
     } catch (error) {
       console.error("SinglelikePost API Error:", error);
@@ -128,9 +137,11 @@ const Page = () => {
       await axiosInstanceAuth.post(`deletePost/${getid}`).then((response) => {
         console.log("SinglelikePost API Response:", response);
         toast.success(response.data.message);
+
         viewPostByUsers();
         sendApiRequest();
         router.push("/my-posts");
+        localStorage.removeItem("_id");
       });
     } catch (error) {
       console.error("SinglelikePost API Error:", error);
@@ -191,10 +202,20 @@ const Page = () => {
                           __html: post.content,
                         }}
                       />
-                      <div className="flex justify-end items-center text-2xl space-x-5">
-                        <div className="cursor-pointer">
-                          <button onClick={handleLikeClick}>
-                            {post.likeCount === 0 ? "🤍" : "❤️"}
+                      <div className="flex justify-end items-center text-xl space-x-5">
+                        <div className="cursor-pointer flex gap-2 justify-center items-center">
+                          {post.likeCount > 0 ? (
+                            <p
+                              className={`text-base ${
+                                post.likeCount > 0 ? "delay-75" : ""
+                              } `}
+                            >
+                              {post.likeCount}
+                            </p>
+                          ) : null}
+
+                          <button onClick={() => handleLikeClick()}>
+                            {userinfo?.email ? "❤️" : "🤍"}
                           </button>
                         </div>
                         <div
