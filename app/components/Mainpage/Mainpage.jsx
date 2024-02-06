@@ -12,7 +12,7 @@ import axiosInstanceAuth from "../apiInstances/axiosInstanceAuth";
 export default function Mainpage() {
   const [searchInput, setSearchInput] = useState("");
   const [selectedCategory, setSelectedCategory] = useState(0);
-  console.log("selectedCategory--> ", selectedCategory);
+  //console.log("selectedCategory--> ", selectedCategory);
   const handleInputChange = (e) => {
     setSearchInput(e.target.value);
   };

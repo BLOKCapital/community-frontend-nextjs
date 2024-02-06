@@ -78,7 +78,9 @@ const Navbar = () => {
     setCoreKitStatus,
     setNewpremises,
   } = useWeb3AuthSigner();
+
   const storedData = localStorage.getItem("UserData");
+
   const storedData1 = storedData ? JSON.parse(storedData) : null;
 
   const formatDate = (dateString) => {

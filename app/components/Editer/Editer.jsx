@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import JoditEditor from "jodit-react";
@@ -7,6 +7,7 @@ import { useWeb3AuthSigner } from "@/app/context/web3-auth-signer";
 import "./editor-styles.css";
 import { IoMdCreate } from "react-icons/io";
 import { MdLibraryAdd } from "react-icons/md";
+import { BsArrowsAngleExpand } from "react-icons/bs";
 import axiosInstanceAuth from "../apiInstances/axiosInstanceAuth";
 
 const Example = () => {
@@ -17,65 +18,127 @@ const Example = () => {
     registerUser,
     viewPostByUsers,
     sendApiRequest,
+    viewsinglePosts,
+    isEditPost,
+    setIsEditPost,
+    viewSinglePost,
+    isEditdata,
+    setIisEditdata,
   } = useWeb3AuthSigner();
   const [BlogsData, setBlogsData] = useState({
     title: "",
     content: "",
   });
 
-  const createpremises = async () => {
-    if (!BlogsData.title || !BlogsData.content) {
-      toast.error("Please fill in all the fields");
-      return;
+  useEffect(() => {
+    if (isEditPost && isEditdata) {
+      setBlogsData({
+        title: isEditdata?.title || "",
+        content: isEditdata?.content || "",
+      });
     }
+  }, [isEditPost, isEditdata]);
 
-    const dataToSend = {
-      title: BlogsData.title,
-      content: BlogsData.content,
-      images: userinfo?.profileImage,
-      id: registerUser?._id,
-    };
-    console.log("dataToSend--->", dataToSend);
-    try {
-      await axiosInstanceAuth
-        .post(`addPost`, dataToSend)
-        .then(async (response) => {
-          console.log("Createpremises API Response:", response);
-          toast.success(response.data.message);
-          if (response) {
-            setopenediter(false);
-            setBlogsData({
-              title: "",
-              content: "",
-            });
-            await viewPostByUsers();
-            await sendApiRequest();
-          }
-        });
-    } catch (error) {
-      console.error("Createpremises API Error:", error);
-      toast.error("Error creating premises");
+  const close = () => {
+    setopenediter(false);
+    setIsEditPost(false);
+    setIisEditdata(undefined);
+    setBlogsData({
+      title: "",
+      content: "",
+    });
+  };
+
+  const createpremises = async () => {
+    if (isEditPost) {
+      if (!BlogsData.title || !BlogsData.content) {
+        toast.error("Please fill in all the fields");
+        return;
+      }
+
+      const postId = viewsinglePosts[0]?._id;
+      const dataToSend = {
+        title: BlogsData.title,
+        content: BlogsData.content,
+        images: userinfo?.profileImage,
+        //id: registerUser?._id,
+      };
+      console.log("dataToSend--->", dataToSend);
+      try {
+        await axiosInstanceAuth
+          .put(`editPost/${postId}`, dataToSend)
+          .then((response) => {
+            console.log("editPost API Response:", response);
+            toast.success(response.data.message);
+            if (response) {
+              setopenediter(false);
+              setBlogsData({
+                title: "",
+                content: "",
+              });
+              setIsEditPost(false);
+              viewPostByUsers();
+              sendApiRequest();
+              viewSinglePost();
+            }
+          });
+      } catch (error) {
+        console.error("editPost API Error:", error);
+        toast.error(response.data.message);
+      }
+    } else {
+      if (!BlogsData.title || !BlogsData.content) {
+        toast.error("Please fill in all the fields");
+        return;
+      }
+
+      const dataToSend = {
+        title: BlogsData.title,
+        content: BlogsData.content,
+        images: userinfo?.profileImage,
+        id: registerUser?._id,
+      };
+      //console.log("dataToSend--->", dataToSend);
+      try {
+        await axiosInstanceAuth
+          .post(`addPost`, dataToSend)
+          .then(async (response) => {
+            console.log("Createpremises API Response:", response);
+            toast.success(response.data.message);
+            if (response) {
+              setopenediter(false);
+              setBlogsData({
+                title: "",
+                content: "",
+              });
+              await viewPostByUsers();
+              await sendApiRequest();
+            }
+          });
+      } catch (error) {
+        console.error("Createpremises API Error:", error);
+        toast.error(response.data.message);
+      }
     }
   };
 
   return (
     <>
-      <div className="space-y-4">
+      <div className={`space-y-4 `}>
         <div className=" text-lg text-white flex justify-between">
           <div className="flex items-center justify-center gap-1">
             <IoMdCreate />
-            <p>Create a new premises</p>
+            <p>{isEditPost ? "Edit premises" : "Create a new premises"}</p>
           </div>
-          <SlArrowDown
-            onClick={() => setopenediter(false)}
-            className="cursor-pointer"
-          />
+          <div className="flex gap-3 items-center">
+            <SlArrowDown onClick={() => close()} className="cursor-pointer" />
+          </div>
         </div>
         <div>
           <input
             type="text"
             placeholder="Enter title"
-            value={BlogsData.title}
+            value={BlogsData?.title}
             onChange={(e) =>
               setBlogsData({ ...BlogsData, title: e.target.value })
             }
@@ -97,11 +160,11 @@ const Example = () => {
             onClick={() => createpremises()}
           >
             <MdLibraryAdd />
-            <p>Create Premises</p>
+            <p>{isEditPost ? "Updtae Premises" : "Create Premises"}</p>
           </button>
           <button
             className="px-2 py-2 text-white hover:font-semibold"
-            onClick={() => setopenediter(false)}
+            onClick={() => close()}
           >
             Close
           </button>

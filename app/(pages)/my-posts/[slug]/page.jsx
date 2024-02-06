@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { useWeb3AuthSigner } from "@/app/context/web3-auth-signer";
 import { BiSolidEditAlt } from "react-icons/bi";
@@ -7,20 +7,12 @@ import { IoBookmarkOutline } from "react-icons/io5";
 import { IoBookmark } from "react-icons/io5";
 import { RiDeleteBin6Fill } from "react-icons/ri";
 import { GrLink } from "react-icons/gr";
-
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useRouter } from "next/navigation";
+import deleteimg from "../../../../assets/icons/delete.png";
+import { FaHeart, FaRegHeart, FaReply } from "react-icons/fa6";
 import axiosInstanceAuth from "@/app/components/apiInstances/axiosInstanceAuth";
-//import * as XLSX from "xlsx";
-//import axios from "axios";
-
-export const datatitle = () => {
-  return {
-    title: ".gggggsdgsdgdsgsdg..",
-    description: "...",
-  };
-};
 
 const Page = () => {
   const router = useRouter();
@@ -32,6 +24,9 @@ const Page = () => {
     sendApiRequest,
     viewSinglePost,
     coreKitStatus,
+    setIsEditPost,
+    isEditdata,
+    setIisEditdata,
   } = useWeb3AuthSigner();
   const [isLiked, setIsLiked] = useState(false);
   const [ioBookmark, setIoBookmark] = useState(false);
@@ -105,8 +100,10 @@ const Page = () => {
     return daysDifference;
   };
 
-  const updatedata = () => {
+  const updatedata = (e) => {
+    setIisEditdata(e);
     setopenediter(true);
+    setIsEditPost(true);
   };
 
   const SinglelikePost = async () => {
@@ -148,6 +145,22 @@ const Page = () => {
       console.error("SinglelikePost API Error:", error);
     }
   };
+
+  const popupRef = useRef();
+
+  useEffect(() => {
+    const handleOutsideClick = (e) => {
+      if (popupRef.current && !popupRef.current.contains(e.target)) {
+        setIsDeletePopupVisible(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleOutsideClick);
+
+    return () => {
+      document.removeEventListener("mousedown", handleOutsideClick);
+    };
+  }, [popupRef]);
   return (
     <>
       <div className="border-t-4 border-amber-600 rounded-t-xl w-full text-white">
@@ -159,7 +172,7 @@ const Page = () => {
                 className="md:p-8 p-3 text-white space-y-3 border-b border-gray-600"
               >
                 <div className="border-b py-2 font-bold ">
-                  <h2>{post.title}</h2>
+                  <h2 className="text-xl">{post.title}</h2>
                 </div>
                 <div className="flex space-x-5 justify-start">
                   <div>
@@ -185,8 +198,8 @@ const Page = () => {
                       <div className="flex gap-3 justify-center text-center">
                         {userinfo?.email === userEmail && (
                           <div
-                            className="cursor-pointer"
-                            onClick={() => updatedata()}
+                            className="cursor-pointer text-lg"
+                            onClick={() => updatedata(post)}
                           >
                             <BiSolidEditAlt size={22} />
                           </div>
@@ -203,46 +216,62 @@ const Page = () => {
                           __html: post.content,
                         }}
                       />
-                      <div className="flex justify-end items-center text-xl space-x-5">
-                        <div className="cursor-pointer flex gap-2 justify-center items-center">
-                          {post.likeCount > 0 ? (
-                            <p
-                              className={`text-base ${
-                                post.likeCount > 0 ? "delay-75" : ""
-                              } `}
-                            >
-                              {post.likeCount}
-                            </p>
-                          ) : null}
+                      <div className="flex justify-end items-center  ">
+                        <div className="flex space-x-5 justify-center items-center">
+                          <div className="cursor-pointer flex gap-2 justify-center items-center">
+                            {post.likeCount > 0 ? (
+                              <p
+                                className={`text-base ${
+                                  post.likeCount > 0 ? "delay-75" : ""
+                                } `}
+                              >
+                                {post.likeCount}
+                              </p>
+                            ) : null}
 
-                          <button onClick={() => handleLikeClick()}>
-                            {userinfo?.email ? "❤️" : "🤍"}
-                          </button>
-                        </div>
-                        <div
-                          className="cursor-pointer"
-                          onClick={() => Bookmark()}
-                        >
-                          {ioBookmark ? (
-                            <div className="text-blue-600">
-                              <IoBookmark />
-                            </div>
-                          ) : (
-                            <div>
-                              <IoBookmarkOutline />
+                            <button onClick={() => handleLikeClick()}>
+                              {userinfo?.email ? (
+                                <FaRegHeart
+                                  className="text-white hover:text-gray-300"
+                                  size={24}
+                                />
+                              ) : (
+                                <FaHeart
+                                  className="text-red-500 hover:text-red-700"
+                                  size={24}
+                                />
+                              )}
+                            </button>
+                          </div>
+                          <div
+                            className="cursor-pointer"
+                            onClick={() => Bookmark()}
+                          >
+                            {ioBookmark ? (
+                              <div className="text-blue-600">
+                                <IoBookmark size={24} />
+                              </div>
+                            ) : (
+                              <div>
+                                <IoBookmarkOutline size={24} />
+                              </div>
+                            )}
+                          </div>
+                          {userinfo?.email === userEmail && (
+                            <div
+                              className="text-red-500 cursor-pointer text-lg"
+                              onClick={() => handleDeleteClick()}
+                            >
+                              <RiDeleteBin6Fill size={24} />
                             </div>
                           )}
-                        </div>
-                        {userinfo?.email === userEmail && (
-                          <div
-                            className="text-red-500 cursor-pointer"
-                            onClick={() => handleDeleteClick()}
-                          >
-                            <RiDeleteBin6Fill />
+                          {/*<div className="cursor-pointer text-lg">
+                            <GrLink size={24} />
+                          </div>*/}
+                          <div className="cursor-pointer flex gap-2 text-lg items-center px-2 py-1  hover:bg-slate-600 hover:rounded-lg hover:delay-75">
+                            <FaReply size={20} />
+                            <p>Reply</p>
                           </div>
-                        )}
-                        <div className="cursor-pointer">
-                          <GrLink />
                         </div>
                       </div>
                     </div>
@@ -255,25 +284,34 @@ const Page = () => {
               </div>
             ))
           ) : (
-            <p>Something Missing</p>
+            <p className="text-center py-5">Create a post</p>
           )}
         </div>
         {isDeletePopupVisible && (
           <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-[99]">
-            <div className="bg-slate-700  p-8 rounded z-[999]">
-              <p className="mb-4">Are you sure you want to delete?</p>
+            <div className="bg-slate-700  p-8 rounded z-[999] " ref={popupRef}>
+              <div className="flex flex-col  gap-3  justify-center items-center">
+                <Image
+                  src={deleteimg}
+                  alt="delete"
+                  height={60}
+                  width={60}
+                  className="rounded-full "
+                />
+                <p className="mb-4">Are you sure you want to delete?</p>
+              </div>
               <div className="flex justify-center">
                 <button
                   onClick={handleDeleteConfirm}
                   className="bg-red-500 text-white px-4 py-2 rounded mr-2"
                 >
-                  Yes
+                  Delete
                 </button>
                 <button
                   onClick={handleDeleteCancel}
                   className="bg-gray-500 text-white px-4 py-2 rounded"
                 >
-                  No
+                  Close
                 </button>
               </div>
             </div>

@@ -4,7 +4,7 @@ import Link from "next/link";
 
 const Latest = () => {
   const { viewPosts, setShowcontent } = useWeb3AuthSigner();
-  console.log("viewPosts------------------------", viewPosts);
+  //console.log("viewPosts------------------------", viewPosts);
   const formatDate = (dateString) => {
     const options = { day: "numeric", month: "short" };
     const formattedDate = new Date(dateString).toLocaleDateString(

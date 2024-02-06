@@ -75,6 +75,12 @@ export interface Web3AuthSignerContext {
   newpremises: boolean;
   setNewpremises: React.Dispatch<React.SetStateAction<boolean>>;
 
+  isEditPost: boolean;
+  setIsEditPost: React.Dispatch<React.SetStateAction<boolean>>;
+
+  isEditdata: any;
+  setIisEditdata: React.Dispatch<React.SetStateAction<any>>;
+
   viewPostByUsers: () => Promise<void>;
   sendApiRequest: () => Promise<void>;
   viewSinglePost: () => Promise<void>;
@@ -117,7 +123,11 @@ export function Web3AuthSignerProvider({
   const [coreKitStatus, setCoreKitStatus] = useState<any>();
   const [newpremises, setNewpremises] = useState<boolean>(false);
   const [isLiked, setIsLiked] = useState<boolean>(false);
+  const [isEditPost, setIsEditPost] = useState<boolean>(false);
+  const [isEditdata, setIisEditdata] = useState<any>(false);
+
   const Token = localStorage.getItem("Token");
+
   const viewPostByUsers = async () => {
     try {
       await axiosInstanceAuth.get(`viewPostByUser`).then((response) => {
@@ -142,9 +152,15 @@ export function Web3AuthSignerProvider({
   };
 
   const viewSinglePost = async () => {
+    const storedData = localStorage.getItem("UserData");
+    const storedData1 = storedData ? JSON.parse(storedData) : null;
+    console.log(storedData1);
+    const Id = [{ postIds: storedData1?._id }];
+    console.log(Id);
+
     try {
       await axiosInstanceAuth
-        .get(`viewSinglePost/${getid}`)
+        .get(`viewSinglePost/${getid}`, Id as any)
         .then((response) => {
           console.log("viewSinglePost API Response:", response.data.data.post);
           SetViewsinglePosts(response.data.data.post);
@@ -218,6 +234,10 @@ export function Web3AuthSignerProvider({
         isLiked,
         setIsLiked,
         viewSinglePost,
+        isEditPost,
+        setIsEditPost,
+        isEditdata,
+        setIisEditdata,
       }}
     >
       {children}

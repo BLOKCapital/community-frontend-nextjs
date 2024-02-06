@@ -21,7 +21,7 @@ const Sidebar = () => {
   const [openmore, setOpenmore] = useState(false);
   const { newpremises, coreKitStatus } = useWeb3AuthSigner();
   const [istoken, setIstoken] = useState();
-  console.log("newpremises--->", newpremises);
+  //console.log("newpremises--->", newpremises);
 
   const popupRef = useRef();
   const tagData = [
