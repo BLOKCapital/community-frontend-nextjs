@@ -1,0 +1,61 @@
+h1 {
+  font-size: 2.5rem !important;
+  font-weight: bold !important;
+}
+
+h2 {
+  font-size: 1.5rem !important;
+  font-weight: bold !important;
+}
+
+h3 {
+  font-size: 1.17rem !important;
+  font-weight: bold !important;
+}
+h4 {
+  font-size: 1rem !important;
+  font-weight: bold !important;
+}
+h5 {
+  font-size: 0.83rem !important;
+  font-weight: bold !important;
+}
+h6 {
+  font-size: 0.67rem !important;
+  font-weight: bold !important;
+}
+
+/* .editor-style a { */
+.editor-style strong p a span {
+  color: rgb(72, 72, 198);
+  text-decoration: underline;
+  margin-left: 2rem;
+}
+/*
+.editor-style ul li {
+  list-style-type: disc;
+  margin-left: 2rem;
+}
+
+.editor-style ol li {
+  list-style-type: decimal;
+  margin-left: 1.7rem;
+}
+
+.disabled ul li {
+  pointer-events: none;
+  opacity: 0.65;
+}*/
+
+/* .editor-style p strong span,
+.editor-style strong p span {
+  color: white !important;
+ 
+  font-size: 16px !important;
+
+} 
+
+/* .editor-style p strong span{
+  color:white !important;
+  font-size: 18px !important;
+} */

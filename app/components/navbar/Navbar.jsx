@@ -4,7 +4,7 @@ import { RiAccountPinCircleFill, RiSearchLine } from "react-icons/ri";
 import { HiMenu } from "react-icons/hi";
 import { PiUserBold } from "react-icons/pi";
 import Image from "next/image";
-import logo from "../../../assets/images/Group 2952hd.png";
+import logo from "../../assets/images/Group 2952hd.png";
 import Link from "next/link";
 import { WEB3AUTH_NETWORK, Web3AuthMPCCoreKit } from "@web3auth/mpc-core-kit";
 import { useWeb3AuthSigner } from "@/app/context/web3-auth-signer";
@@ -286,14 +286,15 @@ const Navbar = () => {
             wallet: accountAddress,
             email: userinfo?.email,
             username: userinfo?.name,
+            userImages: userinfo?.profileImage,
           };
-          console.log("dataToSend--->", dataToSend);
+          console.log("registerUser dataToSend--->", dataToSend);
 
           try {
             await axiosInstanceAuth
               .post(`registerUser`, dataToSend)
               .then((response) => {
-                console.log("API Response:", response);
+                console.log("registerUser Response:", response);
                 //console.log("message-->", response.data.data.checkUser);
                 localStorage.setItem("Token", response.data.data.token);
                 setRegisterUser(response.data.data.userData);

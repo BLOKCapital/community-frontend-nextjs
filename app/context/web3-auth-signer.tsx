@@ -78,12 +78,16 @@ export interface Web3AuthSignerContext {
   isEditPost: boolean;
   setIsEditPost: React.Dispatch<React.SetStateAction<boolean>>;
 
+  isReply: boolean;
+  setReply: React.Dispatch<React.SetStateAction<boolean>>;
+
   isEditdata: any;
-  setIisEditdata: React.Dispatch<React.SetStateAction<any>>;
+  setIsEditdata: React.Dispatch<React.SetStateAction<any>>;
 
   viewPostByUsers: () => Promise<void>;
   sendApiRequest: () => Promise<void>;
   viewSinglePost: () => Promise<void>;
+  CheckLikesclick: () => Promise<void>;
 }
 
 export const Web3AuthSigner = createContext<Web3AuthSignerContext | null>(null);
@@ -124,8 +128,8 @@ export function Web3AuthSignerProvider({
   const [newpremises, setNewpremises] = useState<boolean>(false);
   const [isLiked, setIsLiked] = useState<boolean>(false);
   const [isEditPost, setIsEditPost] = useState<boolean>(false);
-  const [isEditdata, setIisEditdata] = useState<any>(false);
-
+  const [isEditdata, setIsEditdata] = useState<any>(false);
+  const [isReply, setReply] = useState<boolean>(false);
   const Token = localStorage.getItem("Token");
 
   const viewPostByUsers = async () => {
@@ -156,7 +160,6 @@ export function Web3AuthSignerProvider({
     const storedData1 = storedData ? JSON.parse(storedData) : null;
     console.log(storedData1);
     const Id = [{ postIds: storedData1?._id }];
-    console.log(Id);
 
     try {
       await axiosInstanceAuth
@@ -184,6 +187,21 @@ export function Web3AuthSignerProvider({
     }
   };
 
+  const CheckLikesclick = async () => {
+    const storedData = localStorage.getItem("UserData");
+    const storedData1 = storedData ? JSON.parse(storedData) : null;
+    console.log(storedData1);
+    const Id = [{ postIds: storedData1?._id }];
+
+    try {
+      await axiosInstanceAuth.get(`checkLikes`, Id as any).then((response) => {
+        console.log("CheckLikesclick API Response:", response);
+      });
+    } catch (error) {
+      console.error("CheckLikesclick API Error:", error);
+    }
+  };
+
   useEffect(() => {
     sendApiRequest();
     viewSavedPostByUser();
@@ -192,6 +210,7 @@ export function Web3AuthSignerProvider({
     }
     if (getid) {
       viewSinglePost();
+      CheckLikesclick();
     }
     if (coreKitStatus === "LOGGED_IN" && Token) {
       setNewpremises(true);
@@ -237,7 +256,10 @@ export function Web3AuthSignerProvider({
         isEditPost,
         setIsEditPost,
         isEditdata,
-        setIisEditdata,
+        setIsEditdata,
+        isReply,
+        setReply,
+        CheckLikesclick,
       }}
     >
       {children}
