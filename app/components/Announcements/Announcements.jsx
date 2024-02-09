@@ -1,14 +1,14 @@
 import React from "react";
 
-const Cards = () => {
+const Announcements = () => {
   const questionData = [
     {
-      question: "What to do if you’re not able to access the community portal?",
+      question: "What is BLOKC?",
       date: "Apr'23",
       color: "green",
     },
     {
-      question: "What to do if you’re not able to access the community portal?",
+      question: "What's new?",
       date: "Apr'23",
       color: "green",
     },
@@ -18,10 +18,10 @@ const Cards = () => {
   return (
     <div className="border-t-4 border-green-500 rounded-xl w-full">
       <div className="bg-slate-800 bg-opacity-90 rounded-xl">
-        <div className="md:p-6 p-3 text-white space-y-3">
+        <div className="md:p-6 p-3 text-white space-y-3 ">
           <div className="space-y-5">
             <div className="">
-              <p className="text-2xl font-semibold">Getting Started</p>
+              <p className="text-2xl font-semibold">Announcements</p>
             </div>
             {questionData.map((item, index) => (
               <div
@@ -37,8 +37,8 @@ const Cards = () => {
                   </div>
                 </div>
                 <div className="flex gap-2 items-center text-sm font-light py-3">
-                  <span className="bg-[#1C64F2] p-1.5 rounded-full"></span>
-                  <p>BLOK Capital Community</p>
+                  <span className="bg-[#2aa754] p-1.5 rounded-full"></span>
+                  <p>Announcements</p>
                 </div>
               </div>
             ))}
@@ -54,4 +54,4 @@ const Cards = () => {
   );
 };
 
-export default Cards;
+export default Announcements;

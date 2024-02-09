@@ -1,66 +1,41 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { RiAccountPinCircleFill, RiSearchLine } from "react-icons/ri";
 import { HiMenu } from "react-icons/hi";
 import { PiUserBold } from "react-icons/pi";
 import Image from "next/image";
 import logo from "../../assets/images/Group 2952hd.png";
 import Link from "next/link";
-import { WEB3AUTH_NETWORK, Web3AuthMPCCoreKit } from "@web3auth/mpc-core-kit";
-import { useWeb3AuthSigner } from "@/app/context/web3-auth-signer";
 import Web3 from "web3";
-import { LocalAccountSigner } from "@alchemy/aa-core";
-import { generatePrivateKey } from "viem/accounts";
-import { zeroAddress } from "viem";
-import { FaCirclePlus } from "react-icons/fa6";
+import { FaAngleRight, FaCirclePlus } from "react-icons/fa6";
+import { useWeb3AuthSigner } from "@/app/context/web3-auth-signer";
+import { WEB3AUTH_NETWORK, Web3AuthMPCCoreKit } from "@web3auth/mpc-core-kit";
 import {
   ECDSAProvider,
   getRPCProviderOwner,
   SessionKeyProvider,
   getPermissionFromABI,
 } from "@zerodev/sdk";
-import { contractABI } from "../abi/abi";
-import Newtopic from "../newtopic/Newtopic";
+import { LocalAccountSigner } from "@alchemy/aa-core";
+import { generatePrivateKey } from "viem/accounts";
+import { TbLogout } from "react-icons/tb";
+import { MdDone } from "react-icons/md";
+import { BsCopy } from "react-icons/bs";
+import axiosInstanceAuth from "../apiInstances/axiosInstanceAuth";
 import Example from "../Editer/Editer";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import axiosInstanceAuth from "../apiInstances/axiosInstanceAuth";
-import { MdDone } from "react-icons/md";
-import { BsCopy } from "react-icons/bs";
-import clipboardCopy from "clipboard-copy";
-import { FaAngleRight } from "react-icons/fa6";
-import { useRouter } from "next/navigation";
-import { TbLogout } from "react-icons/tb";
-
-const selectedNetwork = WEB3AUTH_NETWORK.MAINNET;
-const clientidweb3 = process.env.NEXT_PUBLIC_WEB3AUTH_CLIENTID;
-
-const coreKitInstance = new Web3AuthMPCCoreKit({
-  web3AuthClientId: clientidweb3,
-  web3AuthNetwork: selectedNetwork,
-  uxMode: "redirect",
-  chainConfig: {
-    chainNamespace: "eip155",
-    chainId: "0xa4ba", // Chain ID for Arbitrum Nova
-    rpcTarget: " https://nova.arbitrum.io/rpc ", // Official RPC endpoint
-    displayName: "Arbitrum Nova",
-    blockExplorer: "https://explorer.arbitrum.io/nova", // Official block explorer
-    ticker: "NOVA",
-    tickerName: "Nova",
-  },
-});
 
 const Navbar = () => {
-  const router = useRouter();
+  const [coreKitInstance, setCoreKitInstance] = useState("");
   const [isHovered, setIsHovered] = useState(false);
   const [web3, setWeb3] = useState();
-  const [providercorkit, setProvidercorkit] = useState();
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [openPopup, setOpenPopup] = useState(false);
-  const [openprofile, setOpenprofile] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [copy, setcopy] = useState(false);
-  const Token = localStorage.getItem("Token");
+  const [Token, setToken] = useState("false");
+  const [storedData1, setStoredData1] = useState("");
   const {
     setWeb3AuthSigner,
     web3AuthSigner,
@@ -79,18 +54,77 @@ const Navbar = () => {
     setNewpremises,
   } = useWeb3AuthSigner();
 
-  const storedData = localStorage.getItem("UserData");
+  useEffect(() => {
+    const initMPC = async () => {
+      try {
+        const selectedNetwork = WEB3AUTH_NETWORK.MAINNET;
+        const clientidweb3 = process.env.NEXT_PUBLIC_WEB3AUTH_CLIENTID;
 
-  const storedData1 = storedData ? JSON.parse(storedData) : null;
+        const coreKitInstance = new Web3AuthMPCCoreKit({
+          web3AuthClientId: clientidweb3,
+          web3AuthNetwork: selectedNetwork,
+          uxMode: "redirect",
+          chainConfig: {
+            chainNamespace: "eip155",
+            chainId: "0xa4ba",
+            rpcTarget: "https://nova.arbitrum.io/rpc",
+            displayName: "Arbitrum Nova",
+            blockExplorer: "https://explorer.arbitrum.io/nova",
+            ticker: "NOVA",
+            tickerName: "Nova",
+          },
+        });
 
-  const formatDate = (dateString) => {
-    const options = { day: "numeric", month: "short", year: "numeric" };
-    const formattedDate = new Date(dateString).toLocaleDateString(
-      "en-US",
-      options
-    );
-    return formattedDate;
+        await coreKitInstance.init();
+
+        setCoreKitInstance(coreKitInstance);
+        setCoreKitStatus(coreKitInstance.status);
+        console.log("coreKitInstance.status-->", coreKitInstance.status);
+        if (coreKitInstance.provider) {
+          const web3Instance = new Web3(coreKitInstance.provider);
+          setWeb3(web3Instance);
+          setWeb3AuthSigner(coreKitInstance.provider);
+          const userdata = coreKitInstance?.getUserInfo();
+          setUserinfo(userdata);
+          console.log("userdata-->", userdata);
+        }
+      } catch (error) {
+        console.error("Error initializing MPC Core Kit:", error);
+      }
+    };
+
+    initMPC();
+  }, [setCoreKitStatus, setUserinfo, setWeb3AuthSigner]);
+
+  const settingpage = () => {
+    setOpenPopup(false);
+    router.push("/account");
   };
+
+  useEffect(() => {
+    // Perform localStorage action
+    const storedData = localStorage.getItem("UserData");
+    const storedData2 = storedData ? JSON.parse(storedData) : null;
+    setStoredData1(storedData2);
+    const Token = localStorage.getItem("Token");
+    setToken(Token);
+  }, []);
+
+  //useEffect(() => {
+  //  if (coreKitInstance) {
+  //    const init = async () => {
+  //      await coreKitInstance.init();
+
+  //      if (coreKitInstance.provider) {
+  //        setWeb3AuthSigner(coreKitInstance.provider);
+  //      }
+
+  //      setCoreKitStatus(coreKitInstance.status);
+  //      console.log("coreKitInstance.status-->", coreKitInstance.status);
+  //    };
+  //    init();
+  //  }
+  //}, [setCoreKitStatus, setWeb3AuthSigner]);
 
   const notify = () => {
     if (accountAddress) {
@@ -103,55 +137,29 @@ const Navbar = () => {
     }
   };
 
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      // Place the code that references window here
-      // For example, if the error is at line 50:
-      // Your code at line 50
-    }
-  }, []);
+  const formatDate = (dateString) => {
+    const options = { day: "numeric", month: "short", year: "numeric" };
+    const formattedDate = new Date(dateString).toLocaleDateString(
+      "en-US",
+      options
+    );
+    return formattedDate;
+  };
 
   useEffect(() => {
-    // Delay the setting of isLoading1 to false by 5000 milliseconds (5 seconds)
     const delayLoading = setTimeout(() => {
       setIsLoading(false);
     }, 3000);
 
-    // Clear the timeout to avoid unexpected behavior if the component unmounts
     return () => clearTimeout(delayLoading);
   }, []);
 
-  useEffect(() => {
-    if (coreKitInstance) {
-      const init = async () => {
-        await coreKitInstance.init();
-
-        if (coreKitInstance.provider) {
-          setWeb3AuthSigner(coreKitInstance.provider);
-          setProvidercorkit(coreKitInstance.provider);
-        }
-
-        setCoreKitStatus(coreKitInstance.status);
-        console.log("coreKitInstance.status-->", coreKitInstance.status);
-      };
-      init();
-    }
-  }, [setCoreKitStatus, setWeb3AuthSigner]);
-
-  useEffect(() => {
-    if (web3AuthSigner) {
-      const userdata = coreKitInstance?.getUserInfo();
-      setUserinfo(userdata);
-      console.log("userdata-->", userdata);
-    }
-  }, [setUserinfo, web3AuthSigner]);
-
-  useEffect(() => {
-    if (web3AuthSigner) {
-      const web3 = new Web3(web3AuthSigner);
-      setWeb3(web3);
-    }
-  }, [web3AuthSigner]);
+  //useEffect(() => {
+  //  if (web3AuthSigner) {
+  //    const web3 = new Web3(web3AuthSigner);
+  //    setWeb3(web3);
+  //  }
+  //}, [web3AuthSigner]);
 
   const login = async () => {
     try {
@@ -199,6 +207,14 @@ const Navbar = () => {
     }
   }, [web3]);
 
+  useEffect(() => {
+    if (web3AuthSigner && coreKitInstance.status === "") {
+      const userdata = coreKitInstance?.getUserInfo();
+      setUserinfo(userdata);
+      console.log("userdata-->", userdata);
+    }
+  }, [setUserinfo, web3AuthSigner]);
+
   const logout = async () => {
     console.log("logout");
     if (!coreKitInstance) {
@@ -212,11 +228,6 @@ const Navbar = () => {
     setCoreKitStatus(undefined);
     setOpenPopup(false);
     localStorage.clear();
-  };
-
-  const settingpage = () => {
-    setOpenPopup(false);
-    router.push("/account");
   };
 
   useEffect(() => {
@@ -239,33 +250,33 @@ const Navbar = () => {
           setAccountAddress(address);
           setEcdsaProvider(ecdsaProvider);
 
-          const sessionKeyProvider = await SessionKeyProvider.init({
-            projectId: process.env.NEXT_PUBLIC_ZERODEV_PROJECT_ID,
-            bundlerProvider: "PIMLICO",
-            defaultProvider: ecdsaProvider,
-            opts: {
-              paymasterConfig: {
-                onlySendSponsoredTransaction: true,
-                policy: "VERIFYING_PAYMASTER",
-              },
-            },
-            sessionKey,
-            sessionKeyData: {
-              validAfter: 0,
-              validUntil: 0,
-              permissions: [
-                getPermissionFromABI({
-                  target: contractAddress,
-                  valueLimit: BigInt(0),
-                  abi: contractABI,
-                  functionName: "transfer",
-                  args: [null, null],
-                }),
-              ],
-              paymaster: zeroAddress,
-            },
-          });
-          setSessionKeyProvider(sessionKeyProvider);
+          //const sessionKeyProvider = await SessionKeyProvider.init({
+          //  projectId: process.env.NEXT_PUBLIC_ZERODEV_PROJECT_ID,
+          //  bundlerProvider: "PIMLICO",
+          //  defaultProvider: ecdsaProvider,
+          //  opts: {
+          //    paymasterConfig: {
+          //      onlySendSponsoredTransaction: true,
+          //      policy: "VERIFYING_PAYMASTER",
+          //    },
+          //  },
+          //  sessionKey,
+          //  sessionKeyData: {
+          //    validAfter: 0,
+          //    validUntil: 0,
+          //    permissions: [
+          //      getPermissionFromABI({
+          //        target: contractAddress,
+          //        valueLimit: BigInt(0),
+          //        abi: contractABI,
+          //        functionName: "transfer",
+          //        args: [null, null],
+          //      }),
+          //    ],
+          //    paymaster: zeroAddress,
+          //  },
+          //});
+          //setSessionKeyProvider(sessionKeyProvider);
         }
       };
       ecdcfunction();
@@ -311,25 +322,17 @@ const Navbar = () => {
         sendApiRequest();
       }
     }
-  }, [Token, accountAddress]);
+  }, [
+    Token,
+    accountAddress,
+    setRegisterUser,
+    userinfo?.email,
+    userinfo?.name,
+    userinfo?.profileImage,
+  ]);
 
-  const popupRef = useRef();
-
-  useEffect(() => {
-    const handleOutsideClick = (e) => {
-      if (popupRef.current && !popupRef.current.contains(e.target)) {
-        setOpenPopup(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleOutsideClick);
-
-    return () => {
-      document.removeEventListener("mousedown", handleOutsideClick);
-    };
-  }, [popupRef]);
   return (
-    <nav className="bg-black text-white">
+    <div className="bg-black text-white">
       <div className="container mx-auto sm:px-6 py-2 lg:px-5 flex justify-between items-center">
         <div className="flex justify-center items-center space-x-3">
           <Link href="/">
@@ -351,7 +354,6 @@ const Navbar = () => {
               </div>
             </>
           ) : null}
-
           <div
             className="relative lg:block hidden"
             onMouseEnter={() => setIsHovered(true)}
@@ -397,7 +399,6 @@ const Navbar = () => {
               </div>
             )}
           </div>
-
           <div className="relative">
             <button className="text-white bg-slate-400 bg-opacity-20 px-2 py-1 rounded-xl flex justify-center items-center gap-2">
               <input
@@ -410,27 +411,21 @@ const Navbar = () => {
               </div>
             </button>
           </div>
-
-          {/* Search Bar Icon */}
           {coreKitStatus === "LOGGED_IN" ? (
             <>
               <div className="flex justify-center items-center gap-2">
-                <button className="" onClick={() => setOpenPopup(true)}>
-                  {userinfo?.profileImage && (
-                    <Image
-                      src={userinfo?.profileImage}
-                      width={38}
-                      height={38}
-                      alt="Profile"
-                      className="rounded-full"
-                    />
-                  )}
+                <button className="" onClick={() => setOpenPopup(!openPopup)}>
+                  <Image
+                    src={userinfo?.profileImage}
+                    width={38}
+                    height={38}
+                    alt="Profile"
+                    className="rounded-full"
+                  />
+
                   {openPopup && (
                     <div className="fixed top-0 right-0 w-full h-full flex xl:items-start items-center md:items-start z-10 xl:justify-end md:justify-end justify-center ">
-                      <div
-                        className="bg-gray-700 rounded-3xl px-10 py-10 xl:mr-24 mr-0 md:mr-5 md:mt-20 xl:mt-20 mt-0"
-                        ref={popupRef}
-                      >
+                      <div className="bg-gray-700 rounded-3xl px-10 py-10 xl:mr-24 mr-0 md:mr-5 md:mt-20 xl:mt-20 mt-0">
                         <div className="flex flex-col space-y-1 justify-center items-center pb-8">
                           <Image
                             src={userinfo?.profileImage}
@@ -452,15 +447,13 @@ const Navbar = () => {
                                   : null}
                               </p>
                             </div>
-                            {/*accountAddress.slice(0, 3) + "...." + accountAddress.slice(-3)*/}
-                            <div>
-                              <button onClick={notify} className="">
-                                {copy ? (
-                                  <MdDone size={15} />
-                                ) : (
-                                  <BsCopy size={15} />
-                                )}
-                              </button>
+
+                            <div onClick={notify} className="">
+                              {copy ? (
+                                <MdDone size={15} />
+                              ) : (
+                                <BsCopy size={15} />
+                              )}
                             </div>
                           </div>
                           <p className="text-sm ">{userinfo?.email}</p>
@@ -501,7 +494,6 @@ const Navbar = () => {
                     </div>
                   )}
                 </button>
-                {/*{openprofile && <Profilepopup />}*/}
               </div>
             </>
           ) : (
@@ -540,7 +532,7 @@ const Navbar = () => {
         </div>
       </div>
 
-      {isPopupOpen && <Newtopic />}
+      {/*{isPopupOpen && <Newtopic />}*/}
 
       <div
         className={`fixed bottom-0 left-0 w-full flex justify-center items-end p-6 transition-transform ease-in-out duration-700 ${
@@ -551,7 +543,7 @@ const Navbar = () => {
           <Example />
         </div>
       </div>
-    </nav>
+    </div>
   );
 };
 

@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { useWeb3AuthSigner } from "@/app/context/web3-auth-signer";
 import { BiSolidEditAlt } from "react-icons/bi";
@@ -14,6 +14,7 @@ import deleteimg from "../../assets/icons/delete.png";
 import { FaHeart, FaRegHeart, FaReply } from "react-icons/fa6";
 import axiosInstanceAuth from "@/app/components/apiInstances/axiosInstanceAuth";
 import "./Datastyle.css";
+import { HashLoader } from "react-spinners";
 //import * as XLSX from "xlsx";
 //import axios from "axios";
 
@@ -36,12 +37,18 @@ const Datashow = () => {
   const [ioBookmark, setIoBookmark] = useState(false);
   const [isDeletePopupVisible, setIsDeletePopupVisible] = useState(false);
   const [userEmail, setUserEmail] = useState("");
-  const getid = localStorage.getItem("_id");
-  useEffect(() => {
-    // Check if post has user data and is not an empty array
-    if (viewsinglePosts && viewsinglePosts.length > 0) {
-      const post = viewsinglePosts[0];
+  const [getid, setGetid] = useState("");
+  const [isloding, setIsloding] = useState(true);
 
+  console.log("userEmail", userEmail);
+  console.log("userinfo", userinfo?.email);
+  useEffect(() => {
+    const getid = localStorage.getItem("_id");
+    setGetid(getid);
+    // Check if post has user data and is not an empty array
+    if (viewsinglePosts) {
+      const post = viewsinglePosts;
+      console.log("post", post);
       // Check if user data exists and is not an empty array
       if (post.userData && post.userData.length > 0) {
         // Set email to state
@@ -49,6 +56,14 @@ const Datashow = () => {
       }
     }
   }, [viewsinglePosts]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsloding(false);
+    }, 5000);
+
+    return () => clearTimeout(timer);
+  });
 
   console.log("view single Posts -->", viewsinglePosts);
   const handleDeleteClick = () => {
@@ -161,218 +176,214 @@ const Datashow = () => {
     }
   };
 
-  const popupRef = useRef();
-
-  useEffect(() => {
-    const handleOutsideClick = (e) => {
-      if (popupRef.current && !popupRef.current.contains(e.target)) {
-        setIsDeletePopupVisible(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleOutsideClick);
-
-    return () => {
-      document.removeEventListener("mousedown", handleOutsideClick);
-    };
-  }, [popupRef]);
-
   return (
     <>
       <div className="border-t-4 border-amber-600 rounded-t-xl  w-full text-white">
         <div className="bg-gray-800 bg-opacity-90 rounded-t-xl  ">
-          {viewsinglePosts ? (
-            <>
-              <div className="md:p-8 p-3 text-white space-y-3  ">
-                <div className="border-b py-2 font-bold ">
-                  <h2 className="text-xl">{viewsinglePosts.title}</h2>
-                </div>
-                <div className="flex space-x-5 justify-start">
-                  <div>
-                    {viewsinglePosts.images && (
-                      <Image
-                        src={viewsinglePosts.images}
-                        alt="Image"
-                        height={60}
-                        width={60}
-                        className="rounded-full "
-                      />
-                    )}
-                  </div>
-                  <div className="w-4/5 ">
-                    <div className="flex justify-between items-center">
-                      <div className="py-2">
-                        {viewsinglePosts.userData &&
-                          viewsinglePosts.userData.length > 0 && (
-                            <p className="text-lg font-semibold ">
-                              {viewsinglePosts.userData[0].email}
-                            </p>
-                          )}
-                      </div>
-                      <div className="flex gap-3 justify-center text-center">
-                        {userinfo?.email === userEmail && (
-                          <div
-                            className="cursor-pointer text-lg"
-                            onClick={() => handleEditClick(post)}
-                          >
-                            <BiSolidEditAlt size={22} />
-                          </div>
-                        )}
-
-                        <div>
-                          <p>
-                            {calculateTimeDifference(viewsinglePosts.updatedAt)}
-                            d
-                          </p>
-                        </div>
-                      </div>
+          {isloding ? (
+            <div className="flex justify-center items-center py-10">
+              <HashLoader color="#ffffff" size={50} />
+            </div>
+          ) : (
+            <div className="">
+              {viewsinglePosts ? (
+                <>
+                  <div className="md:p-8 p-3 text-white space-y-3  ">
+                    <div className="border-b py-2 font-bold ">
+                      <h2 className="text-xl">{viewsinglePosts.title}</h2>
                     </div>
-                    <div className="space-y-5">
-                      <div
-                        dangerouslySetInnerHTML={{
-                          __html: viewsinglePosts.content,
-                        }}
-                      />
-                      <div className="flex justify-end items-center  ">
-                        <div className="flex space-x-5 justify-center items-center">
-                          <div className="cursor-pointer flex gap-2 justify-center items-center">
-                            {viewsinglePosts.likeCount > 0 ? (
-                              <p
-                                className={`text-base ${
-                                  viewsinglePosts.likeCount > 0
-                                    ? "delay-75"
-                                    : ""
-                                } `}
-                              >
-                                {viewsinglePosts.likeCount}
-                              </p>
-                            ) : null}
-
-                            <button onClick={() => handleLikeClick()}>
-                              {userinfo?.email ? (
-                                <FaRegHeart
-                                  className="text-white hover:text-gray-300"
-                                  size={24}
-                                />
-                              ) : (
-                                <FaHeart
-                                  className="text-red-500 hover:text-red-700"
-                                  size={24}
-                                />
+                    <div className="flex space-x-5 justify-start">
+                      <div>
+                        {viewsinglePosts.images && (
+                          <Image
+                            src={viewsinglePosts.images}
+                            alt="Image"
+                            height={60}
+                            width={60}
+                            className="rounded-full "
+                          />
+                        )}
+                      </div>
+                      <div className="w-4/5 ">
+                        <div className="flex justify-between items-center">
+                          <div className="py-2">
+                            {viewsinglePosts.userData &&
+                              viewsinglePosts.userData.length > 0 && (
+                                <p className="text-lg font-semibold ">
+                                  {viewsinglePosts.userData[0].email}
+                                </p>
                               )}
-                            </button>
                           </div>
-                          <div
-                            className="cursor-pointer"
-                            onClick={() => Bookmark()}
-                          >
-                            {ioBookmark ? (
-                              <div className="text-blue-600">
-                                <IoBookmark size={24} />
-                              </div>
-                            ) : (
-                              <div>
-                                <IoBookmarkOutline size={24} />
+                          <div className="flex gap-3 justify-center text-center">
+                            {userinfo?.email === userEmail && (
+                              <div
+                                className="cursor-pointer text-lg"
+                                onClick={() => handleEditClick(post)}
+                              >
+                                <BiSolidEditAlt size={22} />
                               </div>
                             )}
-                          </div>
-                          {userinfo?.email === userEmail && (
-                            <div
-                              className="text-red-500 cursor-pointer text-lg"
-                              onClick={() => handleDeleteClick()}
-                            >
-                              <RiDeleteBin6Fill size={24} />
+
+                            <div>
+                              <p>
+                                {calculateTimeDifference(
+                                  viewsinglePosts.updatedAt
+                                )}
+                                d
+                              </p>
                             </div>
-                          )}
-                          {/*<div className="cursor-pointer text-lg">
+                          </div>
+                        </div>
+                        <div className="space-y-5">
+                          <div
+                            dangerouslySetInnerHTML={{
+                              __html: viewsinglePosts.content,
+                            }}
+                          />
+                          <div className="flex justify-end items-center  ">
+                            <div className="flex space-x-5 justify-center items-center">
+                              <div className="cursor-pointer flex gap-2 justify-center items-center">
+                                {viewsinglePosts.likeCount > 0 ? (
+                                  <p
+                                    className={`text-base ${
+                                      viewsinglePosts.likeCount > 0
+                                        ? "delay-75"
+                                        : ""
+                                    } `}
+                                  >
+                                    {viewsinglePosts.likeCount}
+                                  </p>
+                                ) : null}
+
+                                <button onClick={() => handleLikeClick()}>
+                                  {userinfo?.email ? (
+                                    <FaRegHeart
+                                      className="text-white hover:text-gray-300"
+                                      size={24}
+                                    />
+                                  ) : (
+                                    <FaHeart
+                                      className="text-red-500 hover:text-red-700"
+                                      size={24}
+                                    />
+                                  )}
+                                </button>
+                              </div>
+                              <div
+                                className="cursor-pointer"
+                                onClick={() => Bookmark()}
+                              >
+                                {ioBookmark ? (
+                                  <div className="text-blue-600">
+                                    <IoBookmark size={24} />
+                                  </div>
+                                ) : (
+                                  <div>
+                                    <IoBookmarkOutline size={24} />
+                                  </div>
+                                )}
+                              </div>
+                              {userinfo?.email === userEmail && (
+                                <div
+                                  className="text-red-500 cursor-pointer text-lg"
+                                  onClick={() => handleDeleteClick()}
+                                >
+                                  <RiDeleteBin6Fill size={24} />
+                                </div>
+                              )}
+                              {/*<div className="cursor-pointer text-lg">
                             <GrLink size={24} />
                           </div>*/}
 
-                          <div
-                            className="cursor-pointer flex gap-2 text-lg items-center px-2 py-1  hover:bg-slate-600 hover:rounded-lg hover:delay-75"
-                            onClick={() => handleReplyClick()}
-                          >
-                            <FaReply size={20} />
-                            <p>Reply</p>
+                              <div
+                                className="cursor-pointer flex gap-2 text-lg items-center px-2 py-1  hover:bg-slate-600 hover:rounded-lg hover:delay-75"
+                                onClick={() => handleReplyClick()}
+                              >
+                                <FaReply size={20} />
+                                <p>Reply</p>
+                              </div>
+                            </div>
                           </div>
                         </div>
                       </div>
+                      <div className="text-center">
+                        <p> {formatDate(viewsinglePosts.createdAt)} </p>
+                        <p className="text-xs">days ago</p>
+                      </div>
                     </div>
                   </div>
-                  <div className="text-center">
-                    <p> {formatDate(viewsinglePosts.createdAt)} </p>
-                    <p className="text-xs">days ago</p>
-                  </div>
-                </div>
-              </div>
-              {viewsinglePosts.comments ? (
-                <div className="border-t border-gray-600">
-                  <div className="md:p-8 p-3 text-white space-y-3">
-                    <div className="flex space-x-5 justify-start">
-                      {viewsinglePosts.comments.map((comment, index) => (
-                        <div key={index} className="w-full">
-                          <div className="flex justify-between items-center">
-                            <div>
-                              <Image
-                                src={viewsinglePosts.images}
-                                alt="User Image"
-                                height={60}
-                                width={60}
-                                className="rounded-full"
-                              />
-                            </div>
+                  {viewsinglePosts.comments ? (
+                    <div className="border-t border-gray-600">
+                      <div className="md:p-8 p-3 text-white space-y-3">
+                        <div className="flex space-x-5 justify-start">
+                          {viewsinglePosts.comments.map((comment, index) => (
+                            <div key={index} className="w-full">
+                              <div className="flex justify-between items-center">
+                                <div>
+                                  <Image
+                                    src={viewsinglePosts.images}
+                                    alt="User Image"
+                                    height={60}
+                                    width={60}
+                                    className="rounded-full"
+                                  />
+                                </div>
 
-                            <div className="flex items-center">
-                              <div>
-                                <p className="text-lg font-semibold">
-                                  {comment.userDetails &&
-                                    comment.userDetails.length > 0 &&
-                                    comment.userDetails[0].email}
-                                </p>
+                                <div className="flex items-center">
+                                  <div>
+                                    <p className="text-lg font-semibold">
+                                      {comment.userDetails &&
+                                        comment.userDetails.length > 0 &&
+                                        comment.userDetails[0].email}
+                                    </p>
+                                  </div>
+                                </div>
+                                <div className="flex gap-3 justify-center text-center">
+                                  <div>
+                                    <p>
+                                      {calculateTimeDifference(
+                                        comment.updatedAt
+                                      )}
+                                      d
+                                    </p>
+                                  </div>
+                                </div>
+                              </div>
+                              <div className="space-y-5">
+                                <div
+                                  dangerouslySetInnerHTML={{
+                                    __html: comment.content,
+                                  }}
+                                />
+                                <div className="flex justify-end items-center">
+                                  <div className="flex space-x-5 justify-center items-center">
+                                    {/* Like, Bookmark, Delete, and Reply buttons */}
+                                    {/* You can use the existing logic to handle these buttons */}
+                                  </div>
+                                </div>
+                              </div>
+                              <div className="text-center">
+                                <p>{formatDate(comment.createdAt)}</p>
+                                <p className="text-xs">days ago</p>
                               </div>
                             </div>
-                            <div className="flex gap-3 justify-center text-center">
-                              <div>
-                                <p>
-                                  {calculateTimeDifference(comment.updatedAt)}d
-                                </p>
-                              </div>
-                            </div>
-                          </div>
-                          <div className="space-y-5">
-                            <div
-                              dangerouslySetInnerHTML={{
-                                __html: comment.content,
-                              }}
-                            />
-                            <div className="flex justify-end items-center">
-                              <div className="flex space-x-5 justify-center items-center">
-                                {/* Like, Bookmark, Delete, and Reply buttons */}
-                                {/* You can use the existing logic to handle these buttons */}
-                              </div>
-                            </div>
-                          </div>
-                          <div className="text-center">
-                            <p>{formatDate(comment.createdAt)}</p>
-                            <p className="text-xs">days ago</p>
-                          </div>
+                          ))}
                         </div>
-                      ))}
+                      </div>
                     </div>
-                  </div>
-                </div>
-              ) : null}
-            </>
-          ) : (
-            <p className="flex text-center justify-center items-center py-10 text-3xl">
-              Loding <span className="animate-pulse">...</span>
-            </p>
+                  ) : null}
+                </>
+              ) : (
+                <p className="flex text-center justify-center items-center py-10 text-3xl">
+                  Loding <span className="animate-pulse">...</span>
+                </p>
+              )}
+            </div>
           )}
         </div>
-
         {isDeletePopupVisible && (
           <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-[99]">
-            <div className="bg-slate-700  p-8 rounded z-[999] " ref={popupRef}>
+            <div className="bg-slate-700  p-8 rounded z-[999] ">
               <div className="flex flex-col  gap-3  justify-center items-center">
                 <Image
                   src={deleteimg}

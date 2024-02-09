@@ -1,17 +1,16 @@
-import React, { useState, useRef, useEffect } from "react";
-import { ToastContainer, toast } from "react-toastify";
+import React, { useState, useEffect } from "react";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import JoditEditor from "jodit-react";
 import { SlArrowDown } from "react-icons/sl";
 import { useWeb3AuthSigner } from "@/app/context/web3-auth-signer";
-import "./editor-styles.css";
 import { IoMdCreate } from "react-icons/io";
 import { MdLibraryAdd } from "react-icons/md";
-import { BsArrowsAngleExpand } from "react-icons/bs";
-import axiosInstanceAuth from "../apiInstances/axiosInstanceAuth";
 import { FaReply } from "react-icons/fa6";
-import ReactQuill from "react-quill";
+import dynamic from "next/dynamic";
+const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 import "react-quill/dist/quill.snow.css";
+import axiosInstanceAuth from "../apiInstances/axiosInstanceAuth";
+import "./editor-styles.css";
 
 const modules = {
   toolbar: [
@@ -53,7 +52,6 @@ const modules = {
 };
 
 const Example = () => {
-  const editor = useRef(null);
   const {
     setopenediter,
     userinfo,
@@ -73,7 +71,7 @@ const Example = () => {
     title: "",
     content: "",
   });
-  console.log("isEditdata-->", isEditdata);
+  //console.log("isEditdata-->", isEditdata);
   useEffect(() => {
     if (isEditPost && isEditdata) {
       setBlogsData({
@@ -239,14 +237,6 @@ const Example = () => {
           </>
         )}
         <div className="rounded-md bg-white ">
-          {/*<JoditEditor
-            ref={editor}
-            value={BlogsData?.content}
-            onChange={(newContent) =>
-              setBlogsData({ ...BlogsData, content: newContent })
-            }
-          />*/}
-
           <ReactQuill
             theme="snow"
             modules={modules}

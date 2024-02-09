@@ -1,7 +1,7 @@
 "use client";
+import React from "react";
 import { type SafeEventEmitterProvider } from "@web3auth/base";
 import { createContext, useContext, useEffect, useState } from "react";
-import React from "react";
 import axiosInstanceAuth from "../components/apiInstances/axiosInstanceAuth";
 export interface Wallet1 {
   email: string;
@@ -84,6 +84,15 @@ export interface Web3AuthSignerContext {
   isEditdata: any;
   setIsEditdata: React.Dispatch<React.SetStateAction<any>>;
 
+  getid: any;
+  setGetid: React.Dispatch<React.SetStateAction<any>>;
+
+  Token: any;
+  setToken: React.Dispatch<React.SetStateAction<any>>;
+
+  //coreKitInstance: any;
+  //setCoreKitInstance: React.Dispatch<React.SetStateAction<any>>;
+
   viewPostByUsers: () => Promise<void>;
   sendApiRequest: () => Promise<void>;
   viewSinglePost: () => Promise<void>;
@@ -130,7 +139,23 @@ export function Web3AuthSignerProvider({
   const [isEditPost, setIsEditPost] = useState<boolean>(false);
   const [isEditdata, setIsEditdata] = useState<any>(false);
   const [isReply, setReply] = useState<boolean>(false);
-  const Token = localStorage.getItem("Token");
+  const [Token, setToken] = useState<any>();
+  const [getid, setGetid] = useState<any>();
+  //const [coreKitInstance, setCoreKitInstance] = useState<any>();
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const Token = localStorage.getItem("Token");
+      setToken(Token);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const getid = localStorage.getItem("_id");
+      setGetid(getid);
+    }
+  }, []);
 
   const viewPostByUsers = async () => {
     try {
@@ -142,7 +167,13 @@ export function Web3AuthSignerProvider({
       console.error("viewPostByUser API Error:", error);
     }
   };
-  const getid = localStorage.getItem("_id");
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const getid = localStorage.getItem("_id");
+      setGetid(getid);
+    }
+  }, []);
 
   const sendApiRequest = async () => {
     try {
@@ -165,12 +196,27 @@ export function Web3AuthSignerProvider({
       await axiosInstanceAuth
         .get(`viewSinglePost/${getid}`, Id as any)
         .then((response) => {
-          console.log("viewSinglePost API Response:", response.data.data.post);
-          SetViewsinglePosts(response.data.data.post);
+          console.log("viewSinglePost API Response:", response.data.data);
+          SetViewsinglePosts(response.data.data);
           setIsLiked(!isLiked);
         });
     } catch (error) {
       console.error("viewSinglePost API Error:", error);
+    }
+  };
+
+  const ViewComments = async () => {
+    const storedData = localStorage.getItem("UserData");
+    const storedData1 = storedData ? JSON.parse(storedData) : null;
+    console.log(storedData1);
+    const Id = storedData1?._id;
+
+    try {
+      await axiosInstanceAuth.get(`viewComments/${getid}`).then((response) => {
+        console.log("ViewComments API Response:", response);
+      });
+    } catch (error) {
+      console.error("ViewComments API Error:", error);
     }
   };
 
@@ -188,13 +234,8 @@ export function Web3AuthSignerProvider({
   };
 
   const CheckLikesclick = async () => {
-    const storedData = localStorage.getItem("UserData");
-    const storedData1 = storedData ? JSON.parse(storedData) : null;
-    console.log(storedData1);
-    const Id = [{ postIds: storedData1?._id }];
-
     try {
-      await axiosInstanceAuth.get(`checkLikes`, Id as any).then((response) => {
+      await axiosInstanceAuth.get(`checkLikes/${getid}`).then((response) => {
         console.log("CheckLikesclick API Response:", response);
       });
     } catch (error) {
@@ -211,6 +252,7 @@ export function Web3AuthSignerProvider({
     if (getid) {
       viewSinglePost();
       CheckLikesclick();
+      ViewComments();
     }
     if (coreKitStatus === "LOGGED_IN" && Token) {
       setNewpremises(true);
@@ -260,6 +302,12 @@ export function Web3AuthSignerProvider({
         isReply,
         setReply,
         CheckLikesclick,
+        getid,
+        setGetid,
+        Token,
+        setToken,
+        //coreKitInstance,
+        //setCoreKitInstance,
       }}
     >
       {children}

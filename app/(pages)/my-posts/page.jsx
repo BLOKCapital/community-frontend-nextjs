@@ -1,24 +1,27 @@
-/* eslint-disable react-hooks/rules-of-hooks */
 "use client";
-import React, { useEffect, useState } from "react";
-import { GoSidebarExpand } from "react-icons/go";
+/* eslint-disable react-hooks/rules-of-hooks */
+import React, { useState } from "react";
+//import { GoSidebarExpand } from "react-icons/go";
 import Image from "next/image";
 import { useWeb3AuthSigner } from "@/app/context/web3-auth-signer";
 import clipboardCopy from "clipboard-copy";
 import DashboardHeader from "../../components/myposts/Buttonspage";
 import { MdDone } from "react-icons/md";
 import { BsCopy } from "react-icons/bs";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-const page = () => {
+const Mypost = () => {
   const { accountAddress, userinfo, registerUser } = useWeb3AuthSigner();
   const [profiledetails, setProfiledetails] = useState(false);
   const [copy, setcopy] = useState(false);
 
   const imageSize = profiledetails ? 120 : 60;
-  const storedData = localStorage.getItem("UserData");
+  const storedData =
+    typeof window !== "undefined" ? localStorage.getItem("UserData") : null;
   const storedData1 = storedData ? JSON.parse(storedData) : null;
+  //const storedData = localStorage.getItem("UserData");
+  //const storedData1 = storedData ? JSON.parse(storedData) : null;
   //console.log("storedData-->", storedData);
 
   const opendetails = () => {
@@ -166,4 +169,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Mypost;

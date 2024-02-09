@@ -1,6 +1,6 @@
 import React from "react";
-import Datashow from "../../../components/datashow/Datashow";
-const page = () => {
+import Datashow from "../../../components/Datashow/Datashow";
+const Datashowusermy = () => {
   return (
     <div>
       <Datashow />
@@ -8,4 +8,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Datashowusermy;

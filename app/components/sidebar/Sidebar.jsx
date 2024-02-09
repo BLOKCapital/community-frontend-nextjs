@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useState } from "react";
 import { SiDatabricks } from "react-icons/si";
 import { PiDotsThreeOutlineVerticalFill } from "react-icons/pi";
 import { MdKeyboardArrowDown } from "react-icons/md";
@@ -11,11 +11,12 @@ import { LuBadge } from "react-icons/lu";
 import { AiFillSetting } from "react-icons/ai";
 import { CiKeyboard } from "react-icons/ci";
 import { BsPersonWorkspace } from "react-icons/bs";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useWeb3AuthSigner } from "@/app/context/web3-auth-signer";
 
 const Sidebar = () => {
-  const router = useRouter();
+  const pathname = usePathname();
   const [isCategoriesOpen, setIsCategoriesOpen] = useState(true);
   const [istagOpen, setIstagOpen] = useState(false);
   const [openmore, setOpenmore] = useState(false);
@@ -23,7 +24,6 @@ const Sidebar = () => {
   const [istoken, setIstoken] = useState();
   //console.log("newpremises--->", newpremises);
 
-  const popupRef = useRef();
   const tagData = [
     { icon: <PiInfoDuotone size={22} />, name: "About" },
     { icon: <PiQuestionDuotone size={22} />, name: "FAQ" },
@@ -49,49 +49,39 @@ const Sidebar = () => {
     setOpenmore(!openmore);
   };
 
-  const handleBackgroundClick = (e) => {
-    if (popupRef.current === e.target) {
-      setIstagOpen(false);
-    }
-  };
-
   return (
     <div
       className={`bg-gray-500 bg-opacity-20 rounded-3xl text-white border-t-4  border-t-[#3e4cc9] h-[82vh] md:block hidden`}
-      ref={popupRef}
-      onClick={handleBackgroundClick}
     >
       <div className="py-5 space-y-2">
-        <div
-          className={`hover:bg-slate-500 hover:bg-opacity-20 text-base cursor-pointer ${
-            router.pathname === "/serviceworker/redirect"
-              ? "bg-slate-500 bg-opacity-20"
-              : ""
-          }`}
-          onClick={() => router.push("/serviceworker/redirect")}
-        >
-          <div className="flex items-center space-x-2 mx-5 py-1">
-            <SiDatabricks />
-            <p>All Topics</p>
-          </div>
-        </div>
-        {newpremises ? (
+        <Link href="/">
           <div
-            className={`hover:bg-slate-500 hover:bg-opacity-20 text-base cursor-pointer ${
-              router.pathname === "/my-posts"
-                ? "bg-slate-500  bg-opacity-20"
-                : ""
+            className={`hover:bg-slate-500 hover:bg-opacity-20 text-base cursor-pointer  ${
+              pathname === "/" ? "bg-slate-500  bg-opacity-20" : ""
             }`}
-            onClick={() => router.push("/my-posts")}
           >
             <div className="flex items-center space-x-2 mx-5 py-1">
-              <BsPersonWorkspace />
-              <p>My Posts</p>
+              <SiDatabricks />
+              <p>All Topics</p>
             </div>
           </div>
-        ) : null}
-      </div>
-      <div className="space-y-3">
+        </Link>
+        <div>
+          {newpremises ? (
+            <Link href="/my-posts">
+              <div
+                className={`hover:bg-slate-500 hover:bg-opacity-20 text-base cursor-pointer ${
+                  pathname === "/my-posts" ? "bg-slate-500  bg-opacity-20" : ""
+                }`}
+              >
+                <div className="flex items-center space-x-2 mx-5 py-1">
+                  <BsPersonWorkspace />
+                  <p>My Posts</p>
+                </div>
+              </div>
+            </Link>
+          ) : null}
+        </div>
         <div className="">
           <div
             className={`hover:bg-slate-500 hover:bg-opacity-20 hover:rounded text-base cursor-pointer ${
@@ -122,6 +112,8 @@ const Sidebar = () => {
             </div>
           )}
         </div>
+      </div>
+      <div className="space-y-2">
         <div className="">
           <div
             className={`hover:bg-slate-500 hover:bg-opacity-20 hover:rounded text-base cursor-pointer ${

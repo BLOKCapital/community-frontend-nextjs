@@ -2,7 +2,7 @@ import React from "react";
 import { useWeb3AuthSigner } from "@/app/context/web3-auth-signer";
 import Link from "next/link";
 
-const Latest = () => {
+const Alllatest = () => {
   const { viewPosts, setShowcontent } = useWeb3AuthSigner();
   //console.log("viewPosts------------------------", viewPosts);
   const formatDate = (dateString) => {
@@ -15,8 +15,11 @@ const Latest = () => {
   };
 
   const Opencontent = (e) => {
-    setShowcontent(e);
-    localStorage.setItem("_id", e);
+    if (typeof window !== "undefined") {
+      // Check if window object is defined (client-side)
+      setShowcontent(e);
+      //localStorage.setItem("_id", e);
+    }
   };
 
   const formatTitle = (title) => {
@@ -101,4 +104,4 @@ const Latest = () => {
   );
 };
 
-export default Latest;
+export default Alllatest;
