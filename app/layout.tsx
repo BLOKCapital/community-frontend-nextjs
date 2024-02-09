@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import Sidebar from "./components/Sidebar/Sidebar";
-import Navbar from "./components/Navbar/Navbar";
+import Sidebar from "./components/sidebar/Sidebar";
+import Navbar from "./components/navbar/Navbar";
 import { Web3AuthSignerProvider } from "./context/web3-auth-signer";
 
 const inter = Inter({ subsets: ["latin"] });
