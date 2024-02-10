@@ -128,9 +128,8 @@ const Datashow = () => {
       await axiosInstanceAuth.post(`likePost/${getid}`).then((response) => {
         console.log("SinglelikePost API Response:", response);
         toast.success(response.data.message);
-        viewSinglePost();
+        viewSinglePost(getid);
         sendApiRequest();
-        CheckLikesclick();
       });
     } catch (error) {
       console.error("SinglelikePost API Error:", error);
@@ -150,8 +149,8 @@ const Datashow = () => {
 
   const SingledeletePost = async () => {
     try {
-      await axiosInstanceAuth.post(`deletePost/${getid}`).then((response) => {
-        console.log("SinglelikePost API Response:", response);
+      await axiosInstanceAuth.delete(`deletePost/${getid}`).then((response) => {
+        console.log("deletePost API Response:", response);
         toast.success(response.data.message);
 
         viewPostByUsers();
@@ -160,7 +159,7 @@ const Datashow = () => {
         localStorage.removeItem("_id");
       });
     } catch (error) {
-      console.error("SinglelikePost API Error:", error);
+      console.error("deletePost API Error:", error);
     }
   };
 
