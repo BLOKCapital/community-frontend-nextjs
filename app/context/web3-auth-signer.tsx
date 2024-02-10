@@ -72,9 +72,6 @@ export interface Web3AuthSignerContext {
   bookmark: any;
   SetBookmark: React.Dispatch<React.SetStateAction<any>>;
 
-  newpremises: boolean;
-  setNewpremises: React.Dispatch<React.SetStateAction<boolean>>;
-
   isEditPost: boolean;
   setIsEditPost: React.Dispatch<React.SetStateAction<boolean>>;
 
@@ -90,12 +87,15 @@ export interface Web3AuthSignerContext {
   Token: any;
   setToken: React.Dispatch<React.SetStateAction<any>>;
 
+  isSidebar: boolean;
+  setIsSidebar: React.Dispatch<React.SetStateAction<boolean>>;
+
   //coreKitInstance: any;
   //setCoreKitInstance: React.Dispatch<React.SetStateAction<any>>;
 
   viewPostByUsers: () => Promise<void>;
   sendApiRequest: () => Promise<void>;
-  viewSinglePost: () => Promise<void>;
+  viewSinglePost: (e?: any) => Promise<void>;
   CheckLikesclick: () => Promise<void>;
 }
 
@@ -134,13 +134,14 @@ export function Web3AuthSignerProvider({
   const [viewsinglePosts, SetViewsinglePosts] = useState<any>();
   const [showcontent, setShowcontent] = useState<any>();
   const [coreKitStatus, setCoreKitStatus] = useState<any>();
-  const [newpremises, setNewpremises] = useState<boolean>(false);
+
   const [isLiked, setIsLiked] = useState<boolean>(false);
   const [isEditPost, setIsEditPost] = useState<boolean>(false);
   const [isEditdata, setIsEditdata] = useState<any>(false);
   const [isReply, setReply] = useState<boolean>(false);
   const [Token, setToken] = useState<any>();
   const [getid, setGetid] = useState<any>();
+  const [isSidebar, setIsSidebar] = useState<boolean>(false);
   //const [coreKitInstance, setCoreKitInstance] = useState<any>();
 
   useEffect(() => {
@@ -148,9 +149,6 @@ export function Web3AuthSignerProvider({
       const Token = localStorage.getItem("Token");
       setToken(Token);
     }
-  }, []);
-
-  useEffect(() => {
     if (typeof window !== "undefined") {
       const getid = localStorage.getItem("_id");
       setGetid(getid);
@@ -168,13 +166,6 @@ export function Web3AuthSignerProvider({
     }
   };
 
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const getid = localStorage.getItem("_id");
-      setGetid(getid);
-    }
-  }, []);
-
   const sendApiRequest = async () => {
     try {
       await axiosInstanceAuth.get(`viewPosts`).then((response) => {
@@ -186,15 +177,15 @@ export function Web3AuthSignerProvider({
     }
   };
 
-  const viewSinglePost = async () => {
-    const storedData = localStorage.getItem("UserData");
-    const storedData1 = storedData ? JSON.parse(storedData) : null;
-    console.log(storedData1);
-    const Id = [{ postIds: storedData1?._id }];
+  const viewSinglePost = async (e: any) => {
+    //const storedData = localStorage.getItem("UserData");
+    //const storedData1 = storedData ? JSON.parse(storedData) : null;
+    //console.log(storedData1);
+    //const Id = [{ postIds: storedData1?._id }];
 
     try {
       await axiosInstanceAuth
-        .get(`viewSinglePost/${getid}`, Id as any)
+        .get(`viewSinglePost/${e ? e : getid}`)
         .then((response) => {
           console.log("viewSinglePost API Response:", response.data.data);
           SetViewsinglePosts(response.data.data);
@@ -245,17 +236,12 @@ export function Web3AuthSignerProvider({
 
   useEffect(() => {
     sendApiRequest();
-    viewSavedPostByUser();
+    //viewSavedPostByUser();
     if (Token) {
       viewPostByUsers();
     }
     if (getid) {
-      viewSinglePost();
-      CheckLikesclick();
-      ViewComments();
-    }
-    if (coreKitStatus === "LOGGED_IN" && Token) {
-      setNewpremises(true);
+      viewSinglePost(getid);
     }
   }, [Token, getid, coreKitStatus]);
 
@@ -288,8 +274,7 @@ export function Web3AuthSignerProvider({
         SetViewsinglePosts,
         coreKitStatus,
         setCoreKitStatus,
-        newpremises,
-        setNewpremises,
+
         bookmark,
         SetBookmark,
         isLiked,
@@ -306,6 +291,8 @@ export function Web3AuthSignerProvider({
         setGetid,
         Token,
         setToken,
+        isSidebar,
+        setIsSidebar,
         //coreKitInstance,
         //setCoreKitInstance,
       }}

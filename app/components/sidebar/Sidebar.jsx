@@ -1,28 +1,28 @@
 "use client";
 import React, { useState } from "react";
 import { SiDatabricks } from "react-icons/si";
-import { PiDotsThreeOutlineVerticalFill } from "react-icons/pi";
+import {
+  PiDotsThreeOutlineVerticalFill,
+  PiInfoDuotone,
+  PiQuestionDuotone,
+} from "react-icons/pi";
 import { MdKeyboardArrowDown } from "react-icons/md";
 import { TfiMenuAlt } from "react-icons/tfi";
 import { ImPriceTag } from "react-icons/im";
-import { PiInfoDuotone } from "react-icons/pi";
-import { PiQuestionDuotone } from "react-icons/pi";
-import { LuBadge } from "react-icons/lu";
 import { AiFillSetting } from "react-icons/ai";
 import { CiKeyboard } from "react-icons/ci";
 import { BsPersonWorkspace } from "react-icons/bs";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useWeb3AuthSigner } from "@/app/context/web3-auth-signer";
+import { LuBadge } from "react-icons/lu";
 
 const Sidebar = () => {
   const pathname = usePathname();
   const [isCategoriesOpen, setIsCategoriesOpen] = useState(true);
   const [istagOpen, setIstagOpen] = useState(false);
   const [openmore, setOpenmore] = useState(false);
-  const { newpremises, coreKitStatus } = useWeb3AuthSigner();
-  const [istoken, setIstoken] = useState();
-  //console.log("newpremises--->", newpremises);
+  const { Token, coreKitStatus, isSidebar, setIsSidebar } = useWeb3AuthSigner();
 
   const tagData = [
     { icon: <PiInfoDuotone size={22} />, name: "About" },
@@ -49,25 +49,31 @@ const Sidebar = () => {
     setOpenmore(!openmore);
   };
 
+  const toggleSidebar = () => {
+    setIsSidebar(!isSidebar);
+  };
+
   return (
     <div
-      className={`bg-gray-500 bg-opacity-20 rounded-3xl text-white border-t-4  border-t-[#3e4cc9] h-[82vh] md:block hidden`}
+      className={`bg-gray-500 fixed lg:w-72 md:60  bg-opacity-20 rounded-3xl text-white border-t-4  border-t-[#3e4cc9] h-[82vh] lg:block hidden`}
     >
       <div className="py-5 space-y-2">
-        <Link href="/">
-          <div
-            className={`hover:bg-slate-500 hover:bg-opacity-20 text-base cursor-pointer  ${
-              pathname === "/" ? "bg-slate-500  bg-opacity-20" : ""
-            }`}
-          >
-            <div className="flex items-center space-x-2 mx-5 py-1">
-              <SiDatabricks />
-              <p>All Topics</p>
-            </div>
-          </div>
-        </Link>
         <div>
-          {newpremises ? (
+          <Link href="/">
+            <div
+              className={`hover:bg-slate-500 hover:bg-opacity-20 text-base cursor-pointer  ${
+                pathname === "/" ? "bg-slate-500  bg-opacity-20" : ""
+              }`}
+            >
+              <div className="flex items-center space-x-2 mx-5 py-1">
+                <SiDatabricks />
+                <p>All Topics</p>
+              </div>
+            </div>
+          </Link>
+        </div>
+        <div>
+          {coreKitStatus === "LOGGED_IN" && Token && (
             <Link href="/my-posts">
               <div
                 className={`hover:bg-slate-500 hover:bg-opacity-20 text-base cursor-pointer ${
@@ -80,36 +86,6 @@ const Sidebar = () => {
                 </div>
               </div>
             </Link>
-          ) : null}
-        </div>
-        <div className="">
-          <div
-            className={`hover:bg-slate-500 hover:bg-opacity-20 hover:rounded text-base cursor-pointer ${
-              istagOpen ? "active" : ""
-            }`}
-            onClick={() => toggleTags()}
-          >
-            <div className="flex items-center space-x-2 mx-5 py-1">
-              <PiDotsThreeOutlineVerticalFill />
-              <p>More</p>
-            </div>
-          </div>
-          {istagOpen && (
-            <div className="absolute bg-slate-800 mt-2   rounded-lg  w-72">
-              {tagData.map((tag, index) => (
-                <div
-                  key={index}
-                  className={`px-5 py-1  cursor-pointer hover:bg-slate-500 hover:bg-opacity-20 hover:rounded ${
-                    istagOpen ? "active" : ""
-                  }`}
-                  onClick={() => toggleTags()}
-                >
-                  <div className="flex items-center gap-2 text-xl py-2">
-                    {tag.icon} {tag.name}
-                  </div>
-                </div>
-              ))}
-            </div>
           )}
         </div>
       </div>
@@ -162,7 +138,7 @@ const Sidebar = () => {
         </div>
         <div className="">
           <div
-            className="  hover:bg-slate-500 hover:bg-opacity-20 hover:rounded text-base cursor-pointer"
+            className="hover:bg-slate-500 hover:bg-opacity-20 hover:rounded text-base cursor-pointer"
             onClick={() => toggleMorepopup()}
           >
             <div className="flex items-center space-x-2 mx-5 py-1 ">
@@ -174,13 +150,13 @@ const Sidebar = () => {
             </div>
           </div>
           <div className={`mx-5 py-1 ${openmore ? "block" : "hidden"}`}>
-            <div className=" hover:bg-slate-500  text-base hover:bg-opacity-20 hover:rounded cursor-pointer">
+            <div className="hover:bg-slate-500 text-base hover:bg-opacity-20 hover:rounded cursor-pointer">
               <div className="flex items-center space-x-2 mx-2 py-1  ">
                 <ImPriceTag />
                 <p>Authentication </p>
               </div>
             </div>
-            <div className=" hover:bg-slate-500  text-base hover:bg-opacity-20 hover:rounded cursor-pointer">
+            <div className="hover:bg-slate-500 text-base hover:bg-opacity-20 hover:rounded cursor-pointer">
               <div className="flex items-center space-x-2 mx-2 py-1  ">
                 <TfiMenuAlt />
                 <p>All tags </p>
@@ -189,8 +165,47 @@ const Sidebar = () => {
           </div>
         </div>
       </div>
-      <div className="fixed bottom-3 right-0 flex gap-3 px-5 py-1">
-        <AiFillSetting size={23} className="cursor-pointer hover:rotate-90" />
+      <div className="space-y-1">
+        <div
+          className={`hover:bg-slate-500 hover:bg-opacity-20 text-base cursor-pointer ${
+            pathname === "/about" ? "bg-slate-500  bg-opacity-20" : ""
+          }`}
+        >
+          <div className="flex items-center space-x-2 mx-5 py-1">
+            <PiInfoDuotone size={20} />
+            <p>About</p>
+          </div>
+        </div>
+        <div
+          className={`hover:bg-slate-500 hover:bg-opacity-20 text-base cursor-pointer ${
+            pathname === "/faq" ? "bg-slate-500  bg-opacity-20" : ""
+          }`}
+        >
+          <div className="flex items-center space-x-2 mx-5 py-1">
+            <PiQuestionDuotone size={20} />
+            <p>FAQ</p>
+          </div>
+        </div>
+        <div
+          className={`hover:bg-slate-500 hover:bg-opacity-20 text-base cursor-pointer ${
+            pathname === "/badges" ? "bg-slate-500  bg-opacity-20" : ""
+          }`}
+        >
+          <div className="flex items-center space-x-2 mx-5 py-1">
+            <LuBadge size={20} />
+            <p>Badges</p>
+          </div>
+        </div>
+      </div>
+
+      <div
+        className="fixed bottom-3 right-0 flex gap-3 px-5 py-1"
+        onClick={toggleSidebar}
+      >
+        <AiFillSetting
+          size={23}
+          className={`cursor-pointer ${isSidebar ? "hover:rotate-90" : ""}`}
+        />
         <CiKeyboard size={23} className="cursor-pointer" />
       </div>
     </div>

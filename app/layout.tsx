@@ -25,11 +25,11 @@ export default function RootLayout({
             <Navbar />
           </div>
           <div className="container mx-auto  sm:px-6 md:px-5 pt-16 sm:pt-16 md:pt-24">
-            <div className="flex flex-col px-5 sm:flex-row space-y-6 sm:space-y-0 sm:space-x-10 w-full">
-              <div className="fixed w-72">
+            <div className="flex flex-col  sm:flex-row space-y-6 sm:space-y-0  w-full">
+              <div className="">
                 <Sidebar />
               </div>
-              <div className="flex-grow w-full pl-72">{children}</div>
+              <div className="flex-grow mx-2 w-full lg:pl-72 ">{children}</div>
             </div>
           </div>
         </Web3AuthSignerProvider>

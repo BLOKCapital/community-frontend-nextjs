@@ -15,7 +15,7 @@
     "@zerodev/sdk": "^4.5.5",
     "axios": "^1.6.7",
     "clipboard-copy": "^4.0.1",
-    "next": "14.1.0",
+    "next": "^14.1.0",
     "react": "^18",
     "react-dom": "^18",
     "react-icons": "^5.0.1",

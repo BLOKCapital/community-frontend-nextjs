@@ -61,11 +61,11 @@ const Optioncatagery = ({ setSelectedCategory, selectedCategory }) => {
       </div>
       <div className="py-5">
         {selectedCategory === 0 && (
-          <div className="md:flex md:space-x-10 text-white">
-            <div className="md:w-1/2">
+          <div className="lg:flex lg:space-x-10 text-white">
+            <div className="lg:w-1/2 w-full">
               <Categorise />
             </div>
-            <div className="md:w-1/2">
+            <div className="lg:w-1/2 w-full">
               <Latest />
             </div>
           </div>

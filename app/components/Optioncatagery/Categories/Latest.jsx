@@ -5,7 +5,7 @@ import { useWeb3AuthSigner } from "@/app/context/web3-auth-signer";
 import Link from "next/link";
 
 const Latest = () => {
-  const { viewPosts, setShowcontent } = useWeb3AuthSigner();
+  const { viewPosts, setShowcontent, viewSinglePost } = useWeb3AuthSigner();
 
   const formatDate = (dateString) => {
     const options = { day: "numeric", month: "short", year: "numeric" };
@@ -18,6 +18,7 @@ const Latest = () => {
 
   const Opencontent = (e) => {
     setShowcontent(e);
+    viewSinglePost(e);
     localStorage.setItem("_id", e);
   };
 
@@ -94,7 +95,16 @@ const Latest = () => {
             ))}{" "}
           </>
         ) : (
-          <p>Loding...</p>
+          <div className="shadow rounded-md p-4 mx-auto animate-pulse bg-slate-800 bg-opacity-90">
+            <div className="flex space-x-4  w-96">
+              <div className="rounded-full bg-slate-700 h-10 w-10"></div>
+
+              <div className="flex flex-col space-y-3 w-full">
+                <div className="flex justify-between w-full bg-slate-700 rounded space-y-6 py-1"></div>
+                <div className="h-2 bg-slate-700 rounded w-20"></div>
+              </div>
+            </div>
+          </div>
         )}
       </>
     </>

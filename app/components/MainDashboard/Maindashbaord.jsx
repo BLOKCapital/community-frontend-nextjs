@@ -48,8 +48,8 @@ const Maindashbaord = () => {
         </div>
       </div>
       <div
-        className={`gap-5 my-8 ${
-          selectedCategory === 0 ? "md:flex md:space-x-6 " : "hidden"
+        className={`lg:gap-5 my-8 ${
+          selectedCategory === 0 ? "lg:flex space-y-6   " : "hidden"
         }`}
       >
         <Started />

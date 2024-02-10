@@ -15,11 +15,8 @@ const Alllatest = () => {
   };
 
   const Opencontent = (e) => {
-    if (typeof window !== "undefined") {
-      // Check if window object is defined (client-side)
-      setShowcontent(e);
-      //localStorage.setItem("_id", e);
-    }
+    setShowcontent(e);
+    localStorage.setItem("_id", e);
   };
 
   const formatTitle = (title) => {
@@ -93,11 +90,11 @@ const Alllatest = () => {
               <p>Loding...</p>
             )}
           </div>
-          <div className="flex justify-end text-[#6ca5f0]  ">
+          {/*<div className="flex justify-end text-[#6ca5f0]  ">
             <p className="hover:text-white hover:font-semibold cursor-pointer">
               View More
             </p>
-          </div>
+          </div>*/}
         </div>
       </div>
     </div>

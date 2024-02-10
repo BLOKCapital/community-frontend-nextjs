@@ -99,7 +99,7 @@ const Example = () => {
         return;
       }
 
-      const postId = viewsinglePosts[0]?._id;
+      const postId = viewsinglePosts?._id;
       const dataToSend = {
         title: BlogsData.title,
         content: BlogsData.content,
@@ -120,7 +120,7 @@ const Example = () => {
                 content: "",
               });
               setIsEditPost(false);
-              viewPostByUsers();
+              viewPostByUsers(postId);
               sendApiRequest();
               viewSinglePost();
             }

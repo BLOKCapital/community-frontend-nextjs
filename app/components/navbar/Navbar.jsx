@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { RiAccountPinCircleFill, RiSearchLine } from "react-icons/ri";
 import { HiMenu } from "react-icons/hi";
 import { PiUserBold } from "react-icons/pi";
@@ -25,8 +25,12 @@ import axiosInstanceAuth from "../apiInstances/axiosInstanceAuth";
 import Example from "../Editer/Editer";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { BiMenu } from "react-icons/bi";
+import clipboardCopy from "clipboard-copy";
+import { CgClose } from "react-icons/cg";
 
 const Navbar = () => {
+  const modalRef = useRef(null);
   const [coreKitInstance, setCoreKitInstance] = useState("");
   const [isHovered, setIsHovered] = useState(false);
   const [web3, setWeb3] = useState();
@@ -51,7 +55,9 @@ const Navbar = () => {
     setRegisterUser,
     coreKitStatus,
     setCoreKitStatus,
-    setNewpremises,
+
+    isSidebar,
+    setIsSidebar,
   } = useWeb3AuthSigner();
 
   useEffect(() => {
@@ -98,7 +104,6 @@ const Navbar = () => {
 
   const settingpage = () => {
     setOpenPopup(false);
-    router.push("/account");
   };
 
   useEffect(() => {
@@ -221,8 +226,7 @@ const Navbar = () => {
       throw new Error("coreKitInstance not found");
     }
     await coreKitInstance.logout();
-    router.push("/");
-    setNewpremises(false);
+
     setWeb3AuthSigner(undefined);
     setAccountAddress(undefined);
     setCoreKitStatus(undefined);
@@ -331,13 +335,37 @@ const Navbar = () => {
     userinfo?.profileImage,
   ]);
 
+  useEffect(() => {
+    const handleOutsideClick = (e) => {
+      if (modalRef.current && !modalRef.current.contains(e.target)) {
+        setOpenPopup(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleOutsideClick);
+
+    return () => {
+      document.removeEventListener("mousedown", handleOutsideClick);
+    };
+  }, []);
+
   return (
     <div className="bg-black text-white">
       <div className="container mx-auto sm:px-6 py-2 lg:px-5 flex justify-between items-center">
-        <div className="flex justify-center items-center space-x-3">
-          <Link href="/">
-            <Image src={logo} height={55} alt="Logo" />
-          </Link>
+        <div className="flex justify-center items-center gap-2">
+          <div
+            onClick={() => setIsSidebar(!isSidebar)}
+            className="cursor-pointer lg:hidden block"
+          >
+            <BiMenu size={30} />
+          </div>
+          <div className="flex justify-center items-center space-x-3">
+            <Link href="/">
+              <div className="w-52 h-auto">
+                <Image src={logo} alt="Logo" layout="responsive" />
+              </div>
+            </Link>
+          </div>
         </div>
 
         <div className="flex justify-center items-center space-x-4">
@@ -345,7 +373,7 @@ const Navbar = () => {
             <>
               <div className="flex justify-center items-center gap-2">
                 <button
-                  className="flex items-center gap-2 bg-gray-200 bg-opacity-20 rounded-lg px-3 py-1"
+                  className="flex items-center md:gap-2 gap-1 bg-gray-200 bg-opacity-20 rounded-lg md:px-3 px-1 md:py-1 py-1 md:text-base text-sm"
                   onClick={() => setopenediter(true)}
                 >
                   <FaCirclePlus />
@@ -363,7 +391,7 @@ const Navbar = () => {
               <HiMenu size={20} />
             </div>
             {isHovered && (
-              <div className="absolute top-full md:left-0 right-10 mt-3 p-5 w-40 bg-gray-700 rounded-md shadow-md transition-all duration-300 z-40">
+              <div className="absolute top-full md:left-0 right-5 mt-2 p-5 w-40 bg-gray-700 rounded-md shadow-md transition-all duration-300 z-40">
                 <ul className="space-y-2 text-xl">
                   <li>
                     <a
@@ -399,7 +427,7 @@ const Navbar = () => {
               </div>
             )}
           </div>
-          <div className="relative">
+          <div className="relative md:block hidden">
             <button className="text-white bg-slate-400 bg-opacity-20 px-2 py-1 rounded-xl flex justify-center items-center gap-2">
               <input
                 type="text"
@@ -422,10 +450,20 @@ const Navbar = () => {
                     alt="Profile"
                     className="rounded-full"
                   />
-
-                  {openPopup && (
-                    <div className="fixed top-0 right-0 w-full h-full flex xl:items-start items-center md:items-start z-10 xl:justify-end md:justify-end justify-center ">
-                      <div className="bg-gray-700 rounded-3xl px-10 py-10 xl:mr-24 mr-0 md:mr-5 md:mt-20 xl:mt-20 mt-0">
+                </button>
+                {openPopup && (
+                  <div
+                    className="fixed top-0 right-0 w-full h-full flex xl:items-start items-center md:items-start xl:justify-end md:justify-end justify-center "
+                    ref={modalRef}
+                  >
+                    <div className="bg-gray-700 rounded-3xl  xl:mr-24 mr-0 md:mr-5 md:mt-20 xl:mt-20 mt-0">
+                      <div
+                        className="text-white flex justify-end p-3 cursor-pointer"
+                        onClick={() => setOpenPopup(false)}
+                      >
+                        <CgClose size={20} />
+                      </div>
+                      <div className="px-8 py-3">
                         <div className="flex flex-col space-y-1 justify-center items-center pb-8">
                           <Image
                             src={userinfo?.profileImage}
@@ -436,8 +474,8 @@ const Navbar = () => {
                           />
                           <p className="font-bold text-lg">{userinfo?.name}</p>
 
-                          <div className="flex gap-2">
-                            <div className="flex gap-2">
+                          <div className="flex justify-center items-center gap-2">
+                            <div className="flex justify-center items-center gap-2">
                               <p className="font-semibold">AA wallet: </p>
                               <p>
                                 {accountAddress
@@ -448,7 +486,10 @@ const Navbar = () => {
                               </p>
                             </div>
 
-                            <div onClick={notify} className="">
+                            <div
+                              onClick={() => notify()}
+                              className="cursor-pointer"
+                            >
                               {copy ? (
                                 <MdDone size={15} />
                               ) : (
@@ -466,8 +507,11 @@ const Navbar = () => {
                           </p>
                         </div>
                         <hr />
-                        <Link href="/account" onClick={() => settingpage()}>
-                          <div className="flex flex-row items-center justify-between cursor-pointer hover:scale-105 py-4 hover:font-bold">
+                        <Link href="/my-posts">
+                          <div
+                            className="flex flex-row items-center justify-between cursor-pointer hover:scale-105 py-4 hover:font-bold"
+                            onClick={() => settingpage()}
+                          >
                             <div className="flex flex-row gap-2 items-center justify-between ">
                               <RiAccountPinCircleFill size={20} />
                               <p className="">Account</p>
@@ -478,22 +522,24 @@ const Navbar = () => {
                           </div>
                         </Link>
                         <hr />
-                        <div
-                          onClick={() => logout()}
-                          className="flex flex-row gap-2 items-center justify-between py-4 disconnect cursor-pointer hover:font-bold hover:scale-105"
-                        >
-                          <div className="flex flex-row gap-2 items-center justify-between ">
-                            <TbLogout size={20} />
-                            <p className="text-[#FF4085]">Disconnect</p>
+                        <Link href="/">
+                          <div
+                            onClick={() => logout()}
+                            className="flex flex-row gap-2 items-center justify-between py-4 disconnect cursor-pointer hover:font-bold hover:scale-105"
+                          >
+                            <div className="flex flex-row gap-2 items-center justify-between ">
+                              <TbLogout size={20} />
+                              <p className="text-[#FF4085]">Disconnect</p>
+                            </div>
+                            <div>
+                              <FaAngleRight size={20} />
+                            </div>
                           </div>
-                          <div>
-                            <FaAngleRight size={20} />
-                          </div>
-                        </div>
+                        </Link>
                       </div>
                     </div>
-                  )}
-                </button>
+                  </div>
+                )}
               </div>
             </>
           ) : (
