@@ -361,7 +361,7 @@ const Navbar = () => {
           </div>
           <div className="flex justify-center items-center space-x-3">
             <Link href="/">
-              <div className="w-52 h-auto">
+              <div className="md:w-52 w-auto h-auto">
                 <Image src={logo} alt="Logo" layout="responsive" />
               </div>
             </Link>
