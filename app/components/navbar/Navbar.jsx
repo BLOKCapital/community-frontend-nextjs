@@ -301,7 +301,7 @@ const Navbar = () => {
             wallet: accountAddress,
             email: userinfo?.email,
             username: userinfo?.name,
-            userImages: userinfo?.profileImage,
+            userImage: userinfo?.profileImage,
           };
           console.log("registerUser dataToSend--->", dataToSend);
 
@@ -361,7 +361,7 @@ const Navbar = () => {
           </div>
           <div className="flex justify-center items-center space-x-3">
             <Link href="/">
-              <div className="md:w-52 w-auto h-auto">
+              <div className="md:w-52 w-20 h-auto">
                 <Image src={logo} alt="Logo" layout="responsive" />
               </div>
             </Link>
@@ -439,146 +439,148 @@ const Navbar = () => {
               </div>
             </button>
           </div>
-          {coreKitStatus === "LOGGED_IN" ? (
-            <>
-              <div className="flex justify-center items-center gap-2">
-                <button className="" onClick={() => setOpenPopup(!openPopup)}>
-                  <Image
-                    src={userinfo?.profileImage}
-                    width={38}
-                    height={38}
-                    alt="Profile"
-                    className="rounded-full"
-                  />
-                </button>
-                {openPopup && (
-                  <div
-                    className="fixed top-0 right-0 w-full h-full flex xl:items-start items-center md:items-start xl:justify-end md:justify-end justify-center "
-                    ref={modalRef}
-                  >
-                    <div className="bg-gray-700 rounded-3xl  xl:mr-24 mr-0 md:mr-5 md:mt-20 xl:mt-20 mt-0">
-                      <div
-                        className="text-white flex justify-end p-3 cursor-pointer"
-                        onClick={() => setOpenPopup(false)}
-                      >
-                        <CgClose size={20} />
-                      </div>
-                      <div className="px-8 py-3">
-                        <div className="flex flex-col space-y-1 justify-center items-center pb-8">
-                          <Image
-                            src={userinfo?.profileImage}
-                            width={100}
-                            height={100}
-                            alt="Profile"
-                            className="rounded-full"
-                          />
-                          <p className="font-bold text-lg">{userinfo?.name}</p>
-
-                          <div className="flex justify-center items-center gap-2">
-                            <div className="flex justify-center items-center gap-2">
-                              <p className="font-semibold">AA wallet: </p>
-                              <p>
-                                {accountAddress
-                                  ? accountAddress.slice(0, 3) +
-                                    "...." +
-                                    accountAddress.slice(-3)
-                                  : null}
-                              </p>
-                            </div>
-
-                            <div
-                              onClick={() => notify()}
-                              className="cursor-pointer"
-                            >
-                              {copy ? (
-                                <MdDone size={15} />
-                              ) : (
-                                <BsCopy size={15} />
-                              )}
-                            </div>
-                          </div>
-                          <p className="text-sm ">{userinfo?.email}</p>
-                          <p className="text-xs ">
-                            Last Update:
-                            <span className="text-xm ">
-                              {" "}
-                              {formatDate(storedData1.createdAt)}
-                            </span>{" "}
-                          </p>
+          <div className="">
+            {coreKitStatus === "LOGGED_IN" ? (
+              <>
+                <div className="flex justify-center items-center gap-2">
+                  <button className="" onClick={() => setOpenPopup(!openPopup)}>
+                    <Image
+                      src={userinfo?.profileImage}
+                      width={38}
+                      height={38}
+                      alt="Profile"
+                      className="rounded-full"
+                    />
+                  </button>
+                  {openPopup && (
+                    <div
+                      className="fixed top-0 right-0 w-full h-full flex xl:items-start items-center md:items-start xl:justify-end md:justify-end justify-center "
+                      ref={modalRef}
+                    >
+                      <div className="bg-gray-700 rounded-3xl  xl:mr-24 mr-0 md:mr-5 md:mt-20 xl:mt-20 mt-0">
+                        <div
+                          className="text-white flex justify-end p-3 cursor-pointer"
+                          onClick={() => setOpenPopup(false)}
+                        >
+                          <CgClose size={20} />
                         </div>
-                        <hr />
-                        <Link href="/my-posts">
-                          <div
-                            className="flex flex-row items-center justify-between cursor-pointer hover:scale-105 py-4 hover:font-bold"
-                            onClick={() => settingpage()}
-                          >
-                            <div className="flex flex-row gap-2 items-center justify-between ">
-                              <RiAccountPinCircleFill size={20} />
-                              <p className="">Account</p>
+                        <div className="px-8 py-3">
+                          <div className="flex flex-col space-y-1 justify-center items-center pb-8">
+                            <Image
+                              src={userinfo?.profileImage}
+                              width={100}
+                              height={100}
+                              alt="Profile"
+                              className="rounded-full"
+                            />
+                            <p className="font-bold text-lg">
+                              {userinfo?.name}
+                            </p>
+
+                            <div className="flex justify-center items-center gap-2">
+                              <div className="flex justify-center items-center gap-2">
+                                <p className="font-semibold">AA wallet: </p>
+                                <p>
+                                  {accountAddress
+                                    ? accountAddress.slice(0, 3) +
+                                      "...." +
+                                      accountAddress.slice(-3)
+                                    : null}
+                                </p>
+                              </div>
+
+                              <div
+                                onClick={() => notify()}
+                                className="cursor-pointer"
+                              >
+                                {copy ? (
+                                  <MdDone size={15} />
+                                ) : (
+                                  <BsCopy size={15} />
+                                )}
+                              </div>
                             </div>
-                            <div>
-                              <FaAngleRight size={20} />
-                            </div>
+                            <p className="text-sm ">{userinfo?.email}</p>
+                            <p className="text-xs ">
+                              Last Update:
+                              <span className="text-xm ">
+                                {" "}
+                                {formatDate(storedData1.createdAt)}
+                              </span>{" "}
+                            </p>
                           </div>
-                        </Link>
-                        <hr />
-                        <Link href="/">
-                          <div
-                            onClick={() => logout()}
-                            className="flex flex-row gap-2 items-center justify-between py-4 disconnect cursor-pointer hover:font-bold hover:scale-105"
-                          >
-                            <div className="flex flex-row gap-2 items-center justify-between ">
-                              <TbLogout size={20} />
-                              <p className="text-[#FF4085]">Disconnect</p>
+                          <hr />
+                          <Link href="/my-posts">
+                            <div
+                              className="flex flex-row items-center justify-between cursor-pointer hover:scale-105 py-4 hover:font-bold"
+                              onClick={() => settingpage()}
+                            >
+                              <div className="flex flex-row gap-2 items-center justify-between ">
+                                <RiAccountPinCircleFill size={20} />
+                                <p className="">Account</p>
+                              </div>
+                              <div>
+                                <FaAngleRight size={20} />
+                              </div>
                             </div>
-                            <div>
-                              <FaAngleRight size={20} />
+                          </Link>
+                          <hr />
+                          <Link href="/">
+                            <div
+                              onClick={() => logout()}
+                              className="flex flex-row gap-2 items-center justify-between py-4 disconnect cursor-pointer hover:font-bold hover:scale-105"
+                            >
+                              <div className="flex flex-row gap-2 items-center justify-between ">
+                                <TbLogout size={20} />
+                                <p className="text-[#FF4085]">Disconnect</p>
+                              </div>
+                              <div>
+                                <FaAngleRight size={20} />
+                              </div>
                             </div>
-                          </div>
-                        </Link>
+                          </Link>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                )}
-              </div>
-            </>
-          ) : (
-            <button
-              className="hidden lg:flex justify-center items-center space-x-3 text-white cursor-pointer bg-gray-200 bg-opacity-20 rounded-3xl px-8 py-3"
-              onClick={() => !isLoading && login()}
-            >
-              {isLoading ? (
-                <div className=" ">
-                  <svg
-                    aria-hidden="true"
-                    className="w-5 h-5 text-gray-200 animate-spin dark:text-white fill-blue-600"
-                    viewBox="0 0 100 101"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
-                      fill="currentColor"
-                    />
-                    <path
-                      d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
-                      fill="currentFill"
-                    />
-                  </svg>
+                  )}
                 </div>
-              ) : (
-                <>
-                  <PiUserBold size={20} />
-                </>
-              )}
-              <p> LOGIN </p>
-            </button>
-          )}
-          <ToastContainer />
+              </>
+            ) : (
+              <button
+                className="hidden lg:flex justify-center items-center space-x-3 text-white cursor-pointer bg-gray-200 bg-opacity-20 rounded-3xl px-2 py-2"
+                onClick={() => !isLoading && login()}
+              >
+                {isLoading ? (
+                  <div className=" ">
+                    <svg
+                      aria-hidden="true"
+                      className="w-5 h-5 text-gray-200 animate-spin dark:text-white fill-blue-600"
+                      viewBox="0 0 100 101"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+                        fill="currentColor"
+                      />
+                      <path
+                        d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+                        fill="currentFill"
+                      />
+                    </svg>
+                  </div>
+                ) : (
+                  <>
+                    <PiUserBold size={20} />
+                  </>
+                )}
+                <p> LOGIN </p>
+              </button>
+            )}
+            <ToastContainer />
+          </div>
         </div>
       </div>
-
-      {/*{isPopupOpen && <Newtopic />}*/}
 
       <div
         className={`fixed bottom-0 left-0 w-full flex justify-center items-end p-6 transition-transform ease-in-out duration-700 ${

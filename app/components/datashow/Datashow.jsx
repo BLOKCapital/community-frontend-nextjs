@@ -31,10 +31,17 @@ const Datashow = () => {
     setIsEditdata,
     setReply,
     CheckLikesclick,
+    setIsCommentdata,
+    setIsComment,
+    viewComments,
   } = useWeb3AuthSigner();
   const [isLiked, setIsLiked] = useState(false);
   const [ioBookmark, setIoBookmark] = useState(false);
   const [isDeletePopupVisible, setIsDeletePopupVisible] = useState(false);
+  const [deletew, setDeletew] = useState({
+    title: "",
+    Id: "",
+  });
   const [userEmail, setUserEmail] = useState("");
   const [getid, setGetid] = useState("");
 
@@ -44,7 +51,7 @@ const Datashow = () => {
     // Check if post has user data and is not an empty array
     if (viewsinglePosts) {
       const post = viewsinglePosts;
-      console.log("post", post);
+      //console.log("post", post);
       // Check if user data exists and is not an empty array
       if (post.userData && post.userData.length > 0) {
         // Set email to state
@@ -55,13 +62,21 @@ const Datashow = () => {
 
   console.log("view single Posts -->", viewsinglePosts);
 
-  const handleDeleteClick = () => {
+  const handleDeleteClick = (e, id) => {
+    setDeletew({
+      title: e,
+      Id: id,
+    });
     console.log("deleet");
     setIsDeletePopupVisible(true);
   };
 
   const handleDeleteConfirm = () => {
-    SingledeletePost();
+    if (deletew.title === "comment") {
+      SingledeleteComment();
+    } else {
+      SingledeletePost();
+    }
     // Handle deletion logic here
     setIsDeletePopupVisible(false);
   };
@@ -75,6 +90,14 @@ const Datashow = () => {
     if (coreKitStatus === "LOGGED_IN") {
       SinglelikePost();
       setIsLiked(!isLiked);
+    } else {
+      toast.error("Please Login!");
+    }
+  };
+
+  const handleLikeClickComment = (e) => {
+    if (coreKitStatus === "LOGGED_IN") {
+      SinglelikeComment(e);
     } else {
       toast.error("Please Login!");
     }
@@ -113,7 +136,7 @@ const Datashow = () => {
     const timeDifference = currentDate.getTime() - updatedDate.getTime();
     // Convert milliseconds to days
     const daysDifference = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
-    console.log(daysDifference);
+    //console.log(daysDifference);
     return daysDifference;
   };
 
@@ -121,6 +144,12 @@ const Datashow = () => {
     setIsEditdata(e);
     setopenediter(true);
     setIsEditPost(true);
+  };
+
+  const handleEditcomment = (e) => {
+    setIsCommentdata(e);
+    setIsComment(true);
+    setopenediter(true);
   };
 
   const SinglelikePost = async () => {
@@ -133,6 +162,19 @@ const Datashow = () => {
       });
     } catch (error) {
       console.error("SinglelikePost API Error:", error);
+    }
+  };
+
+  const SinglelikeComment = async (e) => {
+    try {
+      await axiosInstanceAuth.post(`likeComment/${e}`).then((response) => {
+        console.log("SinglelikeComment API Response:", response);
+        toast.success(response.data.message);
+        viewSinglePost(getid);
+        sendApiRequest();
+      });
+    } catch (error) {
+      console.error("SinglelikeComment API Error:", error);
     }
   };
 
@@ -155,11 +197,32 @@ const Datashow = () => {
 
         viewPostByUsers();
         sendApiRequest();
-        router.push("/my-posts");
+
+        router.push("/");
         localStorage.removeItem("_id");
       });
     } catch (error) {
       console.error("deletePost API Error:", error);
+    }
+  };
+
+  const SingledeleteComment = async () => {
+    console.log("deleteComment-->", deletew.Id);
+    try {
+      await axiosInstanceAuth
+        .delete(`deleteComment/${deletew.Id}`)
+        .then((response) => {
+          console.log("deleteComment API Response:", response);
+          toast.success(response.data.message);
+
+          viewPostByUsers();
+          sendApiRequest();
+          viewSinglePost();
+          //router.push("/");
+          //localStorage.removeItem("_id");
+        });
+    } catch (error) {
+      console.error("deleteComment API Error:", error);
     }
   };
 
@@ -173,7 +236,7 @@ const Datashow = () => {
                 <div className="border-b py-2 font-bold ">
                   <h2 className="text-xl">{viewsinglePosts.title}</h2>
                 </div>
-                <div className="flex space-x-5 justify-start">
+                <div className="flex space-x-10 justify-start">
                   <div>
                     {viewsinglePosts.images && (
                       <Image
@@ -186,7 +249,7 @@ const Datashow = () => {
                     )}
                   </div>
                   <div className="w-4/5 ">
-                    <div className="flex justify-between items-center">
+                    <div className="flex justify-between items-center pb-5">
                       <div className="py-2">
                         {viewsinglePosts.userData &&
                           viewsinglePosts.userData.length > 0 && (
@@ -267,7 +330,7 @@ const Datashow = () => {
                           {userinfo?.email === userEmail && (
                             <div
                               className="text-red-500 cursor-pointer text-lg"
-                              onClick={() => handleDeleteClick()}
+                              onClick={() => handleDeleteClick("post")}
                             >
                               <RiDeleteBin6Fill size={24} />
                             </div>
@@ -287,10 +350,156 @@ const Datashow = () => {
                       </div>
                     </div>
                   </div>
-                  <div className="text-center">
+                  <div className="flex flex-col order-last text-center">
                     <p> {formatDate(viewsinglePosts.createdAt)} </p>
                     <p className="text-xs">days ago</p>
                   </div>
+                </div>
+                {/*----------------------Comments--------------------------------*/}
+                <div
+                  className={`${
+                    viewComments ? "border-t border-gray-600 py-3" : null
+                  }`}
+                >
+                  {viewComments &&
+                    viewComments.map((comment, index) => (
+                      <>
+                        <div
+                          className="flex space-x-10 justify-start  "
+                          key={index}
+                        >
+                          <div>
+                            {viewsinglePosts.images && (
+                              <Image
+                                src={
+                                  comment.userData &&
+                                  comment.userData.length > 0 &&
+                                  comment.userData[0].userImage
+                                }
+                                alt="Image"
+                                height={60}
+                                width={60}
+                                className="rounded-full "
+                              />
+                            )}
+                          </div>
+                          <div className="w-4/5 ">
+                            <div className="flex justify-between items-center pb-5">
+                              <div className="py-2">
+                                {comment.userData &&
+                                  comment.userData.length > 0 && (
+                                    <p className="text-lg font-semibold ">
+                                      {comment.userData[0].email}
+                                    </p>
+                                  )}
+                              </div>
+                              <div className="flex gap-3 justify-center text-center">
+                                {userinfo?.email ===
+                                  comment.userData[0].email && (
+                                  <div
+                                    className="cursor-pointer text-lg"
+                                    onClick={() => handleEditcomment(comment)}
+                                  >
+                                    <BiSolidEditAlt size={22} />
+                                  </div>
+                                )}
+
+                                <div>
+                                  <p>
+                                    {calculateTimeDifference(
+                                      comment?.createdAt
+                                    )}
+                                    d
+                                  </p>
+                                </div>
+                              </div>
+                            </div>
+                            <div className="space-y-5">
+                              <div
+                                dangerouslySetInnerHTML={{
+                                  __html: comment.content,
+                                }}
+                              />
+                              <div className="flex justify-end items-center  ">
+                                <div className="flex space-x-5 justify-center items-center">
+                                  <div className="cursor-pointer flex gap-2 justify-center items-center">
+                                    {comment.commentLikeCoun > 0 ? (
+                                      <p
+                                        className={`text-base ${
+                                          comment.commentLikeCoun > 0
+                                            ? "delay-75"
+                                            : ""
+                                        } `}
+                                      >
+                                        {comment.commentLikeCoun}
+                                      </p>
+                                    ) : null}
+
+                                    <button
+                                      onClick={() =>
+                                        handleLikeClickComment(comment._id)
+                                      }
+                                    >
+                                      {userinfo?.email ? (
+                                        <FaRegHeart
+                                          className="text-white hover:text-gray-300"
+                                          size={24}
+                                        />
+                                      ) : (
+                                        <FaHeart
+                                          className="text-red-500 hover:text-red-700"
+                                          size={24}
+                                        />
+                                      )}
+                                    </button>
+                                  </div>
+                                  <div
+                                    className="cursor-pointer"
+                                    onClick={() => Bookmark()}
+                                  >
+                                    {ioBookmark ? (
+                                      <div className="text-blue-600">
+                                        <IoBookmark size={24} />
+                                      </div>
+                                    ) : (
+                                      <div>
+                                        <IoBookmarkOutline size={24} />
+                                      </div>
+                                    )}
+                                  </div>
+                                  {userinfo?.email ===
+                                    comment.userData[0].email && (
+                                    <div
+                                      className="text-red-500 cursor-pointer text-lg"
+                                      onClick={() =>
+                                        handleDeleteClick(
+                                          "comment",
+                                          comment._id
+                                        )
+                                      }
+                                    >
+                                      <RiDeleteBin6Fill size={24} />
+                                    </div>
+                                  )}
+
+                                  <div
+                                    className="cursor-pointer flex gap-2 text-lg items-center px-2 py-1  hover:bg-slate-600 hover:rounded-lg hover:delay-75"
+                                    onClick={() => handleReplyClick()}
+                                  >
+                                    <FaReply size={20} />
+                                    <p>Reply</p>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div className="flex flex-col order-last text-center">
+                            <p> {formatDate(viewsinglePosts.createdAt)} </p>
+                            <p className="text-xs">days ago</p>
+                          </div>
+                        </div>
+                      </>
+                    ))}
                 </div>
               </div>
             </>
@@ -313,7 +522,7 @@ const Datashow = () => {
                   width={60}
                   className="rounded-full "
                 />
-                <p className="mb-4">Are you sure you want to delete?</p>
+                <p className="mb-4">{`Are you sure you want to delete ${deletew.title}?`}</p>
               </div>
               <div className="flex justify-center">
                 <button

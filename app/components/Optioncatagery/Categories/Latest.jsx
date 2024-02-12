@@ -32,7 +32,8 @@ const Latest = () => {
       <div className="text-xl font-semibold py-3">
         <div>Latest</div>
       </div>
-      <>
+      <div>
+        {viewPosts ? null : <p className="text-white">No Data</p>}
         {viewPosts ? (
           <>
             {viewPosts.map((item, index) => (
@@ -92,7 +93,7 @@ const Latest = () => {
                   </div>
                 </Link>
               </div>
-            ))}{" "}
+            ))}
           </>
         ) : (
           <div className="shadow rounded-md p-4 mx-auto animate-pulse bg-slate-800 bg-opacity-90">
@@ -106,7 +107,7 @@ const Latest = () => {
             </div>
           </div>
         )}
-      </>
+      </div>
     </>
   );
 };

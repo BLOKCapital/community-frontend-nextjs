@@ -63,6 +63,9 @@ export interface Web3AuthSignerContext {
   viewsinglePosts: any;
   SetViewsinglePosts: React.Dispatch<React.SetStateAction<any>>;
 
+  viewComments: any;
+  SetViewComments: React.Dispatch<React.SetStateAction<any>>;
+
   showcontent: any;
   setShowcontent: React.Dispatch<React.SetStateAction<any>>;
 
@@ -75,11 +78,17 @@ export interface Web3AuthSignerContext {
   isEditPost: boolean;
   setIsEditPost: React.Dispatch<React.SetStateAction<boolean>>;
 
+  isComment: boolean;
+  setIsComment: React.Dispatch<React.SetStateAction<boolean>>;
+
   isReply: boolean;
   setReply: React.Dispatch<React.SetStateAction<boolean>>;
 
   isEditdata: any;
   setIsEditdata: React.Dispatch<React.SetStateAction<any>>;
+
+  isCommentdata: any;
+  setIsCommentdata: React.Dispatch<React.SetStateAction<any>>;
 
   getid: any;
   setGetid: React.Dispatch<React.SetStateAction<any>>;
@@ -96,6 +105,7 @@ export interface Web3AuthSignerContext {
   viewPostByUsers: () => Promise<void>;
   sendApiRequest: () => Promise<void>;
   viewSinglePost: (e?: any) => Promise<void>;
+  ViewComments: (e?: any) => Promise<void>;
   CheckLikesclick: () => Promise<void>;
 }
 
@@ -132,12 +142,14 @@ export function Web3AuthSignerProvider({
   const [viewPosts, SetViewPosts] = useState<any>();
   const [bookmark, SetBookmark] = useState<any>();
   const [viewsinglePosts, SetViewsinglePosts] = useState<any>();
+  const [viewComments, SetViewComments] = useState<any>();
   const [showcontent, setShowcontent] = useState<any>();
   const [coreKitStatus, setCoreKitStatus] = useState<any>();
-
   const [isLiked, setIsLiked] = useState<boolean>(false);
   const [isEditPost, setIsEditPost] = useState<boolean>(false);
+  const [isComment, setIsComment] = useState<boolean>(false);
   const [isEditdata, setIsEditdata] = useState<any>(false);
+  const [isCommentdata, setIsCommentdata] = useState<any>(false);
   const [isReply, setReply] = useState<boolean>(false);
   const [Token, setToken] = useState<any>();
   const [getid, setGetid] = useState<any>();
@@ -145,14 +157,14 @@ export function Web3AuthSignerProvider({
   //const [coreKitInstance, setCoreKitInstance] = useState<any>();
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      const Token = localStorage.getItem("Token");
-      setToken(Token);
-    }
-    if (typeof window !== "undefined") {
-      const getid = localStorage.getItem("_id");
-      setGetid(getid);
-    }
+    //if (typeof window !== "undefined") {
+    const Token = localStorage.getItem("Token");
+    setToken(Token);
+    //}
+    //if (typeof window !== "undefined") {
+    const getid = localStorage.getItem("_id");
+    setGetid(getid);
+    //}
   }, []);
 
   const viewPostByUsers = async () => {
@@ -190,21 +202,26 @@ export function Web3AuthSignerProvider({
           console.log("viewSinglePost API Response:", response.data.data);
           SetViewsinglePosts(response.data.data);
           setIsLiked(!isLiked);
+          ViewComments(response.data.data._id);
         });
     } catch (error) {
       console.error("viewSinglePost API Error:", error);
     }
   };
 
-  const ViewComments = async () => {
-    const storedData = localStorage.getItem("UserData");
-    const storedData1 = storedData ? JSON.parse(storedData) : null;
-    console.log(storedData1);
-    const Id = storedData1?._id;
+  const ViewComments = async (e: any) => {
+    //const storedData = localStorage.getItem("UserData");
+    //const storedData1 = storedData ? JSON.parse(storedData) : null;
+    //console.log(storedData1);
+    //const Id = storedData1?._id;
 
     try {
-      await axiosInstanceAuth.get(`viewComments/${getid}`).then((response) => {
-        console.log("ViewComments API Response:", response);
+      await axiosInstanceAuth.get(`viewComments/${e}`).then((response) => {
+        console.log(
+          "ViewComments API Response:",
+          response?.data?.data?.comments
+        );
+        SetViewComments(response?.data?.data?.comments);
       });
     } catch (error) {
       console.error("ViewComments API Error:", error);
@@ -293,8 +310,13 @@ export function Web3AuthSignerProvider({
         setToken,
         isSidebar,
         setIsSidebar,
-        //coreKitInstance,
-        //setCoreKitInstance,
+        ViewComments,
+        viewComments,
+        SetViewComments,
+        isComment,
+        setIsComment,
+        isCommentdata,
+        setIsCommentdata,
       }}
     >
       {children}

@@ -55,7 +55,8 @@ const Sidebar = () => {
 
   return (
     <div
-      className={`bg-gray-500 fixed lg:w-72 md:60  bg-opacity-20 rounded-3xl text-white border-t-4  border-t-[#3e4cc9] h-[82vh] lg:block hidden`}
+      className={` lg:block hidden lg:w-72 md:60 bg-gray-500 fixed   bg-opacity-20 rounded-3xl text-white border-t-4  border-t-[#3e4cc9] h-[82vh]
+      `}
     >
       <div className="py-5 space-y-2">
         <div>

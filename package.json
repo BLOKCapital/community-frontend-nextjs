@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@alchemy/aa-core": "^0.1.0-alpha.23",
+    "@ducanh2912/next-pwa": "^10.2.5",
     "@web3auth/base": "^7.2.1",
     "@web3auth/mpc-core-kit": "^1.4.0",
     "@zerodev/sdk": "^4.5.5",
