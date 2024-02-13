@@ -141,7 +141,7 @@ const Example = () => {
             setIsEditPost(false);
             viewPostByUsers(postId);
             sendApiRequest();
-            viewSinglePost();
+            viewSinglePost(postId);
           }
         });
     } catch (error) {

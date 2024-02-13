@@ -547,7 +547,7 @@ const Navbar = () => {
               </>
             ) : (
               <button
-                className="hidden lg:flex justify-center items-center space-x-3 text-white cursor-pointer bg-gray-200 bg-opacity-20 rounded-3xl px-2 py-2"
+                className="flex justify-center items-center space-x-3 text-white cursor-pointer bg-gray-200 bg-opacity-20 rounded-3xl px-2 py-2"
                 onClick={() => !isLoading && login()}
               >
                 {isLoading ? (

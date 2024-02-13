@@ -34,6 +34,7 @@ const Datashow = () => {
     setIsCommentdata,
     setIsComment,
     viewComments,
+    checkuserlike,
   } = useWeb3AuthSigner();
   const [isLiked, setIsLiked] = useState(false);
   const [ioBookmark, setIoBookmark] = useState(false);
@@ -44,7 +45,12 @@ const Datashow = () => {
   });
   const [userEmail, setUserEmail] = useState("");
   const [getid, setGetid] = useState("");
+  const liked =
+    checkuserlike && checkuserlike.length > 0 && checkuserlike[0]?.liked;
 
+  const saved =
+    checkuserlike && checkuserlike.length > 0 && checkuserlike[1]?.saved;
+  console.log(saved);
   useEffect(() => {
     const getid = localStorage.getItem("_id");
     setGetid(getid);
@@ -67,7 +73,7 @@ const Datashow = () => {
       title: e,
       Id: id,
     });
-    console.log("deleet");
+    //console.log("delete");
     setIsDeletePopupVisible(true);
   };
 
@@ -103,10 +109,9 @@ const Datashow = () => {
     }
   };
 
-  const Bookmark = () => {
+  const Bookmark = (e) => {
     if (coreKitStatus === "LOGGED_IN") {
-      setIoBookmark(!ioBookmark);
-      SinglesavePost();
+      SinglesavePost(e);
     } else {
       toast.error("Please Login!");
     }
@@ -153,12 +158,14 @@ const Datashow = () => {
   };
 
   const SinglelikePost = async () => {
+    const postId = getid;
     try {
-      await axiosInstanceAuth.post(`likePost/${getid}`).then((response) => {
+      await axiosInstanceAuth.post(`likePost/${postId}`).then((response) => {
         console.log("SinglelikePost API Response:", response);
         toast.success(response.data.message);
-        viewSinglePost(getid);
+        viewSinglePost(postId);
         sendApiRequest();
+        CheckLikesclick(postId);
       });
     } catch (error) {
       console.error("SinglelikePost API Error:", error);
@@ -178,11 +185,12 @@ const Datashow = () => {
     }
   };
 
-  const SinglesavePost = async () => {
+  const SinglesavePost = async (e) => {
     try {
       await axiosInstanceAuth.post(`savePost/${getid}`).then((response) => {
         console.log("savePost API Response:", response);
         toast.success(response.data.message);
+        CheckLikesclick(e);
       });
     } catch (error) {
       console.error("savePost API Error:", error);
@@ -207,36 +215,46 @@ const Datashow = () => {
   };
 
   const SingledeleteComment = async () => {
+    const commentId = deletew.Id;
     console.log("deleteComment-->", deletew.Id);
     try {
       await axiosInstanceAuth
-        .delete(`deleteComment/${deletew.Id}`)
+        .delete(`deleteComment/${commentId}`)
         .then((response) => {
           console.log("deleteComment API Response:", response);
-          toast.success(response.data.message);
-
-          viewPostByUsers();
-          sendApiRequest();
-          viewSinglePost();
-          //router.push("/");
-          //localStorage.removeItem("_id");
+          if (response.data.status === false) {
+            toast.warn(response.data.message);
+          } else {
+            toast.success(response.data.message);
+            viewPostByUsers();
+            sendApiRequest();
+            viewSinglePost();
+            //router.push("/");
+            //localStorage.removeItem("_id");
+          }
         });
     } catch (error) {
       console.error("deleteComment API Error:", error);
     }
   };
 
+  const getEmailSubstring = (email) => {
+    // Split the email by '@' and take the first part
+    const username = email.split("@")[0];
+    return username;
+  };
+
   return (
     <>
       <div className="border-t-4 border-amber-600 rounded-t-xl  w-full text-white">
-        <div className="bg-gray-800 bg-opacity-90  rounded-t-xl  ">
+        <div className="bg-gray-800 bg-opacity-90  rounded-t-xl">
           {viewsinglePosts ? (
             <>
               <div className="md:p-8 p-3 text-white space-y-3  ">
                 <div className="border-b py-2 font-bold ">
                   <h2 className="text-xl">{viewsinglePosts.title}</h2>
                 </div>
-                <div className="flex space-x-10 justify-start">
+                <div className="flex md:space-x-10 space-x-3 justify-start">
                   <div>
                     {viewsinglePosts.images && (
                       <Image
@@ -253,9 +271,16 @@ const Datashow = () => {
                       <div className="py-2">
                         {viewsinglePosts.userData &&
                           viewsinglePosts.userData.length > 0 && (
-                            <p className="text-lg font-semibold ">
-                              {viewsinglePosts.userData[0].email}
-                            </p>
+                            <>
+                              <p className="text-lg font-semibold ">
+                                {getEmailSubstring(
+                                  viewsinglePosts.userData[0].email
+                                )}
+                              </p>
+                              {/*<p className="text-lg font-semibold block md:hidden">
+                                {viewsinglePosts.userData[0].email.slice(0, 8)}
+                              </p>*/}
+                            </>
                           )}
                       </div>
                       <div className="flex gap-3 justify-center text-center">
@@ -300,14 +325,14 @@ const Datashow = () => {
                             ) : null}
 
                             <button onClick={() => handleLikeClick()}>
-                              {userinfo?.email ? (
-                                <FaRegHeart
-                                  className="text-white hover:text-gray-300"
+                              {liked ? (
+                                <FaHeart
+                                  className="text-red-500 hover:text-red-700"
                                   size={24}
                                 />
                               ) : (
-                                <FaHeart
-                                  className="text-red-500 hover:text-red-700"
+                                <FaRegHeart
+                                  className="text-white hover:text-gray-300"
                                   size={24}
                                 />
                               )}
@@ -315,9 +340,9 @@ const Datashow = () => {
                           </div>
                           <div
                             className="cursor-pointer"
-                            onClick={() => Bookmark()}
+                            onClick={() => Bookmark(viewsinglePosts._id)}
                           >
-                            {ioBookmark ? (
+                            {saved ? (
                               <div className="text-blue-600">
                                 <IoBookmark size={24} />
                               </div>
@@ -350,9 +375,11 @@ const Datashow = () => {
                       </div>
                     </div>
                   </div>
-                  <div className="flex flex-col order-last text-center">
-                    <p> {formatDate(viewsinglePosts.createdAt)} </p>
-                    <p className="text-xs">days ago</p>
+                  <div className=" md:block hidden">
+                    <div className="flex flex-col order-last text-center">
+                      <p> {formatDate(viewsinglePosts.createdAt)} </p>
+                      <p className="text-xs">days ago</p>
+                    </div>
                   </div>
                 </div>
                 {/*----------------------Comments--------------------------------*/}
@@ -365,7 +392,7 @@ const Datashow = () => {
                     viewComments.map((comment, index) => (
                       <>
                         <div
-                          className="flex space-x-10 justify-start  "
+                          className="flex md:space-x-10 space-x-3"
                           key={index}
                         >
                           <div>
@@ -389,7 +416,9 @@ const Datashow = () => {
                                 {comment.userData &&
                                   comment.userData.length > 0 && (
                                     <p className="text-lg font-semibold ">
-                                      {comment.userData[0].email}
+                                      {getEmailSubstring(
+                                        comment.userData[0].email
+                                      )}
                                     </p>
                                   )}
                               </div>
@@ -453,20 +482,7 @@ const Datashow = () => {
                                       )}
                                     </button>
                                   </div>
-                                  <div
-                                    className="cursor-pointer"
-                                    onClick={() => Bookmark()}
-                                  >
-                                    {ioBookmark ? (
-                                      <div className="text-blue-600">
-                                        <IoBookmark size={24} />
-                                      </div>
-                                    ) : (
-                                      <div>
-                                        <IoBookmarkOutline size={24} />
-                                      </div>
-                                    )}
-                                  </div>
+
                                   {userinfo?.email ===
                                     comment.userData[0].email && (
                                     <div
@@ -484,7 +500,7 @@ const Datashow = () => {
 
                                   <div
                                     className="cursor-pointer flex gap-2 text-lg items-center px-2 py-1  hover:bg-slate-600 hover:rounded-lg hover:delay-75"
-                                    onClick={() => handleReplyClick()}
+                                    //onClick={() => handleReplyClick()}
                                   >
                                     <FaReply size={20} />
                                     <p>Reply</p>
@@ -493,9 +509,11 @@ const Datashow = () => {
                               </div>
                             </div>
                           </div>
-                          <div className="flex flex-col order-last text-center">
-                            <p> {formatDate(viewsinglePosts.createdAt)} </p>
-                            <p className="text-xs">days ago</p>
+                          <div className=" md:block hidden">
+                            <div className="flex flex-col order-last text-center">
+                              <p> {formatDate(viewsinglePosts.createdAt)} </p>
+                              <p className="text-xs">days ago</p>
+                            </div>
                           </div>
                         </div>
                       </>

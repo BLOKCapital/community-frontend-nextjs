@@ -22,7 +22,8 @@ const Sidebar = () => {
   const [isCategoriesOpen, setIsCategoriesOpen] = useState(true);
   const [istagOpen, setIstagOpen] = useState(false);
   const [openmore, setOpenmore] = useState(false);
-  const { Token, coreKitStatus, isSidebar, setIsSidebar } = useWeb3AuthSigner();
+  const { Token, accountAddress, isSidebar, setIsSidebar } =
+    useWeb3AuthSigner();
 
   const tagData = [
     { icon: <PiInfoDuotone size={22} />, name: "About" },
@@ -55,7 +56,7 @@ const Sidebar = () => {
 
   return (
     <div
-      className={` lg:block hidden lg:w-72 md:60 bg-gray-500 fixed   bg-opacity-20 rounded-3xl text-white border-t-4  border-t-[#3e4cc9] h-[82vh]
+      className={` lg:block hidden  md:w-64 bg-gray-500 fixed   bg-opacity-20 rounded-3xl text-white border-t-4  border-t-[#3e4cc9] h-[82vh]
       `}
     >
       <div className="py-5 space-y-2">
@@ -74,7 +75,7 @@ const Sidebar = () => {
           </Link>
         </div>
         <div>
-          {coreKitStatus === "LOGGED_IN" && Token && (
+          {accountAddress && Token && (
             <Link href="/my-posts">
               <div
                 className={`hover:bg-slate-500 hover:bg-opacity-20 text-base cursor-pointer ${

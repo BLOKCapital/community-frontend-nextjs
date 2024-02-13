@@ -30,7 +30,7 @@ export default function RootLayout({
               <div className="">
                 <Sidebar />
               </div>
-              <div className="flex-grow mx-2 w-full lg:pl-72 ">{children}</div>
+              <div className="flex-grow mx-2 w-full lg:pl-64 ">{children}</div>
             </div>
           </div>
         </Web3AuthSignerProvider>

@@ -33,7 +33,6 @@ const Latest = () => {
         <div>Latest</div>
       </div>
       <div>
-        {viewPosts ? null : <p className="text-white">No Data</p>}
         {viewPosts ? (
           <>
             {viewPosts.map((item, index) => (
@@ -43,7 +42,7 @@ const Latest = () => {
               >
                 <Link href={`/${formatTitle(item.title)}`}>
                   <div
-                    className="bg-slate-800 bg-opacity-90 rounded-xl flex flex-col md:flex-row justify-between items-center gap-2 p-2"
+                    className="bg-slate-800 bg-opacity-90 rounded-xl flex  justify-between items-center gap-2 p-2"
                     onClick={() => Opencontent(item._id)}
                   >
                     <div className="flex items-center space-x-2 space-y-2">

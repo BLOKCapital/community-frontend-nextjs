@@ -99,14 +99,14 @@ export interface Web3AuthSignerContext {
   isSidebar: boolean;
   setIsSidebar: React.Dispatch<React.SetStateAction<boolean>>;
 
-  //coreKitInstance: any;
-  //setCoreKitInstance: React.Dispatch<React.SetStateAction<any>>;
+  checkuserlike: any;
+  setCheckuserlike: React.Dispatch<React.SetStateAction<any>>;
 
   viewPostByUsers: () => Promise<void>;
   sendApiRequest: () => Promise<void>;
   viewSinglePost: (e?: any) => Promise<void>;
   ViewComments: (e?: any) => Promise<void>;
-  CheckLikesclick: () => Promise<void>;
+  CheckLikesclick: (e?: any) => Promise<void>;
 }
 
 export const Web3AuthSigner = createContext<Web3AuthSignerContext | null>(null);
@@ -154,6 +154,7 @@ export function Web3AuthSignerProvider({
   const [Token, setToken] = useState<any>();
   const [getid, setGetid] = useState<any>();
   const [isSidebar, setIsSidebar] = useState<boolean>(false);
+  const [checkuserlike, setCheckuserlike] = useState<any>();
   //const [coreKitInstance, setCoreKitInstance] = useState<any>();
 
   useEffect(() => {
@@ -203,6 +204,7 @@ export function Web3AuthSignerProvider({
           SetViewsinglePosts(response.data.data);
           setIsLiked(!isLiked);
           ViewComments(response.data.data._id);
+          CheckLikesclick(response.data.data._id);
         });
     } catch (error) {
       console.error("viewSinglePost API Error:", error);
@@ -241,10 +243,17 @@ export function Web3AuthSignerProvider({
     }
   };
 
-  const CheckLikesclick = async () => {
+  const CheckLikesclick = async (e: any) => {
+    console.log("postIds e:---->", e);
+
+    const postIds = e;
+    //const data = { postIds: e };
+    //console.log("data", data);
+
     try {
-      await axiosInstanceAuth.get(`checkLikes/${getid}`).then((response) => {
-        console.log("CheckLikesclick API Response:", response);
+      await axiosInstanceAuth.get(`checkLikes/${postIds}`).then((response) => {
+        console.log("CheckLikesclick API Response:", response.data.data.array);
+        setCheckuserlike(response.data.data.array);
       });
     } catch (error) {
       console.error("CheckLikesclick API Error:", error);
@@ -291,7 +300,6 @@ export function Web3AuthSignerProvider({
         SetViewsinglePosts,
         coreKitStatus,
         setCoreKitStatus,
-
         bookmark,
         SetBookmark,
         isLiked,
@@ -317,6 +325,8 @@ export function Web3AuthSignerProvider({
         setIsComment,
         isCommentdata,
         setIsCommentdata,
+        checkuserlike,
+        setCheckuserlike,
       }}
     >
       {children}

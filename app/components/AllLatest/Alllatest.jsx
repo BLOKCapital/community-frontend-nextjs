@@ -66,12 +66,12 @@ const Alllatest = () => {
                           </div>
                         </Link>
                         <div className="flex justify-center  font-light">
-                          <div className="px-3 py-1 md:w-16">
+                          <div className="px-3 py-1 md:w-14">
                             {item.likeCount}
                           </div>
-                          <div className="px-3 py-1 md:w-16"> 10</div>
+                          <div className="px-3 py-1 md:w-14"> 10</div>
 
-                          <div className="px-3 py-1 md:w-16"> 30</div>
+                          <div className="px-3 py-1 md:w-14"> 30</div>
                           <div className="px-3 py-1 md:w-18">
                             {formatDate(item.createdAt)}
                           </div>
