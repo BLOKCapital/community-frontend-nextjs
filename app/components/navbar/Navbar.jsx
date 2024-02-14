@@ -218,7 +218,7 @@ const Navbar = () => {
       setUserinfo(userdata);
       console.log("userdata-->", userdata);
     }
-  }, [setUserinfo, web3AuthSigner]);
+  }, [coreKitInstance, setUserinfo, web3AuthSigner]);
 
   const logout = async () => {
     console.log("logout");
@@ -503,10 +503,11 @@ const Navbar = () => {
                             <p className="text-sm ">{userinfo?.email}</p>
                             <p className="text-xs ">
                               Last Update:
-                              <span className="text-xm ">
-                                {" "}
-                                {formatDate(storedData1.createdAt)}
-                              </span>{" "}
+                              {storedData1 ? (
+                                <span className="text-xm ">
+                                  {formatDate(storedData1.createdAt)}
+                                </span>
+                              ) : null}
                             </p>
                           </div>
                           <hr />

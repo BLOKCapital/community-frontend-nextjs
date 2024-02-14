@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import All from "./All";
+import Likes from "./Likes";
+import Bookmarks from "./Bookmarks";
 const Activity = () => {
   const [selectedButton, setSelectedButton] = useState("Topics");
 
@@ -9,17 +11,8 @@ const Activity = () => {
 
   const contentMap = {
     Topics: <All />,
-    Likes: (
-      <div className="flex justify-center items-center text-2xl font-bold text-yellow-500">
-        <span className="underline text-purple-500">Coming Soon</span>
-      </div>
-    ),
-    Bookmarks: (
-      <div className="flex justify-center items-center text-2xl font-bold text-red-500">
-        <span className="underline text-indigo-500">Coming Soon</span>
-      </div>
-    ),
-
+    Likes: <Likes />,
+    Bookmarks: <Bookmarks />,
     Vote: (
       <div className="flex justify-center items-center text-2xl font-bold text-blue-500   ">
         <span className="underline text-green-500">Coming Soon</span>

@@ -102,11 +102,21 @@ export interface Web3AuthSignerContext {
   checkuserlike: any;
   setCheckuserlike: React.Dispatch<React.SetStateAction<any>>;
 
+  checkuserlikeComment: any;
+  setCheckuserlikeComment: React.Dispatch<React.SetStateAction<any>>;
+
+  postLikedByUser: any;
+  setPostLikedByUser: React.Dispatch<React.SetStateAction<any>>;
+
+  viewSavedPostByUser: any;
+  setViewSavedPostByUser: React.Dispatch<React.SetStateAction<any>>;
+
   viewPostByUsers: () => Promise<void>;
   sendApiRequest: () => Promise<void>;
   viewSinglePost: (e?: any) => Promise<void>;
   ViewComments: (e?: any) => Promise<void>;
   CheckLikesclick: (e?: any) => Promise<void>;
+  CheckCommentLike: (e?: any) => Promise<void>;
 }
 
 export const Web3AuthSigner = createContext<Web3AuthSignerContext | null>(null);
@@ -155,6 +165,9 @@ export function Web3AuthSignerProvider({
   const [getid, setGetid] = useState<any>();
   const [isSidebar, setIsSidebar] = useState<boolean>(false);
   const [checkuserlike, setCheckuserlike] = useState<any>();
+  const [checkuserlikeComment, setCheckuserlikeComment] = useState<any>();
+  const [postLikedByUser, setPostLikedByUser] = useState<any>();
+  const [viewSavedPostByUser, setViewSavedPostByUser] = useState<any>();
   //const [coreKitInstance, setCoreKitInstance] = useState<any>();
 
   useEffect(() => {
@@ -191,11 +204,6 @@ export function Web3AuthSignerProvider({
   };
 
   const viewSinglePost = async (e: any) => {
-    //const storedData = localStorage.getItem("UserData");
-    //const storedData1 = storedData ? JSON.parse(storedData) : null;
-    //console.log(storedData1);
-    //const Id = [{ postIds: storedData1?._id }];
-
     try {
       await axiosInstanceAuth
         .get(`viewSinglePost/${e ? e : getid}`)
@@ -224,19 +232,21 @@ export function Web3AuthSignerProvider({
           response?.data?.data?.comments
         );
         SetViewComments(response?.data?.data?.comments);
+        CheckCommentLike(response?.data?.data?.comments?._id);
       });
     } catch (error) {
       console.error("ViewComments API Error:", error);
     }
   };
 
-  const viewSavedPostByUser = async () => {
+  const ViewSavedPostByUser = async () => {
     try {
       await axiosInstanceAuth.get(`viewSavedPostByUser`).then((response) => {
         console.log(
           "viewSavedPostByUser API Response:",
           response.data.data.savedPost
         );
+        setViewSavedPostByUser(response.data.data.savedPost);
       });
     } catch (error) {
       console.error("viewSavedPostByUser API Error:", error);
@@ -260,11 +270,49 @@ export function Web3AuthSignerProvider({
     }
   };
 
+  const CheckCommentLike = async (e: any) => {
+    console.log("postIds e:---->", e);
+
+    const commentId = e;
+    //const data = { postIds: e };
+    //console.log("data", data);
+
+    try {
+      await axiosInstanceAuth
+        .get(`checkCommentLike/${commentId}`)
+        .then((response) => {
+          console.log(
+            "checkCommentLike API Response:",
+            response.data.data.array
+          );
+          setCheckuserlikeComment(response.data.data.array);
+        });
+    } catch (error) {
+      console.error("checkCommentLike API Error:", error);
+    }
+  };
+
+  const PostLikedByUser = async () => {
+    try {
+      await axiosInstanceAuth.get(`postLikedByUser`).then((response) => {
+        console.log(
+          "postLikedByUser API Response:",
+          response?.data?.data?.likes
+        );
+        setPostLikedByUser(response?.data?.data?.likes);
+      });
+    } catch (error) {
+      console.error("postLikedByUser API Error:", error);
+    }
+  };
+
   useEffect(() => {
     sendApiRequest();
     //viewSavedPostByUser();
     if (Token) {
       viewPostByUsers();
+      PostLikedByUser();
+      ViewSavedPostByUser();
     }
     if (getid) {
       viewSinglePost(getid);
@@ -327,6 +375,13 @@ export function Web3AuthSignerProvider({
         setIsCommentdata,
         checkuserlike,
         setCheckuserlike,
+        CheckCommentLike,
+        checkuserlikeComment,
+        setCheckuserlikeComment,
+        postLikedByUser,
+        setPostLikedByUser,
+        viewSavedPostByUser,
+        setViewSavedPostByUser,
       }}
     >
       {children}

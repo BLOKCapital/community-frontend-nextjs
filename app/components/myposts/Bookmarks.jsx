@@ -4,9 +4,14 @@ import Image from "next/image";
 import Link from "next/link";
 //import { useRouter } from "next/router";
 
-const Likes = () => {
-  const { setShowcontent, viewSinglePost, userinfo, postLikedByUser } =
-    useWeb3AuthSigner();
+const Bookmarks = () => {
+  const {
+    viewSavedPostByUser,
+    setShowcontent,
+    viewSinglePost,
+    userinfo,
+    postLikedByUser,
+  } = useWeb3AuthSigner();
 
   const formatTitle = (title) => {
     // Your implementation here
@@ -30,9 +35,9 @@ const Likes = () => {
     <>
       {userinfo ? (
         <>
-          {postLikedByUser ? (
+          {viewSavedPostByUser ? (
             <>
-              {postLikedByUser.map((likedItem, index) => (
+              {viewSavedPostByUser.map((likedItem, index) => (
                 <div
                   className="rounded-xl cursor-pointer mb-2 hover:bg-slate-300  hover:rounded-xl"
                   key={index}
@@ -103,7 +108,9 @@ const Likes = () => {
                         </div>
                       </div>
                     </>
-                  ) : null}
+                  ) : (
+                    <p>No Data</p>
+                  )}
                 </div>
               ))}
             </>
@@ -128,4 +135,4 @@ const Likes = () => {
   );
 };
 
-export default Likes;
+export default Bookmarks;

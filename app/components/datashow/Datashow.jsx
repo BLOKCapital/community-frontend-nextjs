@@ -35,6 +35,7 @@ const Datashow = () => {
     setIsComment,
     viewComments,
     checkuserlike,
+    checkuserlikeComment,
   } = useWeb3AuthSigner();
   const [isLiked, setIsLiked] = useState(false);
   const [ioBookmark, setIoBookmark] = useState(false);
@@ -50,7 +51,12 @@ const Datashow = () => {
 
   const saved =
     checkuserlike && checkuserlike.length > 0 && checkuserlike[1]?.saved;
-  console.log(saved);
+
+  const Likecomment =
+    checkuserlikeComment &&
+    checkuserlikeComment.length > 0 &&
+    checkuserlikeComment[0]?.liked;
+
   useEffect(() => {
     const getid = localStorage.getItem("_id");
     setGetid(getid);
@@ -179,6 +185,7 @@ const Datashow = () => {
         toast.success(response.data.message);
         viewSinglePost(getid);
         sendApiRequest();
+        CheckCommentLike(e);
       });
     } catch (error) {
       console.error("SinglelikeComment API Error:", error);
@@ -452,15 +459,15 @@ const Datashow = () => {
                               <div className="flex justify-end items-center  ">
                                 <div className="flex space-x-5 justify-center items-center">
                                   <div className="cursor-pointer flex gap-2 justify-center items-center">
-                                    {comment.commentLikeCoun > 0 ? (
+                                    {comment.commentLikeCount > 0 ? (
                                       <p
                                         className={`text-base ${
-                                          comment.commentLikeCoun > 0
+                                          comment.commentLikeCount > 0
                                             ? "delay-75"
                                             : ""
                                         } `}
                                       >
-                                        {comment.commentLikeCoun}
+                                        {comment.commentLikeCount}
                                       </p>
                                     ) : null}
 
@@ -469,14 +476,14 @@ const Datashow = () => {
                                         handleLikeClickComment(comment._id)
                                       }
                                     >
-                                      {userinfo?.email ? (
-                                        <FaRegHeart
-                                          className="text-white hover:text-gray-300"
+                                      {Likecomment ? (
+                                        <FaHeart
+                                          className="text-red-500 hover:text-red-700"
                                           size={24}
                                         />
                                       ) : (
-                                        <FaHeart
-                                          className="text-red-500 hover:text-red-700"
+                                        <FaRegHeart
+                                          className="text-white hover:text-gray-300"
                                           size={24}
                                         />
                                       )}
