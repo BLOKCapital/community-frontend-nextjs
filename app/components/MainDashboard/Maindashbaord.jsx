@@ -5,17 +5,28 @@ import { GrFormClose } from "react-icons/gr";
 import Announcements from "../Announcements/Announcements";
 import Started from "../Started/Started";
 import Optioncatagery from "../Optioncatagery/optioncatagery";
+import Link from "next/link";
 
 const Maindashbaord = () => {
   const [searchInput, setSearchInput] = useState("");
   const [selectedCategory, setSelectedCategory] = useState(0);
-  //console.log("selectedCategory--> ", selectedCategory);
+  const [showPopup, setShowPopup] = useState(false);
+
   const handleInputChange = (e) => {
     setSearchInput(e.target.value);
+    // Show the popup when there is some search input
+    setShowPopup(e.target.value.trim() !== "");
   };
 
   const clearInput = () => {
     setSearchInput("");
+    // Hide the popup when the input is cleared
+    setShowPopup(false);
+  };
+
+  const formatTitle = (title) => {
+    // Your implementation here
+    return title.toLowerCase().replace(/\s+/g, "-");
   };
   return (
     <div className=" mx-auto">
@@ -38,6 +49,7 @@ const Maindashbaord = () => {
               onChange={handleInputChange}
               className="ml-2 w-full outline-none"
             />
+
             <div className="flex gap-2 px-2 cursor-pointer">
               {searchInput ? (
                 <GrFormClose size={23} onClick={clearInput} />
@@ -45,6 +57,26 @@ const Maindashbaord = () => {
               <RiSearchLine size={23} />
             </div>
           </div>
+          {showPopup && (
+            <div className=" absolute pt-96 text-white text-lg">
+              <div className="flex justify-center">
+                <div className="bg-slate-800 bg-opacity-100 border rounded-lg p-4 w-[full] md:w-[107vh] ">
+                  {/* Render the relevant data based on search input */}
+                  {/* Example: <SearchResults searchInput={searchInput} /> */}
+                  <div className="space-y-3">
+                    <div className=" cursor-pointer hover:bg-slate-300 hover:bg-opacity-25 px-3 py-2 rounded-lg">
+                      <p>Popup content based on search input</p>
+                    </div>
+                    <Link href={`/search/${formatTitle(searchInput)}`}>
+                      <div className="cursor-pointer hover:bg-slate-300 hover:bg-opacity-25 px-3 py-2 rounded-lg ">
+                        More..
+                      </div>
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </div>
       <div
@@ -57,6 +89,7 @@ const Maindashbaord = () => {
         <Started />
         <Announcements />
       </div>
+
       <div>
         <Optioncatagery
           selectedCategory={selectedCategory}

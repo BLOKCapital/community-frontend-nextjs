@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import toast, { Toaster } from "react-hot-toast";
+
 import { SlArrowDown } from "react-icons/sl";
 import { useWeb3AuthSigner } from "@/app/context/web3-auth-signer";
 import { IoMdCreate } from "react-icons/io";

@@ -6,8 +6,7 @@ import clipboardCopy from "clipboard-copy";
 import DashboardHeader from "../../components/myposts/Buttonspage";
 import { MdDone } from "react-icons/md";
 import { BsCopy } from "react-icons/bs";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import toast, { Toaster } from "react-hot-toast";
 
 const Mypost = () => {
   const { accountAddress, userinfo, registerUser } = useWeb3AuthSigner();

@@ -6,8 +6,8 @@ import { BiSolidEditAlt } from "react-icons/bi";
 import { IoBookmarkOutline } from "react-icons/io5";
 import { IoBookmark } from "react-icons/io5";
 import { RiDeleteBin6Fill } from "react-icons/ri";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import toast, { Toaster } from "react-hot-toast";
+
 import { useRouter } from "next/navigation";
 import deleteimg from "../../assets/icons/delete.png";
 import { FaHeart, FaRegHeart, FaReply } from "react-icons/fa6";

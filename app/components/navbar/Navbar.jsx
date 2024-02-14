@@ -23,8 +23,8 @@ import { MdDone } from "react-icons/md";
 import { BsCopy } from "react-icons/bs";
 import axiosInstanceAuth from "../apiInstances/axiosInstanceAuth";
 import Example from "../Editer/Editer";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import toast, { Toaster } from "react-hot-toast";
+
 import { BiMenu } from "react-icons/bi";
 import clipboardCopy from "clipboard-copy";
 import { CgClose } from "react-icons/cg";
@@ -578,7 +578,7 @@ const Navbar = () => {
                 <p> LOGIN </p>
               </button>
             )}
-            <ToastContainer />
+            <Toaster position="top-right" />
           </div>
         </div>
       </div>
