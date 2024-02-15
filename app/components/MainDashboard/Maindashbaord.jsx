@@ -15,7 +15,7 @@ const Maindashbaord = () => {
   const handleInputChange = (e) => {
     setSearchInput(e.target.value);
     // Show the popup when there is some search input
-    setShowPopup(e.target.value.trim() !== "");
+    //setShowPopup(e.target.value.trim() !== "");
   };
 
   const clearInput = () => {

@@ -36,6 +36,11 @@ const Datashow = () => {
     viewComments,
     checkuserlike,
     checkuserlikeComment,
+    postLikedByUser,
+    PostLikedByUser,
+    ViewSavedPostByUser,
+    setIsreplycomment,
+    setReplycommentdata,
   } = useWeb3AuthSigner();
   const [isLiked, setIsLiked] = useState(false);
   const [ioBookmark, setIoBookmark] = useState(false);
@@ -72,7 +77,17 @@ const Datashow = () => {
     }
   }, [viewsinglePosts]);
 
-  console.log("view single Posts -->", viewsinglePosts);
+  //console.log("view single Posts -->", viewsinglePosts);
+
+  const handleReplyComment = () => {
+    //if (coreKitStatus === "LOGGED_IN") {
+    //  setopenediter(true);
+    //  setIsreplycomment(true);
+    //} else {
+    //  toast.error("Please Login!");
+    //}
+    toast.error("Upcoming!!");
+  };
 
   const handleDeleteClick = (e, id) => {
     setDeletew({
@@ -171,6 +186,7 @@ const Datashow = () => {
         toast.success(response.data.message);
         viewSinglePost(postId);
         sendApiRequest();
+        PostLikedByUser();
         CheckLikesclick(postId);
       });
     } catch (error) {
@@ -185,6 +201,7 @@ const Datashow = () => {
         toast.success(response.data.message);
         viewSinglePost(getid);
         sendApiRequest();
+        postLikedByUser();
         CheckCommentLike(e);
       });
     } catch (error) {
@@ -198,6 +215,7 @@ const Datashow = () => {
         console.log("savePost API Response:", response);
         toast.success(response.data.message);
         CheckLikesclick(e);
+        ViewSavedPostByUser();
       });
     } catch (error) {
       console.error("savePost API Error:", error);
@@ -233,9 +251,7 @@ const Datashow = () => {
             toast.warn(response.data.message);
           } else {
             toast.success(response.data.message);
-            viewPostByUsers();
-            sendApiRequest();
-            viewSinglePost();
+            viewSinglePost(getid);
             //router.push("/");
             //localStorage.removeItem("_id");
           }
@@ -403,13 +419,9 @@ const Datashow = () => {
                           key={index}
                         >
                           <div>
-                            {viewsinglePosts.images && (
+                            {comment.user && (
                               <Image
-                                src={
-                                  comment.userData &&
-                                  comment.userData.length > 0 &&
-                                  comment.userData[0].userImage
-                                }
+                                src={comment.user.userImage}
                                 alt="Image"
                                 height={60}
                                 width={60}
@@ -420,18 +432,14 @@ const Datashow = () => {
                           <div className="w-4/5 ">
                             <div className="flex justify-between items-center pb-5">
                               <div className="py-2">
-                                {comment.userData &&
-                                  comment.userData.length > 0 && (
-                                    <p className="text-lg font-semibold ">
-                                      {getEmailSubstring(
-                                        comment.userData[0].email
-                                      )}
-                                    </p>
-                                  )}
+                                {comment.user && (
+                                  <p className="text-lg font-semibold ">
+                                    {getEmailSubstring(comment.user.email)}
+                                  </p>
+                                )}
                               </div>
                               <div className="flex gap-3 justify-center text-center">
-                                {userinfo?.email ===
-                                  comment.userData[0].email && (
+                                {userinfo?.email === comment.user.email && (
                                   <div
                                     className="cursor-pointer text-lg"
                                     onClick={() => handleEditcomment(comment)}
@@ -490,8 +498,125 @@ const Datashow = () => {
                                     </button>
                                   </div>
 
-                                  {userinfo?.email ===
-                                    comment.userData[0].email && (
+                                  {userinfo?.email === comment.user.email && (
+                                    <div
+                                      className="text-red-500 cursor-pointer text-lg"
+                                      onClick={() =>
+                                        handleDeleteClick(
+                                          "comment",
+                                          comment._id
+                                        )
+                                      }
+                                    >
+                                      <RiDeleteBin6Fill size={24} />
+                                    </div>
+                                  )}
+
+                                  <div
+                                    className="cursor-pointer flex gap-2 text-lg items-center px-2 py-1  hover:bg-slate-600 hover:rounded-lg hover:delay-75"
+                                    onClick={() => handleReplyComment()}
+                                  >
+                                    <FaReply size={20} />
+                                    <p>Reply Comment</p>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div className=" md:block hidden">
+                            <div className="flex flex-col order-last text-center">
+                              <p> {formatDate(viewsinglePosts.createdAt)} </p>
+                              <p className="text-xs">days ago</p>
+                            </div>
+                          </div>
+                        </div>
+                        {/*----------------------comment repy---------------------*/}
+
+                        {/*<div
+                          className="flex md:space-x-10 space-x-3"
+                          key={index}
+                        >
+                          <div>
+                            {comment.user && (
+                              <Image
+                                src={comment.user.userImage}
+                                alt="Image"
+                                height={60}
+                                width={60}
+                                className="rounded-full "
+                              />
+                            )}
+                          </div>
+                          <div className="w-4/5 ">
+                            <div className="flex justify-between items-center pb-5">
+                              <div className="py-2">
+                                {comment.user && (
+                                  <p className="text-lg font-semibold ">
+                                    {getEmailSubstring(comment.user.email)}
+                                  </p>
+                                )}
+                              </div>
+                              <div className="flex gap-3 justify-center text-center">
+                                {userinfo?.email === comment.user.email && (
+                                  <div
+                                    className="cursor-pointer text-lg"
+                                    onClick={() => handleEditcomment(comment)}
+                                  >
+                                    <BiSolidEditAlt size={22} />
+                                  </div>
+                                )}
+
+                                <div>
+                                  <p>
+                                    {calculateTimeDifference(
+                                      comment?.createdAt
+                                    )}
+                                    d
+                                  </p>
+                                </div>
+                              </div>
+                            </div>
+                            <div className="space-y-5">
+                              <div
+                                dangerouslySetInnerHTML={{
+                                  __html: comment.content,
+                                }}
+                              />
+                              <div className="flex justify-end items-center  ">
+                                <div className="flex space-x-5 justify-center items-center">
+                                  <div className="cursor-pointer flex gap-2 justify-center items-center">
+                                    {comment.commentLikeCount > 0 ? (
+                                      <p
+                                        className={`text-base ${
+                                          comment.commentLikeCount > 0
+                                            ? "delay-75"
+                                            : ""
+                                        } `}
+                                      >
+                                        {comment.commentLikeCount}
+                                      </p>
+                                    ) : null}
+
+                                    <button
+                                      onClick={() =>
+                                        handleLikeClickComment(comment._id)
+                                      }
+                                    >
+                                      {Likecomment ? (
+                                        <FaHeart
+                                          className="text-red-500 hover:text-red-700"
+                                          size={24}
+                                        />
+                                      ) : (
+                                        <FaRegHeart
+                                          className="text-white hover:text-gray-300"
+                                          size={24}
+                                        />
+                                      )}
+                                    </button>
+                                  </div>
+
+                                  {userinfo?.email === comment.user.email && (
                                     <div
                                       className="text-red-500 cursor-pointer text-lg"
                                       onClick={() =>
@@ -510,7 +635,7 @@ const Datashow = () => {
                                     //onClick={() => handleReplyClick()}
                                   >
                                     <FaReply size={20} />
-                                    <p>Reply</p>
+                                    <p>Reply Comment</p>
                                   </div>
                                 </div>
                               </div>
@@ -522,7 +647,7 @@ const Datashow = () => {
                               <p className="text-xs">days ago</p>
                             </div>
                           </div>
-                        </div>
+                        </div>*/}
                       </>
                     ))}
                 </div>

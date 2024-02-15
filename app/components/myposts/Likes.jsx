@@ -30,86 +30,84 @@ const Likes = () => {
     <>
       {userinfo ? (
         <>
-          {postLikedByUser ? (
+          {postLikedByUser && postLikedByUser.length > 0 ? (
             <>
               {postLikedByUser.map((likedItem, index) => (
                 <div
                   className="rounded-xl cursor-pointer mb-2 hover:bg-slate-300  hover:rounded-xl"
                   key={index}
                 >
-                  {likedItem.postData ? (
-                    <>
-                      <div className="bg-slate-800 bg-opacity-90 rounded-xl flex flex-col md:flex-row justify-between items-center gap-2 p-2">
-                        <div className="flex items-center space-x-2 space-y-2">
-                          <div className="px-2">
-                            {likedItem.postData[0].images &&
-                            !Array.isArray(likedItem.postData[0].images) ? (
-                              <Image
-                                src={likedItem.postData[0].images}
-                                alt="Image"
-                                height={50}
-                                width={50}
-                                className="rounded-full bg-white"
-                              />
-                            ) : (
-                              Array.isArray(likedItem.postData[0].images) &&
-                              likedItem.postData[0].images.map(
-                                (image, imageIndex) => (
-                                  <Image
-                                    key={imageIndex}
-                                    src={image}
-                                    alt={`Image ${imageIndex}`}
-                                    height={50}
-                                    width={50}
-                                    className="rounded-full bg-white"
-                                  />
-                                )
+                  <>
+                    <div className="bg-slate-800 bg-opacity-90 rounded-xl flex flex-col md:flex-row justify-between items-center gap-2 p-2">
+                      <div className="flex items-center space-x-2 space-y-2">
+                        <div className="px-2">
+                          {likedItem.postData[0].images &&
+                          !Array.isArray(likedItem.postData[0].images) ? (
+                            <Image
+                              src={likedItem.postData[0].images}
+                              alt="Image"
+                              height={50}
+                              width={50}
+                              className="rounded-full bg-white"
+                            />
+                          ) : (
+                            Array.isArray(likedItem.postData[0].images) &&
+                            likedItem.postData[0].images.map(
+                              (image, imageIndex) => (
+                                <Image
+                                  key={imageIndex}
+                                  src={image}
+                                  alt={`Image ${imageIndex}`}
+                                  height={50}
+                                  width={50}
+                                  className="rounded-full bg-white"
+                                />
                               )
-                            )}
-                          </div>
-                          <div className="">
-                            <Link
-                              href={`/my-posts/${formatTitle(
-                                likedItem.postData[0].title
-                              )}`}
-                            >
-                              <div
-                                className="cursor-pointer space-y-3 font-semibold text-lg"
-                                onClick={() =>
-                                  Opencontent(likedItem.postData[0]._id)
-                                }
-                              >
-                                <p>{likedItem.postData[0].title}</p>
-                              </div>
-                            </Link>
-                            <div className="px-2 py-1">
-                              {likedItem.postData &&
-                                likedItem.postData[0].content && (
-                                  <div
-                                    dangerouslySetInnerHTML={{
-                                      __html:
-                                        likedItem.postData[0].content.slice(
-                                          0,
-                                          200
-                                        ) + "...",
-                                    }}
-                                  />
-                                )}
-                            </div>
-                          </div>
+                            )
+                          )}
                         </div>
-                        <div className="flex items-center text-slate-300 text-sm space-y-2 md:pl-2">
-                          <p>{formatDate(likedItem.createdAt)}</p>
+                        <div className="">
+                          <Link
+                            href={`/my-posts/${formatTitle(
+                              likedItem.postData[0].title
+                            )}`}
+                          >
+                            <div
+                              className="cursor-pointer space-y-3 font-semibold text-lg"
+                              onClick={() =>
+                                Opencontent(likedItem.postData[0]._id)
+                              }
+                            >
+                              <p>{likedItem.postData[0].title}</p>
+                            </div>
+                          </Link>
+                          <div className="px-2 py-1">
+                            {likedItem.postData &&
+                              likedItem.postData[0].content && (
+                                <div
+                                  dangerouslySetInnerHTML={{
+                                    __html:
+                                      likedItem.postData[0].content.slice(
+                                        0,
+                                        200
+                                      ) + "...",
+                                  }}
+                                />
+                              )}
+                          </div>
                         </div>
                       </div>
-                    </>
-                  ) : null}
+                      <div className="flex items-center text-slate-300 text-sm space-y-2 md:pl-2">
+                        <p>{formatDate(likedItem.createdAt)}</p>
+                      </div>
+                    </div>
+                  </>
                 </div>
               ))}
             </>
           ) : (
             <div className="flex justify-center items-center">
-              <p>There is no Topic Update.</p>
+              <p>There is no Topic Like.</p>
             </div>
           )}
         </>

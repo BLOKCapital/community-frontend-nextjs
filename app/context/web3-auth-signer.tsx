@@ -25,14 +25,21 @@ export interface Wallet1 {
   prompt: string;
   version_info: string;
 }
+
+interface BlogData {
+  content: string;
+  commentId: number;
+  postId: number;
+}
+
 export interface Web3AuthSignerContext {
   web3AuthSigner?: SafeEventEmitterProvider;
   setWeb3AuthSigner: React.Dispatch<
     React.SetStateAction<SafeEventEmitterProvider | undefined>
   >;
 
-  sessionKeyProvider: any;
-  setSessionKeyProvider: any;
+  sessionKeyProvider: any | null;
+  setSessionKeyProvider: any | null;
 
   accountAddress?: `0x${string}`;
   setAccountAddress: React.Dispatch<
@@ -51,28 +58,28 @@ export interface Web3AuthSignerContext {
   isLiked: boolean;
   setIsLiked: React.Dispatch<React.SetStateAction<boolean>>;
 
-  registerUser: any;
+  registerUser: any | null;
   setRegisterUser: React.Dispatch<React.SetStateAction<any>>;
 
-  viewPostByUser: any;
+  viewPostByUser: any | null;
   SetViewPostByUser: React.Dispatch<React.SetStateAction<any>>;
 
-  viewPosts: any;
+  viewPosts: any | null;
   SetViewPosts: React.Dispatch<React.SetStateAction<any>>;
 
-  viewsinglePosts: any;
+  viewsinglePosts: any | null;
   SetViewsinglePosts: React.Dispatch<React.SetStateAction<any>>;
 
-  viewComments: any;
+  viewComments: any | null;
   SetViewComments: React.Dispatch<React.SetStateAction<any>>;
 
-  showcontent: any;
+  showcontent: any | null;
   setShowcontent: React.Dispatch<React.SetStateAction<any>>;
 
-  coreKitStatus: any;
+  coreKitStatus: any | null;
   setCoreKitStatus: React.Dispatch<React.SetStateAction<any>>;
 
-  bookmark: any;
+  bookmark: any | null;
   SetBookmark: React.Dispatch<React.SetStateAction<any>>;
 
   isEditPost: boolean;
@@ -84,33 +91,42 @@ export interface Web3AuthSignerContext {
   isReply: boolean;
   setReply: React.Dispatch<React.SetStateAction<boolean>>;
 
-  isEditdata: any;
+  isEditdata: any | null;
   setIsEditdata: React.Dispatch<React.SetStateAction<any>>;
 
-  isCommentdata: any;
+  isCommentdata: any | null;
   setIsCommentdata: React.Dispatch<React.SetStateAction<any>>;
 
-  getid: any;
+  getid: any | null;
   setGetid: React.Dispatch<React.SetStateAction<any>>;
 
-  Token: any;
+  Token: any | null;
   setToken: React.Dispatch<React.SetStateAction<any>>;
 
   isSidebar: boolean;
   setIsSidebar: React.Dispatch<React.SetStateAction<boolean>>;
 
-  checkuserlike: any;
+  checkuserlike: any | null;
   setCheckuserlike: React.Dispatch<React.SetStateAction<any>>;
 
-  checkuserlikeComment: any;
+  checkuserlikeComment: any | null;
   setCheckuserlikeComment: React.Dispatch<React.SetStateAction<any>>;
 
-  postLikedByUser: any;
+  postLikedByUser: any | null;
   setPostLikedByUser: React.Dispatch<React.SetStateAction<any>>;
 
-  viewSavedPostByUser: any;
+  viewSavedPostByUser: any | null;
   setViewSavedPostByUser: React.Dispatch<React.SetStateAction<any>>;
 
+  isreplycomment: boolean;
+  setIsreplycomment: React.Dispatch<React.SetStateAction<boolean>>;
+
+  replycommentdata: BlogData;
+  setReplycommentdata: React.Dispatch<React.SetStateAction<BlogData>>;
+
+  //function
+  ViewSavedPostByUser: () => Promise<void>;
+  PostLikedByUser: () => Promise<void>;
   viewPostByUsers: () => Promise<void>;
   sendApiRequest: () => Promise<void>;
   viewSinglePost: (e?: any) => Promise<void>;
@@ -168,6 +184,12 @@ export function Web3AuthSignerProvider({
   const [checkuserlikeComment, setCheckuserlikeComment] = useState<any>();
   const [postLikedByUser, setPostLikedByUser] = useState<any>();
   const [viewSavedPostByUser, setViewSavedPostByUser] = useState<any>();
+  const [isreplycomment, setIsreplycomment] = useState<boolean>(false);
+  const [replycommentdata, setReplycommentdata] = useState<BlogData>({
+    content: "",
+    commentId: 0,
+    postId: 0,
+  });
   //const [coreKitInstance, setCoreKitInstance] = useState<any>();
 
   useEffect(() => {
@@ -220,11 +242,6 @@ export function Web3AuthSignerProvider({
   };
 
   const ViewComments = async (e: any) => {
-    //const storedData = localStorage.getItem("UserData");
-    //const storedData1 = storedData ? JSON.parse(storedData) : null;
-    //console.log(storedData1);
-    //const Id = storedData1?._id;
-
     try {
       await axiosInstanceAuth.get(`viewComments/${e}`).then((response) => {
         console.log(
@@ -254,7 +271,7 @@ export function Web3AuthSignerProvider({
   };
 
   const CheckLikesclick = async (e: any) => {
-    console.log("postIds e:---->", e);
+    //console.log("postIds e:---->", e);
 
     const postIds = e;
     //const data = { postIds: e };
@@ -271,7 +288,7 @@ export function Web3AuthSignerProvider({
   };
 
   const CheckCommentLike = async (e: any) => {
-    console.log("postIds e:---->", e);
+    //console.log("postIds e:---->", e);
 
     const commentId = e;
     //const data = { postIds: e };
@@ -308,16 +325,16 @@ export function Web3AuthSignerProvider({
 
   useEffect(() => {
     sendApiRequest();
-    //viewSavedPostByUser();
-    if (Token) {
-      viewPostByUsers();
-      PostLikedByUser();
-      ViewSavedPostByUser();
-    }
+    viewPostByUsers();
+
     if (getid) {
       viewSinglePost(getid);
     }
-  }, [Token, getid, coreKitStatus]);
+    if (Token) {
+      PostLikedByUser();
+      ViewSavedPostByUser();
+    }
+  }, [Token, getid]);
 
   return (
     <Web3AuthSigner.Provider
@@ -340,8 +357,6 @@ export function Web3AuthSignerProvider({
         SetViewPostByUser,
         SetViewPosts,
         viewPosts,
-        viewPostByUsers,
-        sendApiRequest,
         showcontent,
         setShowcontent,
         viewsinglePosts,
@@ -352,21 +367,18 @@ export function Web3AuthSignerProvider({
         SetBookmark,
         isLiked,
         setIsLiked,
-        viewSinglePost,
         isEditPost,
         setIsEditPost,
         isEditdata,
         setIsEditdata,
         isReply,
         setReply,
-        CheckLikesclick,
         getid,
         setGetid,
         Token,
         setToken,
         isSidebar,
         setIsSidebar,
-        ViewComments,
         viewComments,
         SetViewComments,
         isComment,
@@ -375,13 +387,26 @@ export function Web3AuthSignerProvider({
         setIsCommentdata,
         checkuserlike,
         setCheckuserlike,
-        CheckCommentLike,
         checkuserlikeComment,
         setCheckuserlikeComment,
         postLikedByUser,
         setPostLikedByUser,
         viewSavedPostByUser,
         setViewSavedPostByUser,
+        isreplycomment,
+        setIsreplycomment,
+        replycommentdata,
+        setReplycommentdata,
+
+        //function
+        viewPostByUsers,
+        sendApiRequest,
+        viewSinglePost,
+        ViewComments,
+        ViewSavedPostByUser,
+        CheckLikesclick,
+        CheckCommentLike,
+        PostLikedByUser,
       }}
     >
       {children}

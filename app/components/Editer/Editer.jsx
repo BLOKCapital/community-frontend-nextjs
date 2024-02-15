@@ -69,12 +69,14 @@ const Example = () => {
     isCommentdata,
     setIsComment,
     isComment,
+    isreplycomment,
+    setIsreplycomment,
   } = useWeb3AuthSigner();
   const [BlogsData, setBlogsData] = useState({
     title: "",
     content: "",
   });
-  //console.log("isEditdata-->", isEditdata);
+  console.log("isCommentdata-->", isCommentdata);
   useEffect(() => {
     if (isEditPost && isEditdata) {
       setBlogsData({
@@ -96,6 +98,8 @@ const Example = () => {
     setIsEditPost(false);
     setIsEditdata(undefined);
     setReply(false);
+    setIsreplycomment(false);
+    setIsComment(false);
     setBlogsData({
       title: "",
       content: "",
@@ -107,6 +111,8 @@ const Example = () => {
       Editpost();
     } else if (isComment) {
       editComment();
+    } else if (isreplycomment) {
+      ReplyComment();
     } else {
       Addpost();
     }
@@ -233,14 +239,50 @@ const Example = () => {
           toast.success(response.data.message);
           if (response) {
             setopenediter(false);
+            setReply(false);
             setBlogsData({
               title: "",
               content: "",
             });
             setIsEditPost(false);
-            viewPostByUsers();
+            viewPostByUsers(postId);
             sendApiRequest();
-            viewSinglePost();
+            viewSinglePost(postId);
+          }
+        });
+    } catch (error) {
+      console.error("addComment API Error:", error);
+    }
+  };
+
+  const ReplyComment = async () => {
+    if (!BlogsData.content) {
+      toast.error("Please fill in all the fields");
+      return;
+    }
+
+    const postId = viewsinglePosts?._id;
+    const dataToSend = {
+      content: BlogsData.content,
+    };
+    console.log("replyComment-->", postId);
+    try {
+      await axiosInstanceAuth
+        .post(`replyComment/${postId}`, dataToSend)
+        .then((response) => {
+          console.log("replyComment API Response:", response);
+          toast.success(response.data.message);
+          if (response) {
+            setopenediter(false);
+            setIsreplycomment(false);
+            setBlogsData({
+              title: "",
+              content: "",
+            });
+            setIsEditPost(false);
+            viewPostByUsers(postId);
+            sendApiRequest();
+            viewSinglePost(postId);
           }
         });
     } catch (error) {
@@ -253,7 +295,7 @@ const Example = () => {
       <div className={`space-y-4 `}>
         {isComment ? null : (
           <>
-            {isReply ? (
+            {isReply === true ? (
               <div className="flex justify-between text-white ">
                 <div></div>
                 <div className="flex gap-3 items-center">
@@ -327,7 +369,29 @@ const Example = () => {
           </button>
         </div>
 
-        <div className={`flex space-x-2 ${isReply ? "block" : "hidden"}`}>
+        <div
+          className={`flex space-x-2 ${isReply === true ? "block" : "hidden"}`}
+        >
+          <button
+            className="bg-white hover:bg-opacity-20 rounded-lg px-3 py-2 hover:text-white flex justify-center items-center space-x-1"
+            onClick={() => createreply()}
+          >
+            <FaReply size={20} />
+            <p>Reply</p>
+          </button>
+          <button
+            className="px-2 py-2 text-white hover:font-semibold"
+            onClick={() => close()}
+          >
+            Close
+          </button>
+        </div>
+
+        <div
+          className={`flex space-x-2 ${
+            isreplycomment === true ? "block" : "hidden"
+          }`}
+        >
           <button
             className="bg-white hover:bg-opacity-20 rounded-lg px-3 py-2 hover:text-white flex justify-center items-center space-x-1"
             onClick={() => createreply()}

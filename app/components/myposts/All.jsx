@@ -29,76 +29,72 @@ const All = () => {
     <>
       {userinfo ? (
         <>
-          {viewPostByUser ? (
+          {viewPostByUser && viewPostByUser.length > 0 ? (
             <>
               {viewPostByUser.map((item, index) => (
                 <div
                   className={`rounded-xl cursor-pointer mb-2 hover:bg-slate-300  hover:rounded-xl`}
                   key={index}
                 >
-                  {item ? (
-                    <>
-                      {/*<Link
+                  <>
+                    {/*<Link
                 href={`/[questions]`}
                 as={`/${item.title.replace(/\s+/g, "-").toLowerCase()}`}
                 passHref
                 replace
               >*/}
-                      <div className="bg-slate-800 bg-opacity-90 rounded-xl flex flex-col md:flex-row justify-between items-center gap-2 p-2">
-                        <div className="flex items-center space-x-2 space-y-2">
-                          <div className="px-2">
-                            {item.images && !Array.isArray(item.images) ? (
+                    <div className="bg-slate-800 bg-opacity-90 rounded-xl flex flex-col md:flex-row justify-between items-center gap-2 p-2">
+                      <div className="flex items-center space-x-2 space-y-2">
+                        <div className="px-2">
+                          {item.images && !Array.isArray(item.images) ? (
+                            <Image
+                              src={item.images}
+                              alt="Image"
+                              height={50}
+                              width={50}
+                              className="rounded-full bg-white"
+                            />
+                          ) : (
+                            // Handle array of images
+                            Array.isArray(item.images) &&
+                            item.images.map((image, imageIndex) => (
                               <Image
-                                src={item.images}
-                                alt="Image"
+                                key={imageIndex}
+                                src={image}
+                                alt={`Image ${imageIndex}`}
                                 height={50}
                                 width={50}
                                 className="rounded-full bg-white"
                               />
-                            ) : (
-                              // Handle array of images
-                              Array.isArray(item.images) &&
-                              item.images.map((image, imageIndex) => (
-                                <Image
-                                  key={imageIndex}
-                                  src={image}
-                                  alt={`Image ${imageIndex}`}
-                                  height={50}
-                                  width={50}
-                                  className="rounded-full bg-white"
-                                />
-                              ))
+                            ))
+                          )}
+                        </div>
+                        <div className="">
+                          <Link href={`/my-posts/${formatTitle(item.title)}`}>
+                            <div
+                              className={`cursor-pointer space-y-3 font-semibold text-lg`}
+                              onClick={() => Opencontent(item._id)}
+                            >
+                              <p>{item.title}</p>
+                            </div>
+                          </Link>
+                          <div className="flex items-center gap-2 py-1">
+                            <span className="bg-[#1C64F2] p-1.5 rounded-full"></span>
+                            {item.userData && item.userData.length > 0 && (
+                              <p className="text-sm  font-light">
+                                {item.userData[0].username}
+                              </p>
                             )}
                           </div>
-                          <div className="">
-                            <Link href={`/my-posts/${formatTitle(item.title)}`}>
-                              <div
-                                className={`cursor-pointer space-y-3 font-semibold text-lg`}
-                                onClick={() => Opencontent(item._id)}
-                              >
-                                <p>{item.title}</p>
-                              </div>
-                            </Link>
-                            <div className="flex items-center gap-2 py-1">
-                              <span className="bg-[#1C64F2] p-1.5 rounded-full"></span>
-                              {item.userData && item.userData.length > 0 && (
-                                <p className="text-sm  font-light">
-                                  {item.userData[0].username}
-                                </p>
-                              )}
-                            </div>
-                          </div>
-                        </div>
-                        <div className="flex items-center text-slate-300 text-sm space-y-2 md:pl-2">
-                          <p>{formatDate(item.createdAt)}</p>
-                          {/*<p>{item.days}</p>*/}
                         </div>
                       </div>
-                      {/*</Link>*/}
-                    </>
-                  ) : (
-                    <p>No Data</p>
-                  )}
+                      <div className="flex items-center text-slate-300 text-sm space-y-2 md:pl-2">
+                        <p>{formatDate(item.createdAt)}</p>
+                        {/*<p>{item.days}</p>*/}
+                      </div>
+                    </div>
+                    {/*</Link>*/}
+                  </>
                 </div>
               ))}
             </>
