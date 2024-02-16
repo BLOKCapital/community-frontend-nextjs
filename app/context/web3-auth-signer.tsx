@@ -121,8 +121,8 @@ export interface Web3AuthSignerContext {
   isreplycomment: boolean;
   setIsreplycomment: React.Dispatch<React.SetStateAction<boolean>>;
 
-  replycommentdata: BlogData;
-  setReplycommentdata: React.Dispatch<React.SetStateAction<BlogData>>;
+  replycommentdata: any;
+  setReplycommentdata: React.Dispatch<React.SetStateAction<any>>;
 
   //function
   ViewSavedPostByUser: () => Promise<void>;
@@ -185,11 +185,7 @@ export function Web3AuthSignerProvider({
   const [postLikedByUser, setPostLikedByUser] = useState<any>();
   const [viewSavedPostByUser, setViewSavedPostByUser] = useState<any>();
   const [isreplycomment, setIsreplycomment] = useState<boolean>(false);
-  const [replycommentdata, setReplycommentdata] = useState<BlogData>({
-    content: "",
-    commentId: 0,
-    postId: 0,
-  });
+  const [replycommentdata, setReplycommentdata] = useState<any>();
   //const [coreKitInstance, setCoreKitInstance] = useState<any>();
 
   useEffect(() => {
