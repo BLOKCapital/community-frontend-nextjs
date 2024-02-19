@@ -540,7 +540,7 @@ const Datashow = () => {
                                     onClick={() => handleReplyComment()}
                                   >
                                     <FaReply size={20} />
-                                    <p>Reply Comment</p>
+                                    <p>Reply</p>
                                   </div>
                                 </div>
                               </div>
@@ -672,7 +672,7 @@ const Datashow = () => {
                                             onClick={() => handleReplyComment()}
                                           >
                                             <FaReply size={20} />
-                                            <p>Reply Comment</p>
+                                            <p>Reply</p>
                                           </div>
                                         </div>
                                       </div>

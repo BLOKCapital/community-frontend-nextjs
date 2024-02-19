@@ -81,15 +81,16 @@ const Example = () => {
 
   useEffect(() => {
     if (isEditPost && isEditdata) {
+      console.log(isEditdata);
       setBlogsData({
-        title: isEditdata?.title || "",
+        title: isEditdata?.title,
         content: isEditdata?.content || "",
       });
     }
     if (isComment && isCommentdata) {
       console.log("Edit isCommentdata->", isCommentdata);
       setBlogsData({
-        title: "",
+        title: isEditdata?.title || "",
         content: isCommentdata?.content || "",
       });
     }
@@ -97,7 +98,7 @@ const Example = () => {
     if (isreplycomment && replycommentdata) {
       console.log("Edit replycommentdata->", replycommentdata);
       setBlogsData({
-        title: "",
+        title: isEditdata?.title || "",
         content: replycommentdata?.content || "",
       });
     }
@@ -112,15 +113,17 @@ const Example = () => {
 
   const close = () => {
     setopenediter(false);
-    setIsEditPost(false);
-    setIsEditdata(undefined);
-    setReply(false);
-    setIsreplycomment(false);
-    setIsComment(false);
-    setBlogsData({
-      title: "",
-      content: "",
-    });
+    setTimeout(() => {
+      setIsEditPost(false);
+      setIsEditdata(undefined);
+      setReply(false);
+      setIsreplycomment(false);
+      setIsComment(false);
+      setBlogsData({
+        title: "",
+        content: "",
+      });
+    }, 1000);
   };
 
   const createpremises = async () => {
@@ -314,10 +317,10 @@ const Example = () => {
     const dataToSend = {
       content: BlogsData.content,
     };
-    //console.log("dataToSend--->", dataToSend);
+    console.log("dataToSend--->", dataToSend);
     try {
       await axiosInstanceAuth
-        .put(`updateReply/${commentId}`, dataToSend)
+        .post(`updateReply/${commentId}`, dataToSend)
         .then(async (response) => {
           console.log("Createpremises API Response:", response);
           toast.success(response.data.message);
@@ -443,7 +446,7 @@ const Example = () => {
             isreplycomment === true ? "block" : "hidden"
           }`}
         >
-          {isreplycomment && replycommentdata ? (
+          {isreplycomment ? (
             <button
               className="bg-white hover:bg-opacity-20 rounded-lg px-3 py-2 hover:text-white flex justify-center items-center space-x-1"
               onClick={() => editReplyComment()}

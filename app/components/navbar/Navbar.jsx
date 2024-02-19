@@ -9,7 +9,11 @@ import Link from "next/link";
 import Web3 from "web3";
 import { FaAngleRight, FaCirclePlus } from "react-icons/fa6";
 import { useWeb3AuthSigner } from "@/app/context/web3-auth-signer";
-import { WEB3AUTH_NETWORK, Web3AuthMPCCoreKit } from "@web3auth/mpc-core-kit";
+import {
+  COREKIT_STATUS,
+  WEB3AUTH_NETWORK,
+  Web3AuthMPCCoreKit,
+} from "@web3auth/mpc-core-kit";
 import {
   ECDSAProvider,
   getRPCProviderOwner,

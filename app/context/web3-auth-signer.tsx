@@ -172,10 +172,6 @@ export function Web3AuthSignerProvider({
   const [showcontent, setShowcontent] = useState<any>();
   const [coreKitStatus, setCoreKitStatus] = useState<any>();
   const [isLiked, setIsLiked] = useState<boolean>(false);
-  const [isEditPost, setIsEditPost] = useState<boolean>(false);
-  const [isComment, setIsComment] = useState<boolean>(false);
-  const [isEditdata, setIsEditdata] = useState<any>(false);
-  const [isCommentdata, setIsCommentdata] = useState<any>(false);
   const [isReply, setReply] = useState<boolean>(false);
   const [Token, setToken] = useState<any>();
   const [getid, setGetid] = useState<any>();
@@ -184,9 +180,13 @@ export function Web3AuthSignerProvider({
   const [checkuserlikeComment, setCheckuserlikeComment] = useState<any>();
   const [postLikedByUser, setPostLikedByUser] = useState<any>();
   const [viewSavedPostByUser, setViewSavedPostByUser] = useState<any>();
+  //const [coreKitInstance, setCoreKitInstance] = useState<any>();
+  const [isEditPost, setIsEditPost] = useState<boolean>(false);
+  const [isComment, setIsComment] = useState<boolean>(false);
+  const [isEditdata, setIsEditdata] = useState<any>();
+  const [isCommentdata, setIsCommentdata] = useState<any>();
   const [isreplycomment, setIsreplycomment] = useState<boolean>(false);
   const [replycommentdata, setReplycommentdata] = useState<any>();
-  //const [coreKitInstance, setCoreKitInstance] = useState<any>();
 
   useEffect(() => {
     //if (typeof window !== "undefined") {
@@ -202,7 +202,7 @@ export function Web3AuthSignerProvider({
   const viewPostByUsers = async () => {
     try {
       await axiosInstanceAuth.get(`viewPostByUser`).then((response) => {
-        console.log("viewPostByUser API Response:", response.data.data.data);
+        console.log("viewPostByUser API Response:", response);
         SetViewPostByUser(response.data.data.data);
       });
     } catch (error) {

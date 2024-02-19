@@ -25,6 +25,7 @@ const All = () => {
     viewSinglePost(e);
     localStorage.setItem("_id", e);
   };
+  console.log("viewPostByUser", viewPostByUser);
   return (
     <>
       {userinfo ? (
