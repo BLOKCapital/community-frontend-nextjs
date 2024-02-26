@@ -101,7 +101,7 @@ const All = () => {
             </>
           ) : (
             <div className="flex justify-center items-center">
-              <p>There is no Topic Update.</p>
+              <p>There is no Topic.</p>
             </div>
           )}
         </>

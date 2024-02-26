@@ -49,7 +49,7 @@ const Top = () => {
   return (
     <div className="border-t-4 border-orange-500 rounded-xl w-full text-white">
       <div className="bg-slate-800 bg-opacity-90 rounded-xl overflow-x-autossss">
-        <div className="md:p-8 p-3 text-white space-y-3 ">
+        {/*<div className="md:p-8 p-3 text-white space-y-3 ">
           <div className=" space-y-5">
             <div className="flex justify-between text-base cursor-pointer text-gray-400 py-3 border-b-2 border-zinc-500 border-opacity-45 ">
               <div>
@@ -96,6 +96,9 @@ const Top = () => {
               View More
             </p>
           </div>
+        </div>*/}
+        <div className="flex justify-center items-center p-3">
+          <h3>Upcomming...</h3>
         </div>
       </div>
     </div>

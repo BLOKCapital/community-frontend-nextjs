@@ -124,6 +124,9 @@ export interface Web3AuthSignerContext {
   replycommentdata: any;
   setReplycommentdata: React.Dispatch<React.SetStateAction<any>>;
 
+  iseditreplycomment: boolean;
+  setIseditreplycomment: React.Dispatch<React.SetStateAction<boolean>>;
+
   //function
   ViewSavedPostByUser: () => Promise<void>;
   PostLikedByUser: () => Promise<void>;
@@ -187,6 +190,7 @@ export function Web3AuthSignerProvider({
   const [isCommentdata, setIsCommentdata] = useState<any>();
   const [isreplycomment, setIsreplycomment] = useState<boolean>(false);
   const [replycommentdata, setReplycommentdata] = useState<any>();
+  const [iseditreplycomment, setIseditreplycomment] = useState<boolean>(false);
 
   useEffect(() => {
     //if (typeof window !== "undefined") {
@@ -393,6 +397,8 @@ export function Web3AuthSignerProvider({
         setIsreplycomment,
         replycommentdata,
         setReplycommentdata,
+        iseditreplycomment,
+        setIseditreplycomment,
 
         //function
         viewPostByUsers,

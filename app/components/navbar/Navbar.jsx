@@ -381,7 +381,7 @@ const Navbar = () => {
                   onClick={() => setopenediter(true)}
                 >
                   <FaCirclePlus />
-                  <p>NEW TOPIC</p>
+                  <p className="uppercase">NEW premises</p>
                 </button>
               </div>
             </>
@@ -589,10 +589,10 @@ const Navbar = () => {
 
       <div
         className={`fixed bottom-0 left-0 w-full flex justify-center items-end p-6 transition-transform ease-in-out duration-700 ${
-          openediter ? "translate-y-0" : "translate-y-full"
+          openediter ? "translate-y-10" : "translate-y-full"
         }`}
       >
-        <div className="bg-gray-900 p-5 !text-black md:w-4/5 w-3/5 rounded-xl border-t-4 border-rose-400">
+        <div className="bg-gray-900 pb-10  p-5 !text-black md:w-4/5 w-3/5 rounded-xl border-t-4 border-rose-400">
           <Example />
         </div>
       </div>

@@ -11,6 +11,7 @@ const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 import "react-quill/dist/quill.snow.css";
 import axiosInstanceAuth from "../apiInstances/axiosInstanceAuth";
 import "./editor-styles.css";
+import { CiSquarePlus } from "react-icons/ci";
 
 const modules = {
   toolbar: [
@@ -73,32 +74,32 @@ const Example = () => {
     setIsreplycomment,
     viewComments,
     replycommentdata,
+    iseditreplycomment,
+    setIseditreplycomment,
   } = useWeb3AuthSigner();
   const [BlogsData, setBlogsData] = useState({
     title: "",
     content: "",
   });
+  //console.log(isEditdata);
+  console.log(BlogsData);
 
   useEffect(() => {
     if (isEditPost && isEditdata) {
-      console.log(isEditdata);
       setBlogsData({
-        title: isEditdata?.title,
-        content: isEditdata?.content || "",
+        title: viewsinglePosts.title,
+        content: isEditdata?.content,
       });
-    }
-    if (isComment && isCommentdata) {
+    } else if (isComment && isCommentdata) {
       console.log("Edit isCommentdata->", isCommentdata);
       setBlogsData({
-        title: isEditdata?.title || "",
+        title: "",
         content: isCommentdata?.content || "",
       });
-    }
-
-    if (isreplycomment && replycommentdata) {
+    } else if (iseditreplycomment) {
       console.log("Edit replycommentdata->", replycommentdata);
       setBlogsData({
-        title: isEditdata?.title || "",
+        title: "",
         content: replycommentdata?.content || "",
       });
     }
@@ -109,6 +110,8 @@ const Example = () => {
     isEditdata,
     isreplycomment,
     replycommentdata,
+    viewsinglePosts,
+    iseditreplycomment,
   ]);
 
   const close = () => {
@@ -119,6 +122,7 @@ const Example = () => {
       setReply(false);
       setIsreplycomment(false);
       setIsComment(false);
+      setIseditreplycomment(undefined);
       setBlogsData({
         title: "",
         content: "",
@@ -133,6 +137,10 @@ const Example = () => {
       editComment();
     } else if (isreplycomment) {
       ReplyComment();
+    } else if (isReply) {
+      createreply();
+    } else if (iseditreplycomment) {
+      EditReplyComment();
     } else {
       Addpost();
     }
@@ -212,6 +220,7 @@ const Example = () => {
   };
 
   const editComment = async () => {
+    const postId = viewsinglePosts?._id;
     const commentId = isCommentdata?._id;
     const dataToSend = {
       content: BlogsData.content,
@@ -229,9 +238,9 @@ const Example = () => {
               title: "",
               content: "",
             });
-            await viewPostByUsers();
+            await viewPostByUsers(postId);
             await sendApiRequest();
-            await viewSinglePost();
+            await viewSinglePost(postId);
           }
         });
     } catch (error) {
@@ -276,6 +285,7 @@ const Example = () => {
   };
 
   const ReplyComment = async () => {
+    console.log("ReplyComment");
     if (!BlogsData.content) {
       toast.error("Please fill in all the fields");
       return;
@@ -283,7 +293,7 @@ const Example = () => {
     const postId = viewsinglePosts?._id;
     const dataToSend = {
       content: BlogsData.content,
-      commentId: viewComments[0]._id,
+      commentId: replycommentdata._id,
       postId: viewsinglePosts._id,
     };
     console.log("replyComment dataToSend-->", dataToSend);
@@ -311,7 +321,7 @@ const Example = () => {
     }
   };
 
-  const editReplyComment = async () => {
+  const EditReplyComment = async () => {
     const postId = viewsinglePosts?._id;
     const commentId = replycommentdata?._id;
     const dataToSend = {
@@ -344,7 +354,7 @@ const Example = () => {
   return (
     <>
       <div className={`space-y-4 `}>
-        {!isComment && !isreplycomment && (
+        {!isComment && !isreplycomment && !isComment && !iseditreplycomment && (
           <>
             {isReply === true ? (
               <div className="flex justify-between text-white ">
@@ -361,7 +371,7 @@ const Example = () => {
                 <div className=" text-lg text-white flex justify-between">
                   <div className="flex items-center justify-center gap-1">
                     <IoMdCreate />
-                    <p>{isEditPost ? " " : "Create a new premises"}</p>
+                    <p>{isEditPost ? "Save  " : "Create a new premises"}</p>
                   </div>
                   <div className="flex gap-3 items-center">
                     <SlArrowDown
@@ -397,73 +407,37 @@ const Example = () => {
             className="quill-editor"
           />
         </div>
-        <div
-          className={`flex space-x-2 ${
-            isReply || isreplycomment ? "hidden" : "block"
-          }`}
-        >
-          <button
-            className="bg-white hover:bg-opacity-20 rounded-lg px-3 py-2 hover:text-white flex justify-center items-center space-x-1"
-            onClick={() => createpremises()}
-          >
-            <MdLibraryAdd />
-            <p>
-              {isComment ? (
-                "Update Comment"
-              ) : (
-                <>{isEditPost ? "Update Premises" : "Create Premises"} </>
-              )}
-            </p>
-          </button>
-          <button
-            className="px-2 py-2 text-white hover:font-semibold"
-            onClick={() => close()}
-          >
-            Close
-          </button>
-        </div>
-
-        <div
-          className={`flex space-x-2 ${isReply === true ? "block" : "hidden"}`}
-        >
-          <button
-            className="bg-white hover:bg-opacity-20 rounded-lg px-3 py-2 hover:text-white flex justify-center items-center space-x-1"
-            onClick={() => createreply()}
-          >
-            <FaReply size={20} />
-            <p>Reply</p>
-          </button>
-          <button
-            className="px-2 py-2 text-white hover:font-semibold"
-            onClick={() => close()}
-          >
-            Close
-          </button>
-        </div>
-
-        <div
-          className={`flex space-x-2 ${
-            isreplycomment === true ? "block" : "hidden"
-          }`}
-        >
-          {isreplycomment ? (
+        <div className={`flex space-x-2 `}>
+          {isreplycomment ||
+          isReply ||
+          isEditPost ||
+          isComment ||
+          iseditreplycomment ? (
             <button
               className="bg-white hover:bg-opacity-20 rounded-lg px-3 py-2 hover:text-white flex justify-center items-center space-x-1"
-              onClick={() => editReplyComment()}
+              onClick={() => createpremises()}
             >
-              <FaReply size={20} />
-              <p>Update Replycommit</p>
+              {isEditPost || isComment || iseditreplycomment ? (
+                <>
+                  <CiSquarePlus size={20} />
+                  <p>Save</p>
+                </>
+              ) : (
+                <>
+                  <FaReply size={20} />
+                  <p>Reply</p>
+                </>
+              )}
             </button>
           ) : (
             <button
               className="bg-white hover:bg-opacity-20 rounded-lg px-3 py-2 hover:text-white flex justify-center items-center space-x-1"
               onClick={() => createpremises()}
             >
-              <FaReply size={20} />
-              <p>Reply Commit</p>
+              {/*<FaReply size={20} />*/}
+              <CiSquarePlus size={20} /> <p>Create Premises</p>
             </button>
           )}
-
           <button
             className="px-2 py-2 text-white hover:font-semibold"
             onClick={() => close()}

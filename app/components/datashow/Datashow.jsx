@@ -41,6 +41,7 @@ const Datashow = () => {
     ViewSavedPostByUser,
     setIsreplycomment,
     setReplycommentdata,
+    setIseditreplycomment,
   } = useWeb3AuthSigner();
   const [isLiked, setIsLiked] = useState(false);
   const [ioBookmark, setIoBookmark] = useState(false);
@@ -79,9 +80,10 @@ const Datashow = () => {
 
   //console.log("view single Posts -->", viewsinglePosts);
 
-  const handleReplyComment = () => {
+  const handleReplyComment = (e) => {
     if (coreKitStatus === "LOGGED_IN") {
       setopenediter(true);
+      setReplycommentdata(e);
       setIsreplycomment(true);
     } else {
       toast.error("Please Login!");
@@ -125,6 +127,14 @@ const Datashow = () => {
   };
 
   const handleLikeClickComment = (e) => {
+    if (coreKitStatus === "LOGGED_IN") {
+      SinglelikeComment(e);
+    } else {
+      toast.error("Please Login!");
+    }
+  };
+
+  const handleLikeClickCommentreply = (e) => {
     if (coreKitStatus === "LOGGED_IN") {
       SinglelikeComment(e);
     } else {
@@ -182,7 +192,7 @@ const Datashow = () => {
 
   const handleEditreply = (e) => {
     setReplycommentdata(e);
-    setIsreplycomment(true);
+    setIseditreplycomment(true);
     setopenediter(true);
   };
 
@@ -293,21 +303,21 @@ const Datashow = () => {
   return (
     <>
       <div className="border-t-4 border-amber-600 rounded-t-xl  w-full text-white">
-        <div className="bg-gray-800 bg-opacity-90  rounded-t-xl">
+        <div className="bg-gray-800 bg-opacity-90  rounded-t-xl h-screen">
           {viewsinglePosts ? (
             <>
               <div className="md:p-8 p-3 text-white space-y-3  ">
                 <div className="border-b py-2 font-bold ">
                   <h2 className="text-xl">{viewsinglePosts.title}</h2>
                 </div>
-                <div className="flex md:space-x-10 space-x-3 justify-start">
+                <div className="flex md:space-x-8 space-x-3 justify-start">
                   <div className="sticky top-0">
                     {viewsinglePosts.images && (
                       <Image
                         src={viewsinglePosts.images}
                         alt="Image"
-                        height={60}
-                        width={60}
+                        height={50}
+                        width={50}
                         className="rounded-full "
                       />
                     )}
@@ -324,21 +334,12 @@ const Datashow = () => {
                                 )}
                               </p>
                               {/*<p className="text-lg font-semibold block md:hidden">
-                                {viewsinglePosts.userData[0].email.slice(0, 8)}
-                              </p>*/}
+                                  {viewsinglePosts.userData[0].email.slice(0, 8)}
+                                </p>*/}
                             </>
                           )}
                       </div>
                       <div className="flex gap-3 justify-center text-center">
-                        {userinfo?.email === userEmail && (
-                          <div
-                            className="cursor-pointer text-lg"
-                            onClick={() => handleEditClick(viewsinglePosts)}
-                          >
-                            <BiSolidEditAlt size={22} />
-                          </div>
-                        )}
-
                         <div>
                           <p>
                             {calculateTimeDifference(
@@ -398,6 +399,15 @@ const Datashow = () => {
                               </div>
                             )}
                           </div>
+
+                          {userinfo?.email === userEmail && (
+                            <div
+                              className="cursor-pointer text-lg"
+                              onClick={() => handleEditClick(viewsinglePosts)}
+                            >
+                              <BiSolidEditAlt size={24} />
+                            </div>
+                          )}
                           {userinfo?.email === userEmail && (
                             <div
                               className="text-red-500 cursor-pointer text-lg"
@@ -407,8 +417,8 @@ const Datashow = () => {
                             </div>
                           )}
                           {/*<div className="cursor-pointer text-lg">
-                            <GrLink size={24} />
-                          </div>*/}
+                              <GrLink size={24} />
+                            </div>*/}
 
                           <div
                             className="cursor-pointer flex gap-2 text-lg items-center px-2 py-1  hover:bg-slate-600 hover:rounded-lg hover:delay-75"
@@ -438,7 +448,7 @@ const Datashow = () => {
                     viewComments.map((comment, index) => (
                       <>
                         <div
-                          className="flex md:space-x-10 space-x-3 pb-5"
+                          className="flex md:space-x-8 space-x-3 pb-5"
                           key={index}
                         >
                           <div className="sticky top-0">
@@ -446,8 +456,8 @@ const Datashow = () => {
                               <Image
                                 src={comment.user.userImage}
                                 alt="Image"
-                                height={60}
-                                width={60}
+                                height={50}
+                                width={50}
                                 className="rounded-full "
                               />
                             )}
@@ -462,15 +472,6 @@ const Datashow = () => {
                                 )}
                               </div>
                               <div className="flex gap-3 justify-center text-center">
-                                {userinfo?.email === comment.user.email && (
-                                  <div
-                                    className="cursor-pointer text-lg"
-                                    onClick={() => handleEditcomment(comment)}
-                                  >
-                                    <BiSolidEditAlt size={22} />
-                                  </div>
-                                )}
-
                                 <div>
                                   <p>
                                     {calculateTimeDifference(
@@ -489,37 +490,46 @@ const Datashow = () => {
                               />
                               <div className="flex justify-end items-center  ">
                                 <div className="flex space-x-5 justify-center items-center">
-                                  <div className="cursor-pointer flex gap-2 justify-center items-center">
-                                    {comment.commentLikeCount > 0 ? (
-                                      <p
-                                        className={`text-base ${
-                                          comment.commentLikeCount > 0
-                                            ? "delay-75"
-                                            : ""
-                                        } `}
-                                      >
-                                        {comment.commentLikeCount}
-                                      </p>
-                                    ) : null}
+                                  {/*<div className="cursor-pointer flex gap-2 justify-center items-center">
+                                      {comment.commentLikeCount > 0 ? (
+                                        <p
+                                          className={`text-base ${
+                                            comment.commentLikeCount > 0
+                                              ? "delay-75"
+                                              : ""
+                                          } `}
+                                        >
+                                          {comment.commentLikeCount}
+                                        </p>
+                                      ) : null}
 
-                                    <button
-                                      onClick={() =>
-                                        handleLikeClickComment(comment._id)
-                                      }
+                                      <button
+                                        onClick={() =>
+                                          handleLikeClickComment(comment._id)
+                                        }
+                                      >
+                                        {Likecomment ? (
+                                          <FaHeart
+                                            className="text-red-500 hover:text-red-700"
+                                            size={24}
+                                          />
+                                        ) : (
+                                          <FaRegHeart
+                                            className="text-white hover:text-gray-300"
+                                            size={24}
+                                          />
+                                        )}
+                                      </button>
+                                    </div>*/}
+
+                                  {userinfo?.email === comment.user.email && (
+                                    <div
+                                      className="cursor-pointer text-lg"
+                                      onClick={() => handleEditcomment(comment)}
                                     >
-                                      {Likecomment ? (
-                                        <FaHeart
-                                          className="text-red-500 hover:text-red-700"
-                                          size={24}
-                                        />
-                                      ) : (
-                                        <FaRegHeart
-                                          className="text-white hover:text-gray-300"
-                                          size={24}
-                                        />
-                                      )}
-                                    </button>
-                                  </div>
+                                      <BiSolidEditAlt size={24} />
+                                    </div>
+                                  )}
 
                                   {userinfo?.email === comment.user.email && (
                                     <div
@@ -537,7 +547,7 @@ const Datashow = () => {
 
                                   <div
                                     className="cursor-pointer flex gap-2 text-lg items-center px-2 py-1  hover:bg-slate-600 hover:rounded-lg hover:delay-75"
-                                    onClick={() => handleReplyComment()}
+                                    onClick={() => handleReplyComment(comment)}
                                   >
                                     <FaReply size={20} />
                                     <p>Reply</p>
@@ -566,7 +576,7 @@ const Datashow = () => {
                             <>
                               {comment?.replies?.map((data, index1) => (
                                 <div
-                                  className="flex md:space-x-10 space-x-3 "
+                                  className="flex md:space-x-8 space-x-3 py-2 border-b border-gray-600"
                                   key={index1}
                                 >
                                   <div className="sticky top-0">
@@ -574,8 +584,8 @@ const Datashow = () => {
                                       <Image
                                         src={data.user.userImage}
                                         alt="Image"
-                                        height={60}
-                                        width={60}
+                                        height={50}
+                                        width={50}
                                         className="rounded-full "
                                       />
                                     )}
@@ -590,18 +600,6 @@ const Datashow = () => {
                                         )}
                                       </div>
                                       <div className="flex gap-3 justify-center text-center">
-                                        {userinfo?.email ===
-                                          data.user.email && (
-                                          <div
-                                            className="cursor-pointer text-lg"
-                                            onClick={() =>
-                                              handleEditreply(data)
-                                            }
-                                          >
-                                            <BiSolidEditAlt size={22} />
-                                          </div>
-                                        )}
-
                                         <div>
                                           <p>
                                             {calculateTimeDifference(
@@ -620,7 +618,7 @@ const Datashow = () => {
                                       />
                                       <div className="flex justify-end items-center  ">
                                         <div className="flex space-x-5 justify-center items-center">
-                                          <div className="cursor-pointer flex gap-2 justify-center items-center">
+                                          {/*<div className="cursor-pointer flex gap-2 justify-center items-center">
                                             {comment.commentLikeCount > 0 ? (
                                               <p
                                                 className={`text-base ${
@@ -635,7 +633,9 @@ const Datashow = () => {
 
                                             <button
                                               onClick={() =>
-                                                handleLikeClickComment(data._id)
+                                                handleLikeClickCommentreply(
+                                                  data._id
+                                                )
                                               }
                                             >
                                               {Likecomment ? (
@@ -650,7 +650,18 @@ const Datashow = () => {
                                                 />
                                               )}
                                             </button>
-                                          </div>
+                                          </div>*/}
+                                          {userinfo?.email ===
+                                            data.user.email && (
+                                            <div
+                                              className="cursor-pointer text-lg"
+                                              onClick={() =>
+                                                handleEditreply(data)
+                                              }
+                                            >
+                                              <BiSolidEditAlt size={22} />
+                                            </div>
+                                          )}
 
                                           {userinfo?.email ===
                                             data.user.email && (
@@ -667,13 +678,15 @@ const Datashow = () => {
                                             </div>
                                           )}
 
-                                          <div
+                                          {/*<div
                                             className="cursor-pointer flex gap-2 text-lg items-center px-2 py-1  hover:bg-slate-600 hover:rounded-lg hover:delay-75"
-                                            onClick={() => handleReplyComment()}
+                                            onClick={() =>
+                                              handleReplyComment(data)
+                                            }
                                           >
                                             <FaReply size={20} />
                                             <p>Reply</p>
-                                          </div>
+                                          </div>*/}
                                         </div>
                                       </div>
                                     </div>
