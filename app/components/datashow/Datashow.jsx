@@ -200,7 +200,7 @@ const Datashow = () => {
     const postId = getid;
     try {
       await axiosInstanceAuth.post(`likePost/${postId}`).then((response) => {
-        console.log("SinglelikePost API Response:", response);
+        //console.log("SinglelikePost API Response:", response);
         toast.success(response.data.message);
         viewSinglePost(postId);
         sendApiRequest();
@@ -215,7 +215,7 @@ const Datashow = () => {
   const SinglelikeComment = async (e) => {
     try {
       await axiosInstanceAuth.post(`likeComment/${e}`).then((response) => {
-        console.log("SinglelikeComment API Response:", response);
+        //console.log("SinglelikeComment API Response:", response);
         toast.success(response.data.message);
         viewSinglePost(getid);
         sendApiRequest();
@@ -230,7 +230,7 @@ const Datashow = () => {
   const SinglesavePost = async (e) => {
     try {
       await axiosInstanceAuth.post(`savePost/${getid}`).then((response) => {
-        console.log("savePost API Response:", response);
+        //console.log("savePost API Response:", response);
         toast.success(response.data.message);
         CheckLikesclick(e);
         ViewSavedPostByUser();
@@ -243,7 +243,7 @@ const Datashow = () => {
   const SingledeletePost = async () => {
     try {
       await axiosInstanceAuth.delete(`deletePost/${getid}`).then((response) => {
-        console.log("deletePost API Response:", response);
+        //console.log("deletePost API Response:", response);
         toast.success(response.data.message);
 
         viewPostByUsers();
@@ -261,7 +261,7 @@ const Datashow = () => {
     const Id = deletew.Id;
     try {
       await axiosInstanceAuth.delete(`deleteReply/${Id}`).then((response) => {
-        console.log("deleteReply API Response:", response);
+        //console.log("deleteReply API Response:", response);
         if (response.data.status === false) {
           toast.warn(response.data.message);
         } else {
@@ -276,12 +276,12 @@ const Datashow = () => {
 
   const SingledeleteComment = async () => {
     const commentId = deletew.Id;
-    console.log("deleteComment-->", deletew.Id);
+    //console.log("deleteComment-->", deletew.Id);
     try {
       await axiosInstanceAuth
         .delete(`deleteComment/${commentId}`)
         .then((response) => {
-          console.log("deleteComment API Response:", response);
+          //console.log("deleteComment API Response:", response);
           if (response.data.status === false) {
             toast.warn(response.data.message);
           } else {
@@ -303,7 +303,7 @@ const Datashow = () => {
   return (
     <>
       <div className="border-t-4 border-amber-600 rounded-t-xl  w-full text-white">
-        <div className="bg-gray-800 bg-opacity-90  rounded-t-xl h-screen">
+        <div className="bg-gray-800 bg-opacity-90  rounded-t-xl ">
           {viewsinglePosts ? (
             <>
               <div className="md:p-8 p-3 text-white space-y-3  ">

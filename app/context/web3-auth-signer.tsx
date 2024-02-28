@@ -206,7 +206,7 @@ export function Web3AuthSignerProvider({
   const viewPostByUsers = async () => {
     try {
       await axiosInstanceAuth.get(`viewPostByUser`).then((response) => {
-        console.log("viewPostByUser API Response:", response);
+        //console.log("viewPostByUser API Response:", response);
         SetViewPostByUser(response.data.data.data);
       });
     } catch (error) {
@@ -217,7 +217,7 @@ export function Web3AuthSignerProvider({
   const sendApiRequest = async () => {
     try {
       await axiosInstanceAuth.get(`viewPosts`).then((response) => {
-        console.log("viewPosts API Response:", response.data.data.posts);
+        //console.log("viewPosts API Response:", response.data.data.posts);
         SetViewPosts(response.data.data.posts);
       });
     } catch (error) {
@@ -230,7 +230,7 @@ export function Web3AuthSignerProvider({
       await axiosInstanceAuth
         .get(`viewSinglePost/${e ? e : getid}`)
         .then((response) => {
-          console.log("viewSinglePost API Response:", response.data.data);
+          //console.log("viewSinglePost API Response:", response.data.data);
           SetViewsinglePosts(response.data.data);
           setIsLiked(!isLiked);
           ViewComments(response.data.data._id);
@@ -244,10 +244,10 @@ export function Web3AuthSignerProvider({
   const ViewComments = async (e: any) => {
     try {
       await axiosInstanceAuth.get(`viewComments/${e}`).then((response) => {
-        console.log(
-          "ViewComments API Response:",
-          response?.data?.data?.comments
-        );
+        //console.log(
+        //  "ViewComments API Response:",
+        //  response?.data?.data?.comments
+        //);
         SetViewComments(response?.data?.data?.comments);
         CheckCommentLike(response?.data?.data?.comments?._id);
       });
@@ -259,10 +259,10 @@ export function Web3AuthSignerProvider({
   const ViewSavedPostByUser = async () => {
     try {
       await axiosInstanceAuth.get(`viewSavedPostByUser`).then((response) => {
-        console.log(
-          "viewSavedPostByUser API Response:",
-          response.data.data.savedPost
-        );
+        //console.log(
+        //  "viewSavedPostByUser API Response:",
+        //  response.data.data.savedPost
+        //);
         setViewSavedPostByUser(response.data.data.savedPost);
       });
     } catch (error) {
@@ -279,7 +279,7 @@ export function Web3AuthSignerProvider({
 
     try {
       await axiosInstanceAuth.get(`checkLikes/${postIds}`).then((response) => {
-        console.log("CheckLikesclick API Response:", response.data.data.array);
+        //console.log("CheckLikesclick API Response:", response.data.data.array);
         setCheckuserlike(response.data.data.array);
       });
     } catch (error) {
@@ -298,10 +298,10 @@ export function Web3AuthSignerProvider({
       await axiosInstanceAuth
         .get(`checkCommentLike/${commentId}`)
         .then((response) => {
-          console.log(
-            "checkCommentLike API Response:",
-            response.data.data.array
-          );
+          //console.log(
+          //  "checkCommentLike API Response:",
+          //  response.data.data.array
+          //);
           setCheckuserlikeComment(response.data.data.array);
         });
     } catch (error) {
@@ -312,10 +312,10 @@ export function Web3AuthSignerProvider({
   const PostLikedByUser = async () => {
     try {
       await axiosInstanceAuth.get(`postLikedByUser`).then((response) => {
-        console.log(
-          "postLikedByUser API Response:",
-          response?.data?.data?.likes
-        );
+        //console.log(
+        //  "postLikedByUser API Response:",
+        //  response?.data?.data?.likes
+        //);
         setPostLikedByUser(response?.data?.data?.likes);
       });
     } catch (error) {

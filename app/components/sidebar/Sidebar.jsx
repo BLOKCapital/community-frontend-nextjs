@@ -31,11 +31,11 @@ const Sidebar = () => {
     { icon: <LuBadge size={22} />, name: "Badges" },
   ];
   const colorData = [
-    { name: "Box 1", color: "red" },
-    { name: "Box 2", color: "blue" },
-    { name: "Box 3", color: "green" },
-    { name: "Box 4", color: "yellow" },
-    { name: "Box 5", color: "purple" },
+    { name: "Announcement", color: "green", link: "announcement" },
+    { name: "Box 2", color: "blue", link: "" },
+    { name: "Box 3", color: "red", link: "" },
+    { name: "Box 4", color: "yellow", link: "" },
+    { name: "Box 5", color: "purple", link: "" },
   ];
 
   const toggleCategories = () => {
@@ -109,22 +109,27 @@ const Sidebar = () => {
           <div className={`mx-5 py-1 ${isCategoriesOpen ? "block" : "hidden"}`}>
             <div>
               {colorData.map((box, index) => (
-                <div
-                  key={index}
-                  className={`flex gap-2 items-center hover:bg-slate-500 hover:bg-opacity-20 hover:rounded cursor-pointer ${
-                    isCategoriesOpen ? "active" : ""
-                  }`}
-                >
-                  <p
-                    className="w-1"
-                    style={{
-                      backgroundColor: box.color,
-                      padding: "6px",
-                      margin: "10px",
-                      color: "white",
-                    }}
-                  ></p>
-                  {box.name}
+                <div key={index}>
+                  <Link href={`/${box.link === undefined ? "" : box.link}`}>
+                    <div
+                      className={`flex items-center hover:bg-slate-500 hover:bg-opacity-20 hover:rounded cursor-pointer ${
+                        pathname === box.link
+                          ? "bg-slate-500  bg-opacity-20"
+                          : ""
+                      }`}
+                    >
+                      <p
+                        className="w-1"
+                        style={{
+                          backgroundColor: box.color,
+                          padding: "6px 3px",
+                          margin: "10px",
+                          color: "white",
+                        }}
+                      ></p>
+                      {box.name}
+                    </div>
+                  </Link>
                 </div>
               ))}
             </div>

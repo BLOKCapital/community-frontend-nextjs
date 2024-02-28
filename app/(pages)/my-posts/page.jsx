@@ -26,7 +26,7 @@ const Mypost = () => {
     const storedDatas =
       typeof window !== "undefined" ? localStorage.getItem("UserData") : null;
     const storedData1 = storedDatas ? JSON.parse(storedDatas) : null;
-    console.log(storedData1);
+    //console.log(storedData1);
     setStoredData(storedData1);
   });
   const notify = () => {

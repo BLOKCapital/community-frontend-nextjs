@@ -1,6 +1,9 @@
+"use client";
 import React from "react";
-
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 const Announcements = () => {
+  const pathname = usePathname();
   const questionData = [
     {
       question: "What is BLOKC?",
@@ -16,9 +19,9 @@ const Announcements = () => {
     // Add more question objects as needed
   ];
   return (
-    <div className="border-t-4 border-green-500 rounded-xl w-full">
+    <div className={`border-t-4 border-green-500 rounded-xl   w-full`}>
       <div className="bg-slate-800 bg-opacity-90 rounded-xl">
-        <div className="md:p-6 p-3 text-white space-y-3 ">
+        <div className="md:p-6 p-3 text-white space-y-3">
           <div className="space-y-5">
             <div className="">
               <p className="text-2xl font-semibold">Announcements</p>
@@ -43,11 +46,15 @@ const Announcements = () => {
               </div>
             ))}
           </div>
-          <div className="flex justify-end text-[#6ca5f0]">
-            <p className="hover:text-white hover:font-semibold cursor-pointer">
-              View More
-            </p>
-          </div>
+          {pathname === "/announcement" ? null : (
+            <Link href={`/announcement`}>
+              <div className="flex justify-end text-[#6ca5f0]">
+                <p className="hover:text-white hover:font-semibold cursor-pointer py-2">
+                  View More
+                </p>
+              </div>
+            </Link>
+          )}
         </div>
       </div>
     </div>

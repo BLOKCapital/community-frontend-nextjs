@@ -7,9 +7,29 @@ import Link from "next/link";
 const Searchall = () => {
   const [showPopup, setShowPopup] = useState(false);
   const [searchInput, setSearchInput] = useState("");
+
   const handleInputChange = (e) => {
-    setSearchInput(e.target.value);
-    //setShowPopup(e.target.value.trim() !== "");
+    const input = e.target.value;
+    setSearchInput(input);
+    setShowPopup(input.trim() !== "");
+  };
+
+  const handleKeyDown = async (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault(); // Prevent form submission
+      // Fetch data from API based on searchInput
+      try {
+        const response = await fetch(`YOUR_API_ENDPOINT?query=${searchInput}`);
+        if (!response.ok) {
+          throw new Error("Failed to fetch data");
+        }
+        const data = await response.json();
+        console.log("Fetched data:", data);
+        // You can update state or do other operations with fetched data here
+      } catch (error) {
+        console.error("Error fetching data:", error.message);
+      }
+    }
   };
 
   const clearInput = () => {
@@ -19,17 +39,18 @@ const Searchall = () => {
   };
 
   const formatTitle = (title) => {
-    // Your implementation here
     return title.toLowerCase().replace(/\s+/g, "-");
   };
+
   return (
     <>
-      <div className="flex items-center justify-between md:w-[60%] w-full py-2 bg-white text-black rounded-md">
+      <div className="relative flex items-center justify-between md:w-[60%] w-full py-2 bg-white text-black rounded-md">
         <input
           type="text"
           placeholder="Search..."
           value={searchInput}
           onChange={handleInputChange}
+          onKeyDown={handleKeyDown} // Call handleKeyDown on key press
           className="ml-2 w-full outline-none"
         />
 
@@ -39,7 +60,7 @@ const Searchall = () => {
         </div>
       </div>
       {showPopup && (
-        <div className="absolute pb-80 text-white text-lg z-10">
+        <div className="absolute top-80 text-white text-lg bg-white">
           <div className="flex justify-center">
             <div className="bg-slate-800 bg-opacity-100 border rounded-lg p-4 w-[full] md:w-[107vh] ">
               {/* Render the relevant data based on search input */}

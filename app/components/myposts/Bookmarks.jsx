@@ -42,8 +42,15 @@ const Bookmarks = () => {
                   className="rounded-xl cursor-pointer mb-2 hover:bg-slate-300  hover:rounded-xl"
                   key={index}
                 >
-                  <>
-                    <div className="bg-slate-800 bg-opacity-90 rounded-xl flex flex-col md:flex-row justify-between items-center gap-2 p-2">
+                  <Link
+                    href={`/my-posts/${formatTitle(
+                      likedItem.postData[0].title
+                    )}`}
+                  >
+                    <div
+                      className="bg-slate-800 bg-opacity-90 rounded-xl flex flex-col md:flex-row justify-between items-center gap-2 p-2"
+                      onClick={() => Opencontent(likedItem.postData[0]._id)}
+                    >
                       <div className="flex items-center space-x-2 space-y-2">
                         <div className="px-2">
                           {likedItem.postData[0].images &&
@@ -72,20 +79,10 @@ const Bookmarks = () => {
                           )}
                         </div>
                         <div className="">
-                          <Link
-                            href={`/my-posts/${formatTitle(
-                              likedItem.postData[0].title
-                            )}`}
-                          >
-                            <div
-                              className="cursor-pointer space-y-3 font-semibold text-lg"
-                              onClick={() =>
-                                Opencontent(likedItem.postData[0]._id)
-                              }
-                            >
-                              <p>{likedItem.postData[0].title}</p>
-                            </div>
-                          </Link>
+                          <div className="cursor-pointer space-y-3 font-semibold text-lg">
+                            <p>{likedItem.postData[0].title}</p>
+                          </div>
+
                           <div className="px-2 py-1">
                             {likedItem.postData &&
                               likedItem.postData[0].content && (
@@ -106,7 +103,7 @@ const Bookmarks = () => {
                         <p>{formatDate(likedItem.createdAt)}</p>
                       </div>
                     </div>
-                  </>
+                  </Link>
                 </div>
               ))}
             </>

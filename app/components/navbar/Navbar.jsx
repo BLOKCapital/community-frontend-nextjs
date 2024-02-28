@@ -4,7 +4,7 @@ import { RiAccountPinCircleFill, RiSearchLine } from "react-icons/ri";
 import { HiMenu } from "react-icons/hi";
 import { PiUserBold } from "react-icons/pi";
 import Image from "next/image";
-import logo from "../../assets/images/Group 2952hd.png";
+import logo from "../../assets/images/MianBlokclogo.png";
 import Link from "next/link";
 import Web3 from "web3";
 import { FaAngleRight, FaCirclePlus } from "react-icons/fa6";
@@ -89,14 +89,14 @@ const Navbar = () => {
 
         setCoreKitInstance(coreKitInstance);
         setCoreKitStatus(coreKitInstance.status);
-        console.log("coreKitInstance.status-->", coreKitInstance.status);
+        //console.log("coreKitInstance.status-->", coreKitInstance.status);
         if (coreKitInstance.provider) {
           const web3Instance = new Web3(coreKitInstance.provider);
           setWeb3(web3Instance);
           setWeb3AuthSigner(coreKitInstance.provider);
           const userdata = coreKitInstance?.getUserInfo();
           setUserinfo(userdata);
-          console.log("userdata-->", userdata);
+          //console.log("userdata-->", userdata);
         }
       } catch (error) {
         console.error("Error initializing MPC Core Kit:", error);
@@ -209,7 +209,7 @@ const Navbar = () => {
           return;
         }
         const chainId = await web3.eth.getChainId();
-        console.log("chainid--->", chainId);
+        //console.log("chainid--->", chainId);
         return chainId;
       };
       getChainID();
@@ -220,12 +220,12 @@ const Navbar = () => {
     if (web3AuthSigner && coreKitInstance.status === "") {
       const userdata = coreKitInstance?.getUserInfo();
       setUserinfo(userdata);
-      console.log("userdata-->", userdata);
+      //console.log("userdata-->", userdata);
     }
   }, [coreKitInstance, setUserinfo, web3AuthSigner]);
 
   const logout = async () => {
-    console.log("logout");
+    //console.log("logout");
     if (!coreKitInstance) {
       throw new Error("coreKitInstance not found");
     }
@@ -253,7 +253,7 @@ const Navbar = () => {
             owner: getRPCProviderOwner(web3AuthSigner),
           });
           const address = await ecdsaProvider.getAddress();
-          console.log("address-->", address);
+          //console.log("address-->", address);
 
           setAccountAddress(address);
           setEcdsaProvider(ecdsaProvider);
@@ -307,13 +307,13 @@ const Navbar = () => {
             username: userinfo?.name,
             userImage: userinfo?.profileImage,
           };
-          console.log("registerUser dataToSend--->", dataToSend);
+          //console.log("registerUser dataToSend--->", dataToSend);
 
           try {
             await axiosInstanceAuth
               .post(`registerUser`, dataToSend)
               .then((response) => {
-                console.log("registerUser Response:", response);
+                //console.log("registerUser Response:", response);
                 //console.log("message-->", response.data.data.checkUser);
                 localStorage.setItem("Token", response.data.data.token);
                 setRegisterUser(response.data.data.userData);

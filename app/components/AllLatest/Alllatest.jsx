@@ -3,7 +3,7 @@ import { useWeb3AuthSigner } from "@/app/context/web3-auth-signer";
 import Link from "next/link";
 
 const Alllatest = () => {
-  const { viewPosts, setShowcontent } = useWeb3AuthSigner();
+  const { viewPosts, setShowcontent, viewSinglePost } = useWeb3AuthSigner();
   //console.log("viewPosts------------------------", viewPosts);
   const formatDate = (dateString) => {
     const options = { day: "numeric", month: "short" };
@@ -16,6 +16,7 @@ const Alllatest = () => {
 
   const Opencontent = (e) => {
     setShowcontent(e);
+    viewSinglePost(e);
     localStorage.setItem("_id", e);
   };
 
@@ -40,9 +41,9 @@ const Alllatest = () => {
                 <div className="hover:bg-slate-400 hover:bg-opacity-45 hover:text-white px-3 py-1 rounded-md">
                   Views
                 </div>
-                <div className="hover:bg-slate-400 hover:bg-opacity-45 hover:text-white px-3 py-1 rounded-md">
+                {/*<div className="hover:bg-slate-400 hover:bg-opacity-45 hover:text-white px-3 py-1 rounded-md">
                   Vote
-                </div>
+                </div>*/}
                 <div className="hover:bg-slate-400 hover:bg-opacity-45 hover:text-white px-3 py-1 rounded-md">
                   Active
                 </div>
@@ -71,7 +72,7 @@ const Alllatest = () => {
                           </div>
                           <div className="px-3 py-1 md:w-14"> 10</div>
 
-                          <div className="px-3 py-1 md:w-14"> 30</div>
+                          {/*<div className="px-3 py-1 md:w-14"> 30</div>*/}
                           <div className="px-3 py-1 md:w-18">
                             {formatDate(item.createdAt)}
                           </div>

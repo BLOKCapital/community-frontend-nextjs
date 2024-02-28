@@ -82,7 +82,7 @@ const Example = () => {
     content: "",
   });
   //console.log(isEditdata);
-  console.log(BlogsData);
+  //console.log(BlogsData);
 
   useEffect(() => {
     if (isEditPost && isEditdata) {
@@ -91,13 +91,13 @@ const Example = () => {
         content: isEditdata?.content,
       });
     } else if (isComment && isCommentdata) {
-      console.log("Edit isCommentdata->", isCommentdata);
+      //console.log("Edit isCommentdata->", isCommentdata);
       setBlogsData({
         title: "",
         content: isCommentdata?.content || "",
       });
     } else if (iseditreplycomment) {
-      console.log("Edit replycommentdata->", replycommentdata);
+      //console.log("Edit replycommentdata->", replycommentdata);
       setBlogsData({
         title: "",
         content: replycommentdata?.content || "",
@@ -164,7 +164,7 @@ const Example = () => {
       await axiosInstanceAuth
         .put(`editPost/${postId}`, dataToSend)
         .then((response) => {
-          console.log("editPost API Response:", response);
+          //console.log("editPost API Response:", response);
           toast.success(response.data.message);
           if (response) {
             setopenediter(false);
@@ -201,7 +201,7 @@ const Example = () => {
       await axiosInstanceAuth
         .post(`addPost`, dataToSend)
         .then(async (response) => {
-          console.log("Createpremises API Response:", response);
+          //console.log("Createpremises API Response:", response);
           toast.success(response.data.message);
           if (response) {
             setopenediter(false);
@@ -230,7 +230,7 @@ const Example = () => {
       await axiosInstanceAuth
         .put(`editComment/${commentId}`, dataToSend)
         .then(async (response) => {
-          console.log("Createpremises API Response:", response);
+          //console.log("Create/premises API Response:", response);
           toast.success(response.data.message);
           if (response) {
             setopenediter(false);
@@ -259,12 +259,12 @@ const Example = () => {
     const dataToSend = {
       content: BlogsData.content,
     };
-    console.log("addComment-->", postId);
+    //console.log("addComment-->", postId);
     try {
       await axiosInstanceAuth
         .post(`addComment/${postId}`, dataToSend)
         .then((response) => {
-          console.log("addComment API Response:", response);
+          //console.log("addComment API Response:", response);
           toast.success(response.data.message);
           if (response) {
             setopenediter(false);
@@ -285,7 +285,7 @@ const Example = () => {
   };
 
   const ReplyComment = async () => {
-    console.log("ReplyComment");
+    //console.log("ReplyComment");
     if (!BlogsData.content) {
       toast.error("Please fill in all the fields");
       return;
@@ -296,12 +296,12 @@ const Example = () => {
       commentId: replycommentdata._id,
       postId: viewsinglePosts._id,
     };
-    console.log("replyComment dataToSend-->", dataToSend);
+    //console.log("replyComment dataToSend-->", dataToSend);
     try {
       await axiosInstanceAuth
         .post(`replyComment`, dataToSend)
         .then((response) => {
-          console.log("replyComment API Response:", response);
+          //console.log("replyComment API Response:", response);
           toast.success(response.data.message);
           if (response) {
             setopenediter(false);
@@ -327,12 +327,12 @@ const Example = () => {
     const dataToSend = {
       content: BlogsData.content,
     };
-    console.log("dataToSend--->", dataToSend);
+    //console.log("dataToSend--->", dataToSend);
     try {
       await axiosInstanceAuth
         .post(`updateReply/${commentId}`, dataToSend)
         .then(async (response) => {
-          console.log("Createpremises API Response:", response);
+          //console.log("Createpremises API Response:", response);
           toast.success(response.data.message);
           if (response) {
             setopenediter(false);
