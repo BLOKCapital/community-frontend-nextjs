@@ -344,11 +344,9 @@ export function Web3AuthSignerProvider({
       //if (!response.data.status === false) {
       //  throw new Error("Failed to fetch data");
       //}
-      if (response) {
-        setShowPopup(true);
-      }
-      console.log("Fetched data:", response.data.data.final);
-      setSearchResults(response.data.data.final); // Limit to first 5 results
+
+      //console.log("Fetched data:", response?.data?.data?.postdata);
+      setSearchResults(response?.data?.data?.postdata); // Limit to first 5 results
       setShowPopup(true);
     } catch (error) {
       console.error("Error fetching data:", error.message);

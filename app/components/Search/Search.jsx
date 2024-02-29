@@ -93,7 +93,7 @@ const Searchall = () => {
               <div className="flex justify-center">
                 <div className="bg-slate-800 bg-opacity-100  rounded-lg p-3 md:w-[81vh] ">
                   <div className="space-y-3">
-                    {searchResults.slice(0, 5)?.map((result, index) => (
+                    {searchResults?.map((result, index) => (
                       <div
                         key={index}
                         className="cursor-pointer hover:bg-slate-300 hover:bg-opacity-5 px-3 py-2 rounded-lg text-sm"
