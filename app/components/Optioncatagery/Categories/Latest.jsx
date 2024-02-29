@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import Image from "next/image";
-import { useWeb3AuthSigner } from "@/app/context/web3-auth-signer";
+import { useWeb3AuthSigner } from "../../../context/web3-auth-signer";
 import Link from "next/link";
 
 const Latest = () => {
@@ -53,7 +53,7 @@ const Latest = () => {
                             alt="Image"
                             height={50}
                             width={50}
-                            className="rounded-full bg-white"
+                            className="rounded-full "
                           />
                         ) : (
                           // Handle array of images
@@ -65,7 +65,7 @@ const Latest = () => {
                               alt={`Image ${imageIndex}`}
                               height={50}
                               width={50}
-                              className="rounded-full bg-white"
+                              className="rounded-full "
                             />
                           ))
                         )}

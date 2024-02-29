@@ -8,7 +8,7 @@ import logo from "../../assets/images/MianBlokclogo.png";
 import Link from "next/link";
 import Web3 from "web3";
 import { FaAngleRight, FaCirclePlus } from "react-icons/fa6";
-import { useWeb3AuthSigner } from "@/app/context/web3-auth-signer";
+import { useWeb3AuthSigner } from "../../context/web3-auth-signer";
 import {
   COREKIT_STATUS,
   WEB3AUTH_NETWORK,
@@ -395,43 +395,41 @@ const Navbar = () => {
               <HiMenu size={20} />
             </div>
             {isHovered && (
-              <div className="absolute top-full md:left-0 right-5 mt-2 p-5 w-40 bg-gray-700 rounded-md shadow-md transition-all duration-300 z-40">
-                <ul className="space-y-2 text-xl">
-                  <li>
-                    <a
-                      href="https://blokcapital.io"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="hover:text-gray-300"
-                    >
-                      Website
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      href="https://docsend.com/view/qqzdvsv2q47g6t9y"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="hover:text-gray-300"
-                    >
-                      Whitepaper
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      href="https://prototype.blokcapital.io"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="hover:text-gray-300"
-                    >
-                      Prototype
-                    </a>
-                  </li>
-                </ul>
+              <div className="absolute top-full md:left-0 w-36 right-5 mt-2 p-5  bg-gray-700 rounded-md shadow-md transition-all duration-300 z-40">
+                <div>
+                  <a
+                    href="https://blokcapital.io"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:text-gray-300"
+                  >
+                    Website
+                  </a>
+                </div>
+                <div>
+                  <a
+                    href="https://docsend.com/view/qqzdvsv2q47g6t9y"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:text-gray-300"
+                  >
+                    Whitepaper
+                  </a>
+                </div>
+                <div>
+                  <a
+                    href="https://prototype.blokcapital.io"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:text-gray-300"
+                  >
+                    Prototype
+                  </a>
+                </div>
               </div>
             )}
           </div>
-          <div className="relative md:block hidden">
+          {/*<div className="relative md:block hidden">
             <button className="text-white bg-slate-400 bg-opacity-20 px-2 py-1 rounded-xl flex justify-center items-center gap-2">
               <input
                 type="text"
@@ -442,7 +440,7 @@ const Navbar = () => {
                 <RiSearchLine size={20} />
               </div>
             </button>
-          </div>
+          </div>*/}
           <div className="">
             {coreKitStatus === "LOGGED_IN" ? (
               <>

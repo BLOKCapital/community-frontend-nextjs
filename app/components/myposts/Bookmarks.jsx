@@ -1,5 +1,5 @@
 import React from "react";
-import { useWeb3AuthSigner } from "@/app/context/web3-auth-signer";
+import { useWeb3AuthSigner } from "../../context/web3-auth-signer";
 import Image from "next/image";
 import Link from "next/link";
 //import { useRouter } from "next/router";
@@ -60,7 +60,7 @@ const Bookmarks = () => {
                               alt="Image"
                               height={50}
                               width={50}
-                              className="rounded-full bg-white"
+                              className="rounded-full "
                             />
                           ) : (
                             Array.isArray(likedItem.postData[0].images) &&
@@ -72,7 +72,7 @@ const Bookmarks = () => {
                                   alt={`Image ${imageIndex}`}
                                   height={50}
                                   width={50}
-                                  className="rounded-full bg-white"
+                                  className="rounded-full"
                                 />
                               )
                             )

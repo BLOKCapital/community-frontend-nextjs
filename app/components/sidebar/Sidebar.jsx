@@ -14,7 +14,7 @@ import { CiKeyboard } from "react-icons/ci";
 import { BsPersonWorkspace } from "react-icons/bs";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useWeb3AuthSigner } from "@/app/context/web3-auth-signer";
+import { useWeb3AuthSigner } from "../../context/web3-auth-signer";
 import { LuBadge } from "react-icons/lu";
 
 const Sidebar = () => {
@@ -56,7 +56,9 @@ const Sidebar = () => {
 
   return (
     <div
-      className={` lg:block hidden  md:w-64 bg-gray-500 fixed   bg-opacity-20 rounded-3xl text-white border-t-4  border-t-[#3e4cc9] h-[82vh]
+      className={`md:w-64 lg:bg-gray-500 lg:bg-opacity-20 bg-black fixed transition-transform ease-in-out duration-700  lg:rounded-3xl text-white lg:border-t-4  lg:border-t-[#3e4cc9] lg:h-[82vh] h-screen z-[99999999] ${
+        isSidebar ? "translate-x-0" : "lg:translate-x-0 -translate-x-full "
+      }
       `}
     >
       <div className="py-5 space-y-2">

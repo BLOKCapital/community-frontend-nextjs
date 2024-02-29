@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
-import { useWeb3AuthSigner } from "@/app/context/web3-auth-signer";
+import { useWeb3AuthSigner } from "../../context/web3-auth-signer";
 import { BiSolidEditAlt } from "react-icons/bi";
 import { IoBookmarkOutline } from "react-icons/io5";
 import { IoBookmark } from "react-icons/io5";
@@ -11,7 +11,7 @@ import toast, { Toaster } from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import deleteimg from "../../assets/icons/delete.png";
 import { FaHeart, FaRegHeart, FaReply } from "react-icons/fa6";
-import axiosInstanceAuth from "@/app/components/apiInstances/axiosInstanceAuth";
+import axiosInstanceAuth from "../apiInstances/axiosInstanceAuth";
 import "./Datastyle.css";
 import { PulseLoader } from "react-spinners";
 //import * as XLSX from "xlsx";

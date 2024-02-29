@@ -3,6 +3,8 @@ import React from "react";
 import { type SafeEventEmitterProvider } from "@web3auth/base";
 import { createContext, useContext, useEffect, useState } from "react";
 import axiosInstanceAuth from "../components/apiInstances/axiosInstanceAuth";
+import axiosInstance from "../components/apiInstances/axiosInstance";
+
 export interface Wallet1 {
   email: string;
   name: string;
@@ -127,11 +129,21 @@ export interface Web3AuthSignerContext {
   iseditreplycomment: boolean;
   setIseditreplycomment: React.Dispatch<React.SetStateAction<boolean>>;
 
+  showPopup: boolean;
+  setShowPopup: React.Dispatch<React.SetStateAction<boolean>>;
+
+  searchInput: any;
+  setSearchInput: React.Dispatch<React.SetStateAction<any>>;
+
+  searchResults: any;
+  setSearchResults: React.Dispatch<React.SetStateAction<any>>;
+
   //function
   ViewSavedPostByUser: () => Promise<void>;
   PostLikedByUser: () => Promise<void>;
   viewPostByUsers: () => Promise<void>;
   sendApiRequest: () => Promise<void>;
+  handleKeyDown: () => Promise<void>;
   viewSinglePost: (e?: any) => Promise<void>;
   ViewComments: (e?: any) => Promise<void>;
   CheckLikesclick: (e?: any) => Promise<void>;
@@ -191,6 +203,9 @@ export function Web3AuthSignerProvider({
   const [isreplycomment, setIsreplycomment] = useState<boolean>(false);
   const [replycommentdata, setReplycommentdata] = useState<any>();
   const [iseditreplycomment, setIseditreplycomment] = useState<boolean>(false);
+  const [showPopup, setShowPopup] = useState<boolean>(false);
+  const [searchInput, setSearchInput] = useState<any>("");
+  const [searchResults, setSearchResults] = useState<any>();
 
   useEffect(() => {
     //if (typeof window !== "undefined") {
@@ -323,9 +338,32 @@ export function Web3AuthSignerProvider({
     }
   };
 
+  const handleKeyDown = async () => {
+    try {
+      const response = await axiosInstance.get(`searchData/${searchInput}`);
+      //if (!response.data.status === false) {
+      //  throw new Error("Failed to fetch data");
+      //}
+      if (response) {
+        setShowPopup(true);
+      }
+      console.log("Fetched data:", response.data.data.final);
+      setSearchResults(response.data.data.final); // Limit to first 5 results
+      setShowPopup(true);
+    } catch (error) {
+      console.error("Error fetching data:", error.message);
+    }
+  };
+
   useEffect(() => {
     sendApiRequest();
     viewPostByUsers();
+    if (searchInput) {
+      handleKeyDown();
+    } else {
+      setShowPopup(false);
+      setSearchResults(undefined);
+    }
 
     if (getid) {
       viewSinglePost(getid);
@@ -334,7 +372,7 @@ export function Web3AuthSignerProvider({
       PostLikedByUser();
       ViewSavedPostByUser();
     }
-  }, [Token, getid]);
+  }, [Token, getid, searchInput]);
 
   return (
     <Web3AuthSigner.Provider
@@ -399,6 +437,12 @@ export function Web3AuthSignerProvider({
         setReplycommentdata,
         iseditreplycomment,
         setIseditreplycomment,
+        searchResults,
+        setSearchResults,
+        searchInput,
+        setSearchInput,
+        showPopup,
+        setShowPopup,
 
         //function
         viewPostByUsers,
@@ -409,6 +453,7 @@ export function Web3AuthSignerProvider({
         CheckLikesclick,
         CheckCommentLike,
         PostLikedByUser,
+        handleKeyDown,
       }}
     >
       {children}

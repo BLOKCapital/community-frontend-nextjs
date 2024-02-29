@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import toast, { Toaster } from "react-hot-toast";
 
 import { SlArrowDown } from "react-icons/sl";
-import { useWeb3AuthSigner } from "@/app/context/web3-auth-signer";
+import { useWeb3AuthSigner } from "../../context/web3-auth-signer";
 import { IoMdCreate } from "react-icons/io";
 import { MdLibraryAdd } from "react-icons/md";
 import { FaReply } from "react-icons/fa6";

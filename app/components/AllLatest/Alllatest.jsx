@@ -1,5 +1,5 @@
 import React from "react";
-import { useWeb3AuthSigner } from "@/app/context/web3-auth-signer";
+import { useWeb3AuthSigner } from "../../context/web3-auth-signer";
 import Link from "next/link";
 
 const Alllatest = () => {

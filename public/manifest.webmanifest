@@ -1,11 +1,12 @@
 {
-  "theme_color": "#179af0",
-  "background_color": "#179af0",
-  "display": "browser",
+  "theme_color": "#2196F3",
+  "background_color": "#000000",
+  "display": "standalone",
   "scope": "/",
   "start_url": "/",
-  "name": "Community",
-  "short_name": " BLOKC Community",
+  "name": "BLOK Capital Community",
+  "short_name": "BLOKC Community",
+  "description": "BLOK Capital Community",
   "icons": [
     {
       "src": "/icon-192x192.png",

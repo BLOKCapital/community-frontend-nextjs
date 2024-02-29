@@ -2,29 +2,59 @@
 @tailwind components;
 @tailwind utilities;
 
-/*body {
-  background: rgba(1, 31, 84);
-  color: #fff;
-  font-family: sans-serif;
-}*/
+:root {
+  --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 214, 219, 220;
+  --background-end-rgb: 255, 255, 255;
+}
+
 body {
-  background: black;
-  font-family: sans-serif;
   color: white;
-  /*user-select: none;*/
+  background: black;
 }
 
-.absolute {
-  transform: translateY(-21px) scale(0.75);
-  transition: 0.3s;
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
 }
 
-/* Add styles for the hover state */
-.absolute.hovered {
-  transform: translateY(0) scale(1);
+.otp-style-input {
+  margin: 0 0.8rem;
+  height: 60px;
+  width: 12% !important;
+  border-radius: 6px;
+  border: 0px;
+  background: transparent;
+  box-shadow: 0px 0px 10px rgba(250, 249, 249, 0.25);
+  font-size: 20px;
+  border-color: white;
 }
 
-/*custom scrollbar in wallet.jsx*/
+.otp-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.ql-editor {
+  height: 18em; /* Set the height */
+  max-height: 18em; /* Set the maximum height */
+  overflow-y: auto; /* Enable vertical scrolling */
+  background-color: white;
+  color: #000;
+}
+
+.ql-editor {
+  min-height: 18em;
+  overflow: auto;
+}
+
+.themeSwitcher {
+  margin-top: 0.5em;
+  font-size: small;
+}
+
 ::-webkit-scrollbar-thumb {
   background: rgb(69, 89, 221, 255);
   border-radius: 10px;

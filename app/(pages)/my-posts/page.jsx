@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import Image from "next/image";
-import { useWeb3AuthSigner } from "@/app/context/web3-auth-signer";
+import { useWeb3AuthSigner } from "../../context/web3-auth-signer";
 import clipboardCopy from "clipboard-copy";
 import DashboardHeader from "../../components/myposts/Buttonspage";
 import { MdDone } from "react-icons/md";

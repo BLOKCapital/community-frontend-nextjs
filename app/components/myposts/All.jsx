@@ -1,5 +1,5 @@
 import React from "react";
-import { useWeb3AuthSigner } from "@/app/context/web3-auth-signer";
+import { useWeb3AuthSigner } from "../../context/web3-auth-signer";
 import Image from "next/image";
 import Link from "next/link";
 //import { useRouter } from "next/router";
@@ -53,7 +53,7 @@ const All = () => {
                               alt="Image"
                               height={50}
                               width={50}
-                              className="rounded-full bg-white"
+                              className="rounded-full"
                             />
                           ) : (
                             // Handle array of images
@@ -65,7 +65,7 @@ const All = () => {
                                 alt={`Image ${imageIndex}`}
                                 height={50}
                                 width={50}
-                                className="rounded-full bg-white"
+                                className="rounded-full"
                               />
                             ))
                           )}
