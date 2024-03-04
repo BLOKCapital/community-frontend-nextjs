@@ -5,38 +5,12 @@ import Top from "./Categories/Top";
 import Alllatest from "../AllLatest/Alllatest";
 
 const Optioncatagery = ({ setSelectedCategory, selectedCategory }) => {
-  // eslint-disable-next-line react-hooks/rules-of-hooks
-  const [showAllCategoriesPopup, setShowAllCategoriesPopup] = useState(false);
-  // eslint-disable-next-line react-hooks/rules-of-hooks
-  const [showTagsPopup, setShowTagsPopup] = useState(false);
   const categories = ["Categories", "Latest", "Top"];
-  const wordsArray = [
-    "Google",
-    "Microsoft",
-    "Apple",
-    "Facebook",
-    "Amazon",
-    "Netflix",
-    "Twitter",
-    "Instagram",
-    "LinkedIn",
-    "Pinterest",
-    "Snapchat",
-  ];
 
   const handleClick = (index) => {
     setSelectedCategory(index === selectedCategory ? index : index);
   };
 
-  const handleAllCategoriesClick = () => {
-    setShowTagsPopup(false);
-    setShowAllCategoriesPopup(!showAllCategoriesPopup);
-  };
-
-  const handleTagsClick = () => {
-    setShowAllCategoriesPopup(false);
-    setShowTagsPopup(!showTagsPopup);
-  };
   return (
     <>
       <div className="flex flex-col md:flex-row gap-5 md:justify-between items-center text-white">

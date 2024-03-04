@@ -373,7 +373,7 @@ const Navbar = () => {
         </div>
 
         <div className="flex justify-center items-center space-x-4">
-          {coreKitStatus === "LOGGED_IN" ? (
+          {accountAddress ? (
             <>
               <div className="flex justify-center items-center gap-2">
                 <button
@@ -381,7 +381,7 @@ const Navbar = () => {
                   onClick={() => setopenediter(true)}
                 >
                   <FaCirclePlus />
-                  <p className="uppercase">NEW premises</p>
+                  <p className="uppercase">New Premises</p>
                 </button>
               </div>
             </>
@@ -586,7 +586,7 @@ const Navbar = () => {
       </div>
 
       <div
-        className={`fixed bottom-0 left-0 w-full flex justify-center items-end p-6 transition-transform ease-in-out duration-700 ${
+        className={`fixed bottom-0 left-0 w-full flex justify-center items-end p-6 transition-transform ease-in-out duration-700  ${
           openediter ? "translate-y-10" : "translate-y-full"
         }`}
       >

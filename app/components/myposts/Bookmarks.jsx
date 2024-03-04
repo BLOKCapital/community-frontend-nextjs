@@ -15,8 +15,9 @@ const Bookmarks = () => {
 
   const formatTitle = (title) => {
     // Your implementation here
-    return title.toLowerCase().replace(/\s+/g, "-");
+    return title?.toLowerCase()?.replace(/\s+/g, "-");
   };
+
   const formatDate = (dateString) => {
     const options = { day: "numeric", month: "short", year: "numeric" };
     const formattedDate = new Date(dateString).toLocaleDateString(
@@ -35,36 +36,36 @@ const Bookmarks = () => {
     <>
       {userinfo ? (
         <>
-          {viewSavedPostByUser && viewSavedPostByUser.length > 0 ? (
+          {viewSavedPostByUser && viewSavedPostByUser?.length > 0 ? (
             <>
-              {viewSavedPostByUser.map((likedItem, index) => (
+              {viewSavedPostByUser?.map((likedItem, index) => (
                 <div
                   className="rounded-xl cursor-pointer mb-2 hover:bg-slate-300  hover:rounded-xl"
                   key={index}
                 >
                   <Link
                     href={`/my-posts/${formatTitle(
-                      likedItem.postData[0].title
+                      likedItem?.postData[0]?.title
                     )}`}
                   >
                     <div
                       className="bg-slate-800 bg-opacity-90 rounded-xl flex flex-col md:flex-row justify-between items-center gap-2 p-2"
-                      onClick={() => Opencontent(likedItem.postData[0]._id)}
+                      onClick={() => Opencontent(likedItem?.postData[0]?._id)}
                     >
                       <div className="flex items-center space-x-2 space-y-2">
                         <div className="px-2">
-                          {likedItem.postData[0].images &&
-                          !Array.isArray(likedItem.postData[0].images) ? (
+                          {likedItem?.postData[0]?.images &&
+                          !Array.isArray(likedItem?.postData[0]?.images) ? (
                             <Image
-                              src={likedItem.postData[0].images}
+                              src={likedItem?.postData[0]?.images}
                               alt="Image"
                               height={50}
                               width={50}
                               className="rounded-full "
                             />
                           ) : (
-                            Array.isArray(likedItem.postData[0].images) &&
-                            likedItem.postData[0].images.map(
+                            Array.isArray(likedItem?.postData[0]?.images) &&
+                            likedItem?.postData[0]?.images?.map(
                               (image, imageIndex) => (
                                 <Image
                                   key={imageIndex}
@@ -80,16 +81,16 @@ const Bookmarks = () => {
                         </div>
                         <div className="">
                           <div className="cursor-pointer space-y-3 font-semibold text-lg">
-                            <p>{likedItem.postData[0].title}</p>
+                            <p>{likedItem?.postData[0]?.title}</p>
                           </div>
 
                           <div className="px-2 py-1">
-                            {likedItem.postData &&
-                              likedItem.postData[0].content && (
+                            {likedItem?.postData &&
+                              likedItem?.postData[0]?.content && (
                                 <div
                                   dangerouslySetInnerHTML={{
                                     __html:
-                                      likedItem.postData[0].content.slice(
+                                      likedItem?.postData[0]?.content?.slice(
                                         0,
                                         200
                                       ) + "...",
@@ -100,7 +101,7 @@ const Bookmarks = () => {
                         </div>
                       </div>
                       <div className="flex items-center text-slate-300 text-sm space-y-2 md:pl-2">
-                        <p>{formatDate(likedItem.createdAt)}</p>
+                        <p>{formatDate(likedItem?.createdAt)}</p>
                       </div>
                     </div>
                   </Link>

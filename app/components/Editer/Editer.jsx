@@ -12,6 +12,7 @@ import "react-quill/dist/quill.snow.css";
 import axiosInstanceAuth from "../apiInstances/axiosInstanceAuth";
 import "./editor-styles.css";
 import { CiSquarePlus } from "react-icons/ci";
+import { RiArrowDownSLine } from "react-icons/ri";
 
 const modules = {
   toolbar: [
@@ -80,9 +81,24 @@ const Example = () => {
   const [BlogsData, setBlogsData] = useState({
     title: "",
     content: "",
+    subject: "",
   });
   //console.log(isEditdata);
   //console.log(BlogsData);
+
+  const [isOpen, setIsOpen] = useState(false);
+  const [selectedOption, setSelectedOption] = useState(null);
+  const options = ["Category 1", "Category 2", "Category 3"];
+
+  const handleOptionSelect = (option) => {
+    setSelectedOption(option);
+    setIsOpen(false);
+
+    setBlogsData({ ...BlogsData, subject: option.name });
+
+    // Perform custom action with the selected option
+    console.log("Selected category:", option);
+  };
 
   useEffect(() => {
     if (isEditPost && isEditdata) {
@@ -195,6 +211,7 @@ const Example = () => {
       content: BlogsData.content,
       images: userinfo?.profileImage,
       id: registerUser?._id,
+      subjecct: BlogsData?.subject,
     };
     //console.log("dataToSend--->", dataToSend);
     try {
@@ -351,6 +368,22 @@ const Example = () => {
     }
   };
 
+  const optionsdata = [
+    //{
+    //  name: "Select Categories",
+    //  color: "bg-[#ffff]",
+    //},
+    {
+      name: "Wallet Features",
+      color: "bg-[#0c63e7]",
+    },
+    { name: "Metaverse", color: "bg-[#d704b2]" },
+    { name: "Gardens", color: "bg-[#7bd909]" },
+    { name: "Gardeners", color: "bg-[#228B22]" },
+    { name: "Proposals", color: "bg-[#ffbc0a]" },
+    { name: "Governance", color: "bg-[#0affc2]" },
+  ];
+
   return (
     <>
       <div className={`space-y-4 `}>
@@ -380,16 +413,52 @@ const Example = () => {
                     />
                   </div>
                 </div>
-                <div>
-                  <input
-                    type="text"
-                    placeholder="Enter title"
-                    value={BlogsData?.title}
-                    onChange={(e) =>
-                      setBlogsData({ ...BlogsData, title: e.target.value })
-                    }
-                    className="outline-none w-full py-1 px-2  text-black  border border-stone-400 rounded-md "
-                  />
+                <div className="flex justify-between w-full items-center gap-2">
+                  <div className="w-full">
+                    <input
+                      type="text"
+                      placeholder="Enter title"
+                      value={BlogsData?.title}
+                      onChange={(e) =>
+                        setBlogsData({ ...BlogsData, title: e.target.value })
+                      }
+                      className="outline-none w-full py-1 px-2  text-black  border border-stone-400 rounded-md "
+                    />
+                  </div>
+                  <div className="custom-select-container bg-white rounded-md  px-2 py-1  w-60">
+                    <div className="flex gap-2 justify-between items-center">
+                      <div
+                        className="custom-select flex justify-start items-center gap-2 cursor-pointer"
+                        onClick={() => setIsOpen(!isOpen)}
+                      >
+                        {selectedOption?.color ? (
+                          <span
+                            className={`p-1.5 ${selectedOption?.color}`}
+                          ></span>
+                        ) : null}
+                        <p>{selectedOption?.name || "Select categories"}</p>
+                      </div>
+                      <div className={`${isOpen ? "" : "-rotate-90"}`}>
+                        <RiArrowDownSLine />
+                      </div>
+                    </div>
+                    {isOpen && (
+                      <div className=" absolute pt-3 z-50">
+                        <div className="options-container  bg-white w-48 px-2 py-1 shadow-md  cursor-pointer">
+                          {optionsdata.map((option, index) => (
+                            <div
+                              key={index}
+                              className="option flex  gap-2 justify-start items-center"
+                              onClick={() => handleOptionSelect(option)}
+                            >
+                              <span className={`p-1.5 ${option?.color}`}></span>
+                              {option?.name}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
                 </div>
               </>
             )}

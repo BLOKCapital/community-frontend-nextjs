@@ -31,11 +31,13 @@ const Sidebar = () => {
     { icon: <LuBadge size={22} />, name: "Badges" },
   ];
   const colorData = [
-    { name: "Announcement", color: "green", link: "announcement" },
-    { name: "Box 2", color: "blue", link: "" },
-    { name: "Box 3", color: "red", link: "" },
-    { name: "Box 4", color: "yellow", link: "" },
-    { name: "Box 5", color: "purple", link: "" },
+    { name: "Wallet Features", color: "#0c63e7", link: "wallet-features" },
+    { name: "Metaverse", color: "#d704b2", link: "metaverse" },
+    { name: "Gardens", color: "#7bd909", link: "gardens" },
+    { name: "Gardeners", color: "#228B22", link: "gardeners" },
+    { name: "Proposals", color: "#ffbc0a", link: "proposals" },
+    { name: "Governance", color: "#0affc2", link: "governance" },
+    { name: "Announcement", color: "#ff7d00", link: "announcement" },
   ];
 
   const toggleCategories = () => {
@@ -54,28 +56,24 @@ const Sidebar = () => {
     setIsSidebar(!isSidebar);
   };
 
+  const formatTitle = (title) => {
+    // Your implementation here
+    return title.toLowerCase().replace(/\s+/g, "-");
+  };
+
   return (
     <div
-      className={`md:w-64 lg:bg-gray-500 lg:bg-opacity-20 bg-black fixed transition-transform ease-in-out duration-700  lg:rounded-3xl text-white lg:border-t-4  lg:border-t-[#3e4cc9] lg:h-[82vh] h-screen z-[99999999] ${
+      className={`md:w-64 lg:bg-gray-500 lg:bg-opacity-20 bg-black fixed transition-transform ease-in-out duration-700  lg:rounded-3xl text-white lg:border-t-4  lg:border-t-[#3e4cc9] lg:h-[82vh] h-screen ${
         isSidebar ? "translate-x-0" : "lg:translate-x-0 -translate-x-full "
       }
       `}
     >
       <div className="py-5 space-y-2">
-        <div>
-          <Link href="/">
-            <div
-              className={`hover:bg-slate-500 hover:bg-opacity-20 text-base cursor-pointer  ${
-                pathname === "/" ? "bg-slate-500  bg-opacity-20" : ""
-              }`}
-            >
-              <div className="flex items-center space-x-2 mx-5 py-1">
-                <SiDatabricks />
-                <p>All Topics</p>
-              </div>
-            </div>
-          </Link>
+        <div className="flex items-center space-x-2 mx-5 py-1">
+          <SiDatabricks />
+          <p>All Topics</p>
         </div>
+
         <div>
           {accountAddress && Token && (
             <Link href="/my-posts">
@@ -111,11 +109,11 @@ const Sidebar = () => {
           <div className={`mx-5 py-1 ${isCategoriesOpen ? "block" : "hidden"}`}>
             <div>
               {colorData.map((box, index) => (
-                <div key={index}>
-                  <Link href={`/${box.link === undefined ? "" : box.link}`}>
+                <div key={index} className="space-y-2">
+                  <Link href={`/${formatTitle(box.name)}`}>
                     <div
-                      className={`flex items-center hover:bg-slate-500 hover:bg-opacity-20 hover:rounded cursor-pointer ${
-                        pathname === box.link
+                      className={`flex items-center hover:bg-slate-500 hover:bg-opacity-20 hover:rounded cursor-pointer  ${
+                        pathname === `/${box.link}`
                           ? "bg-slate-500  bg-opacity-20"
                           : ""
                       }`}
@@ -135,14 +133,16 @@ const Sidebar = () => {
                 </div>
               ))}
             </div>
-            <div
-              className={`py-1 px-2 flex items-center space-x-2 hover:bg-slate-500 hover:bg-opacity-20 hover:rounded cursor-pointer ${
-                isCategoriesOpen ? "active" : ""
-              }`}
-            >
-              <TfiMenuAlt />
-              <p>All categories</p>
-            </div>
+            <Link href="/">
+              <div
+                className={`py-1 px-2 flex items-center space-x-2 hover:bg-slate-500 hover:rounded hover:bg-opacity-20 text-base cursor-pointer  ${
+                  pathname === "/" ? "bg-slate-500  bg-opacity-20 rounded" : ""
+                }`}
+              >
+                <TfiMenuAlt />
+                <p>All categories</p>
+              </div>
+            </Link>
           </div>
         </div>
         <div className="">

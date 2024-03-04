@@ -37,7 +37,7 @@ const Started = () => {
                   </div>
                 </div>
                 <div className="flex gap-2 items-center text-sm font-light py-3">
-                  <span className="bg-[#1C64F2] p-1.5 rounded-full"></span>
+                  <span className="bg-teal-700 p-1.5 rounded-full"></span>
                   <p>BLOK Capital Community</p>
                 </div>
               </div>

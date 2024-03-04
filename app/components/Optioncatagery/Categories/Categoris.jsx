@@ -4,27 +4,44 @@ const Categorise = () => {
   const questionData = [
     {
       maintitle: "BLOK Capital Community",
-      question: "What to do if you’re not able to access the community portal?",
-      borderColor: "border-orange-500",
-      title: "BLOK Capital Community",
+      borderColor: "border-teal-700",
+      question: "All topics BLOK Capital Community.",
     },
     {
       maintitle: "Announcements",
       question: "General & Product Announcement goes here.",
-      borderColor: "border-green-500",
+      borderColor: "border-[#ff7d00]",
     },
     {
-      maintitle: "Box 1",
-      question: "Your Box 1 question goes here.",
-      borderColor: "border-sky-500",
+      maintitle: "Wallet Features",
+      question: "Your Wallet Features question goes here.",
+      borderColor: "border-[#0c63e7]",
     },
     {
-      maintitle: "Box 2",
-      question: "Your Box 2 question goes here.",
-      borderColor: "border-purple-500",
+      maintitle: "Metaverse",
+      question: "Your Metaverse question goes here.",
+      borderColor: "border-[#d704b2]",
     },
-
-    // Add more objects as needed
+    {
+      maintitle: "Gardens",
+      question: "Your Gardens question goes here.",
+      borderColor: "border-[#7bd909]",
+    },
+    {
+      maintitle: "Gardeners",
+      question: "Your Gardeners question goes here.",
+      borderColor: "border-[#228B22]",
+    },
+    {
+      maintitle: "Proposals",
+      question: "Your Proposals question goes here.",
+      borderColor: "border-[#ffbc0a]",
+    },
+    {
+      maintitle: "Governance",
+      question: "Your Governance question goes here.",
+      borderColor: "border-[#0affc2]",
+    },
   ];
   return (
     <>
@@ -40,26 +57,12 @@ const Categorise = () => {
             <div className="p-5 text-white space-y-3">
               <div className="space-y-2">
                 <div className="">
-                  <p className="text-xl font-semibold">{item.maintitle}</p>
+                  <p className="text-xl font-semibold ">{item.maintitle}</p>
                 </div>
                 <div className="space-y-3">
-                  <div
-                    className={`${
-                      item.title
-                        ? "border-b border-zinc-500 border-opacity-45 py-2"
-                        : ""
-                    }`}
-                  >
-                    <div className="">
-                      <p>{item.question}</p>
-                    </div>
+                  <div className="">
+                    <p>{item.question}</p>
                   </div>
-                  {item.title ? (
-                    <div className="flex gap-2 items-center text-sm font-light">
-                      <span className="bg-[#1C64F2] p-1.5 rounded-full"></span>
-                      <p>{item.title}</p>
-                    </div>
-                  ) : null}
                 </div>
               </div>
             </div>
