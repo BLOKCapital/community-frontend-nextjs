@@ -7,7 +7,7 @@ import { IoBookmarkOutline } from "react-icons/io5";
 import { IoBookmark } from "react-icons/io5";
 import { RiDeleteBin6Fill } from "react-icons/ri";
 import toast, { Toaster } from "react-hot-toast";
-
+import logocoin from "../../assets/images/logocoin.png";
 import { useRouter } from "next/navigation";
 import deleteimg from "../../assets/icons/delete.png";
 import { FaHeart, FaRegHeart, FaReply } from "react-icons/fa6";
@@ -42,6 +42,7 @@ const Datashow = () => {
     setIsreplycomment,
     setReplycommentdata,
     setIseditreplycomment,
+    optionsdata,
   } = useWeb3AuthSigner();
   const [isLiked, setIsLiked] = useState(false);
   const [ioBookmark, setIoBookmark] = useState(false);
@@ -53,10 +54,10 @@ const Datashow = () => {
   const [userEmail, setUserEmail] = useState("");
   const [getid, setGetid] = useState("");
   const liked =
-    checkuserlike && checkuserlike.length > 0 && checkuserlike[0]?.liked;
+    checkuserlike && checkuserlike?.length > 0 && checkuserlike[0]?.liked;
 
   const saved =
-    checkuserlike && checkuserlike.length > 0 && checkuserlike[1]?.saved;
+    checkuserlike && checkuserlike?.length > 0 && checkuserlike[1]?.saved;
 
   const Likecomment =
     checkuserlikeComment &&
@@ -307,14 +308,41 @@ const Datashow = () => {
           {viewsinglePosts ? (
             <>
               <div className="md:p-8 p-3 text-white space-y-3  ">
-                <div className="border-b py-2 font-bold ">
+                <div className="border-b py-2 font-bold flex flex-col gap-1">
                   <h2 className="text-xl">{viewsinglePosts.title}</h2>
+                  <div className="flex items-center gap-2 py-1">
+                    {optionsdata?.find(
+                      (option) => option?.name === viewsinglePosts?.subject
+                    ) && (
+                      <span
+                        className={`p-1.5 rounded-full ${
+                          optionsdata?.find(
+                            (option) =>
+                              option?.name === viewsinglePosts?.subject
+                          )?.color
+                        }`}
+                      ></span>
+                    )}
+                    {viewsinglePosts.subject && (
+                      <p className="text-sm  font-light">
+                        {viewsinglePosts.subject}
+                      </p>
+                    )}
+                  </div>
                 </div>
                 <div className="flex md:space-x-8 space-x-3 justify-start">
                   <div className="sticky top-0">
-                    {viewsinglePosts.images && (
+                    {viewsinglePosts?.images ? (
                       <Image
-                        src={viewsinglePosts.images}
+                        src={viewsinglePosts?.images}
+                        alt="Image"
+                        height={50}
+                        width={50}
+                        className="rounded-full "
+                      />
+                    ) : (
+                      <Image
+                        src={logocoin}
                         alt="Image"
                         height={50}
                         width={50}
@@ -325,7 +353,7 @@ const Datashow = () => {
                   <div className="w-4/5 ">
                     <div className="flex justify-between items-center pb-5">
                       <div className="py-2">
-                        {viewsinglePosts.userData &&
+                        {viewsinglePosts.userData ? (
                           viewsinglePosts.userData.length > 0 && (
                             <>
                               <p className="text-lg font-semibold ">
@@ -337,7 +365,12 @@ const Datashow = () => {
                                   {viewsinglePosts.userData[0].email.slice(0, 8)}
                                 </p>*/}
                             </>
-                          )}
+                          )
+                        ) : (
+                          <p className="text-lg font-semibold ">
+                            BLOKC Community
+                          </p>
+                        )}
                       </div>
                       <div className="flex gap-3 justify-center text-center">
                         <div>
@@ -419,14 +452,15 @@ const Datashow = () => {
                           {/*<div className="cursor-pointer text-lg">
                               <GrLink size={24} />
                             </div>*/}
-
-                          <div
-                            className="cursor-pointer flex gap-2 text-lg items-center px-2 py-1  hover:bg-slate-600 hover:rounded-lg hover:delay-75"
-                            onClick={() => handleReplyClick()}
-                          >
-                            <FaReply size={20} />
-                            <p>Reply</p>
-                          </div>
+                          {viewsinglePosts.subject === "Announcement" ? null : (
+                            <div
+                              className="cursor-pointer flex gap-2 text-lg items-center px-2 py-1  hover:bg-slate-600 hover:rounded-lg hover:delay-75"
+                              onClick={() => handleReplyClick()}
+                            >
+                              <FaReply size={20} />
+                              <p>Reply</p>
+                            </div>
+                          )}
                         </div>
                       </div>
                     </div>

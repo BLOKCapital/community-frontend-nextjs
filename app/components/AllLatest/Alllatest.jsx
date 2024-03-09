@@ -3,7 +3,8 @@ import { useWeb3AuthSigner } from "../../context/web3-auth-signer";
 import Link from "next/link";
 
 const Alllatest = () => {
-  const { viewPosts, setShowcontent, viewSinglePost } = useWeb3AuthSigner();
+  const { viewPosts, setShowcontent, viewSinglePost, optionsdata } =
+    useWeb3AuthSigner();
   //console.log("viewPosts------------------------", viewPosts);
   const formatDate = (dateString) => {
     const options = { day: "numeric", month: "short" };
@@ -58,30 +59,40 @@ const Alllatest = () => {
                   .map((item, index) => (
                     <div key={index} className="cursor-pointer ">
                       <div className="flex justify-between text-base">
-                        <Link href={`/${formatTitle(item.title)}`}>
+                        <Link href={`/${formatTitle(item?.title)}`}>
                           <div
                             className="font-semibold break-words"
-                            onClick={() => Opencontent(item._id)}
+                            onClick={() => Opencontent(item?._id)}
                           >
-                            <p>{item.title}</p>
+                            <p>{item?.title}</p>
                           </div>
                         </Link>
                         <div className="flex justify-center  font-light">
                           <div className="px-3 py-1 md:w-14">
-                            {item.likeCount}
+                            {item?.likeCount}
                           </div>
                           <div className="px-3 py-1 md:w-14"> 10</div>
 
                           {/*<div className="px-3 py-1 md:w-14"> 30</div>*/}
                           <div className="px-3 py-1 md:w-18">
-                            {formatDate(item.createdAt)}
+                            {formatDate(item?.createdAt)}
                           </div>
                         </div>
                       </div>
                       <div className="flex gap-2 items-center text-sm font-light">
-                        <span className="bg-[#1C64F2] p-1.5 rounded-full"></span>
-                        {item.userData && item.userData.length > 0 && (
-                          <p>{item.userData[0].username}</p>
+                        {optionsdata?.find(
+                          (option) => option?.name === item?.subject
+                        ) && (
+                          <span
+                            className={`p-1.5 rounded-full ${
+                              optionsdata?.find(
+                                (option) => option?.name === item?.subject
+                              )?.color
+                            }`}
+                          ></span>
+                        )}
+                        {item?.userData && item.userData?.length > 0 && (
+                          <p>{item?.subject}</p>
                         )}
                       </div>
                     </div>

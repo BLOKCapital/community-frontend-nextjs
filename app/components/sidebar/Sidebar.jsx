@@ -63,7 +63,7 @@ const Sidebar = () => {
 
   return (
     <div
-      className={`md:w-64 lg:bg-gray-500 lg:bg-opacity-20 bg-black fixed transition-transform ease-in-out duration-700  lg:rounded-3xl text-white lg:border-t-4  lg:border-t-[#3e4cc9] lg:h-[82vh] h-screen ${
+      className={`md:w-64 lg:bg-gray-500 lg:bg-opacity-20 bg-black fixed transition-transform ease-in-out duration-700  lg:rounded-3xl text-white lg:border-t-4  lg:border-t-[#3e4cc9] lg:h-[82vh] h-screen lg:z-0 z-[999] ${
         isSidebar ? "translate-x-0" : "lg:translate-x-0 -translate-x-full "
       }
       `}
@@ -117,6 +117,7 @@ const Sidebar = () => {
                           ? "bg-slate-500  bg-opacity-20"
                           : ""
                       }`}
+                      onClick={() => toggleSidebar()}
                     >
                       <p
                         className="w-1"
@@ -138,6 +139,7 @@ const Sidebar = () => {
                 className={`py-1 px-2 flex items-center space-x-2 hover:bg-slate-500 hover:rounded hover:bg-opacity-20 text-base cursor-pointer  ${
                   pathname === "/" ? "bg-slate-500  bg-opacity-20 rounded" : ""
                 }`}
+                onClick={() => toggleSidebar()}
               >
                 <TfiMenuAlt />
                 <p>All categories</p>
@@ -159,13 +161,19 @@ const Sidebar = () => {
             </div>
           </div>
           <div className={`mx-5 py-1 ${openmore ? "block" : "hidden"}`}>
-            <div className="hover:bg-slate-500 text-base hover:bg-opacity-20 hover:rounded cursor-pointer">
+            <div
+              className="hover:bg-slate-500 text-base hover:bg-opacity-20 hover:rounded cursor-pointer"
+              onClick={() => toggleSidebar()}
+            >
               <div className="flex items-center space-x-2 mx-2 py-1  ">
                 <ImPriceTag />
                 <p>Authentication </p>
               </div>
             </div>
-            <div className="hover:bg-slate-500 text-base hover:bg-opacity-20 hover:rounded cursor-pointer">
+            <div
+              className="hover:bg-slate-500 text-base hover:bg-opacity-20 hover:rounded cursor-pointer"
+              onClick={() => toggleSidebar()}
+            >
               <div className="flex items-center space-x-2 mx-2 py-1  ">
                 <TfiMenuAlt />
                 <p>All tags </p>
@@ -179,6 +187,7 @@ const Sidebar = () => {
           className={`hover:bg-slate-500 hover:bg-opacity-20 text-base cursor-pointer ${
             pathname === "/about" ? "bg-slate-500  bg-opacity-20" : ""
           }`}
+          onClick={() => toggleSidebar()}
         >
           <div className="flex items-center space-x-2 mx-5 py-1">
             <PiInfoDuotone size={20} />
@@ -189,6 +198,7 @@ const Sidebar = () => {
           className={`hover:bg-slate-500 hover:bg-opacity-20 text-base cursor-pointer ${
             pathname === "/faq" ? "bg-slate-500  bg-opacity-20" : ""
           }`}
+          onClick={() => toggleSidebar()}
         >
           <div className="flex items-center space-x-2 mx-5 py-1">
             <PiQuestionDuotone size={20} />
@@ -199,6 +209,7 @@ const Sidebar = () => {
           className={`hover:bg-slate-500 hover:bg-opacity-20 text-base cursor-pointer ${
             pathname === "/badges" ? "bg-slate-500  bg-opacity-20" : ""
           }`}
+          onClick={() => toggleSidebar()}
         >
           <div className="flex items-center space-x-2 mx-5 py-1">
             <LuBadge size={20} />

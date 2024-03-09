@@ -1,55 +1,60 @@
-import React from "react";
+"use client";
+import React, { useEffect, useState } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import CustomSelect from "../SelecteC/SelecteC";
 import { useWeb3AuthSigner } from "../../../context/web3-auth-signer";
 import { FaCirclePlus } from "react-icons/fa6";
 const Allcategories = () => {
-  const { accountAddress, setopenediter } = useWeb3AuthSigner();
-  const questionData = [
-    {
-      question: "Your Box 1 question goes here.",
-      date: "Apr'24",
-      vote: "25",
-      replies: "8",
-      views: "8",
-      days: "6s",
-    },
-    {
-      question: "General & Product Announcement goes here.",
-      date: "Apr'24",
-      vote: "25",
-      replies: "8",
-      views: "4",
-      days: "4d",
-    },
-    {
-      question: "Your Box 1 question goes here.",
-      date: "Apr'24",
-      vote: "25",
-      replies: "8",
-      views: "2",
-      days: "6d",
-    },
-    {
-      question: "What to do if you’re not able to access the community portal?",
-      date: "Apr'24",
-      vote: "25",
-      replies: "8",
-      views: "2",
-      days: "2h",
-    },
-    {
-      question: "Your Box 1 question goes here.",
-      date: "Apr'24",
-      vote: "25",
-      replies: "8",
-      views: "23",
-      days: "6d",
-    },
+  const pathname = usePathname();
+  const [itemColor, setItemColor] = useState("");
+  const {
+    accountAddress,
+    setopenediter,
+    Categoriesdata,
+    optionsdata,
+    setShowcontent,
+    viewSinglePost,
+    Announcementdata,
+  } = useWeb3AuthSigner();
+  //console.log("🚀 ~ Allcategories ~ Categoriesdata:", Categoriesdata);
 
-    // Add more objects as needed
-  ];
+  useEffect(() => {
+    const itemColor = optionsdata.find(
+      (option) => pathname === `/${option.link}`
+    )?.border;
+
+    setItemColor(itemColor);
+  }, [optionsdata, pathname]);
+
+  const Data = pathname === "/announcement" ? Announcementdata : Categoriesdata;
+
+  const formatDate = (dateString) => {
+    const options = { day: "numeric", month: "short" };
+    const formattedDate = new Date(dateString).toLocaleDateString(
+      "en-US",
+      options
+    );
+    return formattedDate;
+  };
+
+  const formatTitle = (title) => {
+    // Your implementation here
+    return title.toLowerCase().replace(/\s+/g, "-");
+  };
+
+  const Opencontent = (e) => {
+    setShowcontent(e);
+    viewSinglePost(e);
+    localStorage.setItem("_id", e);
+  };
+
   return (
-    <div className={`border-t-4 border-green-500 rounded-xl   w-full`}>
+    <div
+      className={`border-t-4 mt-10 ${
+        itemColor ? itemColor : "border-[#0c63e7]"
+      }  rounded-xl   w-full`}
+    >
       <div className="bg-slate-800 bg-opacity-90 rounded-xl">
         <div className="md:p-6 p-3 text-white space-y-3">
           <div className="space-y-5">
@@ -84,39 +89,64 @@ const Allcategories = () => {
                   </div>
                   <div className="flex  ">
                     <div className="hover:bg-slate-400 hover:bg-opacity-45 hover:text-white px-3 py-1 rounded-md">
-                      Replies
+                      Like
                     </div>
                     <div className="hover:bg-slate-400 hover:bg-opacity-45 hover:text-white px-3 py-1 rounded-md">
-                      Views
+                      Comment
                     </div>
-                    <div className="hover:bg-slate-400 hover:bg-opacity-45 hover:text-white px-3 py-1 rounded-md">
+                    {/*<div className="hover:bg-slate-400 hover:bg-opacity-45 hover:text-white px-3 py-1 rounded-md">
                       Vote
-                    </div>
+                    </div>*/}
                     <div className="hover:bg-slate-400 hover:bg-opacity-45 hover:text-white px-3 py-1 rounded-md">
                       Active
                     </div>
                   </div>
                 </div>
-                {questionData.map((item, index) => (
-                  <div key={index} className="cursor-pointer ">
-                    <div className="flex justify-between text-base">
-                      <div className="font-semibold">
-                        <p>{item.question}</p>
-                      </div>
-                      <div className="flex justify-center  font-light">
-                        <div className="px-3 py-1 md:w-16"> {item.replies}</div>
-                        <div className="px-3 py-1 md:w-16"> {item.views}</div>
+                {Data?.length > 0 ? (
+                  Data?.map((item, index) => (
+                    <div key={index} className="cursor-pointer ">
+                      <div className="flex justify-between text-base">
+                        <Link href={`/${formatTitle(item?.title)}`}>
+                          <div
+                            className="font-semibold"
+                            onClick={() => Opencontent(item?._id)}
+                          >
+                            <p>{item.title}</p>
+                          </div>
+                        </Link>
+                        <div className="flex justify-center  font-light">
+                          <div className="px-3 py-1 md:w-16">
+                            {item.likeCount}
+                          </div>
+                          <div className="px-3 py-1 md:w-16">
+                            {item.commentCount}
+                          </div>
 
-                        <div className="px-3 py-1 md:w-16"> {item.vote}</div>
-                        <div className="px-3 py-1 md:w-16"> {item.date}</div>
+                          <div className="px-3 py-1 ">
+                            {formatDate(item?.createdAt)}
+                          </div>
+                          {/*<div className="px-3 py-1 md:w-16"> {item.date}</div>*/}
+                        </div>
+                      </div>
+                      <div className="flex gap-2 items-center text-sm font-light ">
+                        {optionsdata?.find(
+                          (option) => option?.name === item?.subject
+                        ) && (
+                          <span
+                            className={`p-1.5 rounded-full ${
+                              optionsdata?.find(
+                                (option) => option?.name === item?.subject
+                              )?.color
+                            }`}
+                          ></span>
+                        )}
+                        <p>{item?.subject}</p>
                       </div>
                     </div>
-                    <div className="flex gap-2 items-center text-sm font-light py-3">
-                      <span className="bg-[#1C64F2] p-1.5 rounded-full"></span>
-                      <p>BLOK Capital Community</p>
-                    </div>
-                  </div>
-                ))}
+                  ))
+                ) : (
+                  <p>{`No post created!!`}</p>
+                )}
               </div>
             </div>
           </div>

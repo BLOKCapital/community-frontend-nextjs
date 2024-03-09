@@ -7,25 +7,12 @@ import { useWeb3AuthSigner } from "../../../context/web3-auth-signer";
 
 const CustomSelect = () => {
   const pathname = usePathname();
-  console.log("🚀 ~ CustomSelect ~ pathname:", pathname);
+  //console.log("🚀 ~ CustomSelect ~ pathname:", pathname);
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedOption, setSelectedOption] = useState([]);
-  console.log("🚀 ~ CustomSelect ~ selectedOption:", selectedOption);
-  const { select } = useWeb3AuthSigner();
 
-  const options = [
-    {
-      name: "Wallet Features",
-      color: "bg-[#0c63e7]",
-      link: "wallet-features",
-    },
-    { name: "Metaverse", color: "bg-[#d704b2]", link: "metaverse" },
-    { name: "Gardens", color: "bg-[#7bd909]", link: "gardens" },
-    { name: "Gardeners", color: "bg-[#228B22]", link: "gardeners" },
-    { name: "Proposals", color: "bg-[#ffbc0a]", link: "proposals" },
-    { name: "Governance", color: "bg-[#0affc2]", link: "governance" },
-    { name: "Announcement", color: "bg-[#ff7d00]", link: "announcement" },
-  ];
+  //console.log("🚀 ~ CustomSelect ~ selectedOption:", selectedOption);
+  const { selectedOption, setSelectedOption, optionsdata } =
+    useWeb3AuthSigner();
 
   const handleOptionSelect = (option) => {
     setSelectedOption(option);
@@ -36,7 +23,7 @@ const CustomSelect = () => {
   useEffect(() => {
     switch (pathname) {
       case "/wallet-features":
-        setSelectedOption({ name: "Wallet Features", color: "bg-[#0c63e7]" });
+        setSelectedOption({ name: "Wallet-Features", color: "bg-[#0c63e7]" });
         break;
       case "/metaverse":
         setSelectedOption({ name: "Metaverse", color: "bg-[#d704b2]" });
@@ -87,7 +74,7 @@ const CustomSelect = () => {
       </div>
       {isOpen && (
         <div className="options-container absolute bg-gray-800 p-2 space-y-2 w-44  cursor-pointer shadow-md shadow-slate-700 ">
-          {options.map((option, index) => (
+          {optionsdata.map((option, index) => (
             <Link href={`/${option.link}`} key={index}>
               <div
                 className="option hover:bg-slate-300 hover:bg-opacity-10 flex gap-2 justify-start items-center px-2 py-1 "

@@ -77,6 +77,7 @@ const Example = () => {
     replycommentdata,
     iseditreplycomment,
     setIseditreplycomment,
+    optionsdata,
   } = useWeb3AuthSigner();
   const [BlogsData, setBlogsData] = useState({
     title: "",
@@ -201,7 +202,7 @@ const Example = () => {
   };
 
   const Addpost = async () => {
-    if (!BlogsData.title || !BlogsData.content) {
+    if (!BlogsData.title || !BlogsData.content || !BlogsData.subject) {
       toast.error("Please fill in all the fields");
       return;
     }
@@ -211,7 +212,7 @@ const Example = () => {
       content: BlogsData.content,
       images: userinfo?.profileImage,
       id: registerUser?._id,
-      subjecct: BlogsData?.subject,
+      subject: BlogsData?.subject,
     };
     //console.log("dataToSend--->", dataToSend);
     try {
@@ -368,22 +369,6 @@ const Example = () => {
     }
   };
 
-  const optionsdata = [
-    //{
-    //  name: "Select Categories",
-    //  color: "bg-[#ffff]",
-    //},
-    {
-      name: "Wallet Features",
-      color: "bg-[#0c63e7]",
-    },
-    { name: "Metaverse", color: "bg-[#d704b2]" },
-    { name: "Gardens", color: "bg-[#7bd909]" },
-    { name: "Gardeners", color: "bg-[#228B22]" },
-    { name: "Proposals", color: "bg-[#ffbc0a]" },
-    { name: "Governance", color: "bg-[#0affc2]" },
-  ];
-
   return (
     <>
       <div className={`space-y-4 `}>
@@ -401,7 +386,7 @@ const Example = () => {
               </div>
             ) : (
               <>
-                <div className=" text-lg text-white flex justify-between">
+                <div className=" text-lg text-white  flex justify-between">
                   <div className="flex items-center justify-center gap-1">
                     <IoMdCreate />
                     <p>{isEditPost ? "Save  " : "Create a new premises"}</p>
@@ -413,7 +398,7 @@ const Example = () => {
                     />
                   </div>
                 </div>
-                <div className="flex justify-between w-full items-center gap-2">
+                <div className="flex flex-col md:flex-row md:justify-between w-full items-center gap-2">
                   <div className="w-full">
                     <input
                       type="text"
@@ -425,18 +410,18 @@ const Example = () => {
                       className="outline-none w-full py-1 px-2  text-black  border border-stone-400 rounded-md "
                     />
                   </div>
-                  <div className="custom-select-container bg-white rounded-md  px-2 py-1  w-60">
-                    <div className="flex gap-2 justify-between items-center">
-                      <div
-                        className="custom-select flex justify-start items-center gap-2 cursor-pointer"
-                        onClick={() => setIsOpen(!isOpen)}
-                      >
+                  <div className="custom-select-container bg-white rounded-md   px-2 py-1  md:w-60 w-full">
+                    <div
+                      className="flex gap-2 justify-between items-center"
+                      onClick={() => setIsOpen(!isOpen)}
+                    >
+                      <div className="custom-select flex justify-start items-center gap-2 cursor-pointer">
                         {selectedOption?.color ? (
                           <span
                             className={`p-1.5 ${selectedOption?.color}`}
                           ></span>
                         ) : null}
-                        <p>{selectedOption?.name || "Select categories"}</p>
+                        <p>{selectedOption?.name || "Select "}</p>
                       </div>
                       <div className={`${isOpen ? "" : "-rotate-90"}`}>
                         <RiArrowDownSLine />
@@ -445,7 +430,7 @@ const Example = () => {
                     {isOpen && (
                       <div className=" absolute pt-3 z-50">
                         <div className="options-container  bg-white w-48 px-2 py-1 shadow-md  cursor-pointer">
-                          {optionsdata.map((option, index) => (
+                          {optionsdata.slice(0, 6).map((option, index) => (
                             <div
                               key={index}
                               className="option flex  gap-2 justify-start items-center"

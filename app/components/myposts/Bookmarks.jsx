@@ -10,8 +10,10 @@ const Bookmarks = () => {
     setShowcontent,
     viewSinglePost,
     userinfo,
+    optionsdata,
     postLikedByUser,
   } = useWeb3AuthSigner();
+  //console.log("🚀 ~ Bookmarks ~ viewSavedPostByUser:", viewSavedPostByUser);
 
   const formatTitle = (title) => {
     // Your implementation here
@@ -80,11 +82,33 @@ const Bookmarks = () => {
                           )}
                         </div>
                         <div className="">
-                          <div className="cursor-pointer space-y-3 font-semibold text-lg">
+                          <div className="cursor-pointer font-semibold text-lg">
                             <p>{likedItem?.postData[0]?.title}</p>
+                            <div className="flex items-center gap-2 py-1">
+                              {optionsdata?.find(
+                                (option) =>
+                                  option?.name ===
+                                  likedItem?.postData[0]?.subject
+                              ) && (
+                                <span
+                                  className={`p-1.5 rounded-full ${
+                                    optionsdata?.find(
+                                      (option) =>
+                                        option?.name ===
+                                        likedItem?.postData[0]?.subject
+                                    )?.color
+                                  }`}
+                                ></span>
+                              )}
+                              {likedItem?.postData[0]?.subject && (
+                                <p className="text-sm  font-light">
+                                  {likedItem?.postData[0]?.subject}
+                                </p>
+                              )}
+                            </div>
                           </div>
 
-                          <div className="px-2 py-1">
+                          {/*<div className="px-2 py-1">
                             {likedItem?.postData &&
                               likedItem?.postData[0]?.content && (
                                 <div
@@ -97,7 +121,7 @@ const Bookmarks = () => {
                                   }}
                                 />
                               )}
-                          </div>
+                          </div>*/}
                         </div>
                       </div>
                       <div className="flex items-center text-slate-300 text-sm space-y-2 md:pl-2">

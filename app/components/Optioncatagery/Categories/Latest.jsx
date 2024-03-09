@@ -5,7 +5,8 @@ import { useWeb3AuthSigner } from "../../../context/web3-auth-signer";
 import Link from "next/link";
 
 const Latest = () => {
-  const { viewPosts, setShowcontent, viewSinglePost } = useWeb3AuthSigner();
+  const { viewPosts, setShowcontent, viewSinglePost, optionsdata } =
+    useWeb3AuthSigner();
 
   const formatDate = (dateString) => {
     const options = { day: "numeric", month: "short", year: "numeric" };
@@ -56,7 +57,6 @@ const Latest = () => {
                             className="rounded-full "
                           />
                         ) : (
-                          // Handle array of images
                           Array.isArray(item.images) &&
                           item.images.map((image, imageIndex) => (
                             <Image
@@ -77,11 +77,19 @@ const Latest = () => {
                           </p>
                         </div>
                         <div className="flex items-center space-x-2 py-1">
-                          <span className="bg-[#1C64F2] p-1.5 rounded-full"></span>
+                          {optionsdata.find(
+                            (option) => option.name === item.subject
+                          ) && (
+                            <span
+                              className={`p-1.5 rounded-full ${
+                                optionsdata.find(
+                                  (option) => option.name === item.subject
+                                ).color
+                              }`}
+                            ></span>
+                          )}
                           {item.userData && item.userData.length > 0 && (
-                            <p className="text-xs font-light">
-                              {item.userData[0].username}
-                            </p>
+                            <p className="text-xs font-light">{item.subject}</p>
                           )}
                         </div>
                       </div>

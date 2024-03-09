@@ -5,8 +5,13 @@ import Link from "next/link";
 //import { useRouter } from "next/router";
 
 const All = () => {
-  const { viewPostByUser, setShowcontent, viewSinglePost, userinfo } =
-    useWeb3AuthSigner();
+  const {
+    viewPostByUser,
+    setShowcontent,
+    viewSinglePost,
+    userinfo,
+    optionsdata,
+  } = useWeb3AuthSigner();
   const formatTitle = (title) => {
     // Your implementation here
     return title.toLowerCase().replace(/\s+/g, "-");
@@ -80,10 +85,20 @@ const All = () => {
                             </div>
                           </Link>
                           <div className="flex items-center gap-2 py-1">
-                            <span className="bg-[#1C64F2] p-1.5 rounded-full"></span>
-                            {item.userData && item.userData.length > 0 && (
+                            {optionsdata?.find(
+                              (option) => option?.name === item?.subject
+                            ) && (
+                              <span
+                                className={` p-1.5 rounded-full ${
+                                  optionsdata?.find(
+                                    (option) => option?.name === item?.subject
+                                  )?.color
+                                }`}
+                              ></span>
+                            )}
+                            {item.subject && item.userData.length > 0 && (
                               <p className="text-sm  font-light">
-                                {item.userData[0].username}
+                                {item.subject}
                               </p>
                             )}
                           </div>

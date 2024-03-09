@@ -4,6 +4,7 @@ import { type SafeEventEmitterProvider } from "@web3auth/base";
 import { createContext, useContext, useEffect, useState } from "react";
 import axiosInstanceAuth from "../components/apiInstances/axiosInstanceAuth";
 import axiosInstance from "../components/apiInstances/axiosInstance";
+import { usePathname } from "next/navigation";
 
 export interface Wallet1 {
   email: string;
@@ -138,6 +139,16 @@ export interface Web3AuthSignerContext {
   searchResults: any;
   setSearchResults: React.Dispatch<React.SetStateAction<any>>;
 
+  selectedOption: any;
+  setSelectedOption: React.Dispatch<React.SetStateAction<any>>;
+
+  Categoriesdata: any;
+  setCategoriesdata: React.Dispatch<React.SetStateAction<any>>;
+
+  Announcementdata: any;
+  setAnnouncementdata: React.Dispatch<React.SetStateAction<any>>;
+
+  optionsdata: any;
   //function
   ViewSavedPostByUser: () => Promise<void>;
   PostLikedByUser: () => Promise<void>;
@@ -145,6 +156,7 @@ export interface Web3AuthSignerContext {
   sendApiRequest: () => Promise<void>;
   handleKeyDown: () => Promise<void>;
   viewSinglePost: (e?: any) => Promise<void>;
+  //ViewAnnouncement: (e?: any) => Promise<void>;
   ViewComments: (e?: any) => Promise<void>;
   CheckLikesclick: (e?: any) => Promise<void>;
   CheckCommentLike: (e?: any) => Promise<void>;
@@ -206,6 +218,14 @@ export function Web3AuthSignerProvider({
   const [showPopup, setShowPopup] = useState<boolean>(false);
   const [searchInput, setSearchInput] = useState<any>("");
   const [searchResults, setSearchResults] = useState<any>();
+  const [Categoriesdata, setCategoriesdata] = useState<any>();
+  const [selectedOption, setSelectedOption] = useState<any>([]);
+  const [Announcementdata, setAnnouncementdata] = useState<any>();
+
+  const pathname = usePathname();
+
+  const api =
+    pathname === "/announcement" ? "viewAnnouncement" : "viewSinglePost";
 
   useEffect(() => {
     //if (typeof window !== "undefined") {
@@ -223,6 +243,7 @@ export function Web3AuthSignerProvider({
       await axiosInstanceAuth.get(`viewPostByUser`).then((response) => {
         //console.log("viewPostByUser API Response:", response);
         SetViewPostByUser(response.data.data.data);
+        Categoriesfetch();
       });
     } catch (error) {
       console.error("viewPostByUser API Error:", error);
@@ -243,9 +264,9 @@ export function Web3AuthSignerProvider({
   const viewSinglePost = async (e: any) => {
     try {
       await axiosInstanceAuth
-        .get(`viewSinglePost/${e ? e : getid}`)
+        .get(`${api}/${e ? e : getid}`)
         .then((response) => {
-          //console.log("viewSinglePost API Response:", response.data.data);
+          console.log("viewSinglePost API Response:", response.data.data);
           SetViewsinglePosts(response.data.data);
           setIsLiked(!isLiked);
           ViewComments(response.data.data._id);
@@ -345,17 +366,105 @@ export function Web3AuthSignerProvider({
       //  throw new Error("Failed to fetch data");
       //}
 
-      //console.log("Fetched data:", response?.data?.data?.postdata);
-      setSearchResults(response?.data?.data?.postdata); // Limit to first 5 results
+      console.log("Fetched data:", response?.data?.data);
+      const mergedResults = [
+        ...(response?.data?.data?.postdata || []),
+        ...(response?.data?.data?.announcement || []),
+      ];
+      console.log("🚀 ~ handleKeyDown ~ mergedResults:", mergedResults);
+      setSearchResults(mergedResults); // Limit to first 5 results
       setShowPopup(true);
     } catch (error) {
       console.error("Error fetching data:", error.message);
     }
   };
 
+  const Categoriesfetch = async () => {
+    //console.log(selectedOption.name);
+
+    try {
+      const response = await axiosInstance.get(
+        `searchData/${selectedOption.name}`
+      );
+
+      //console.log("Categoriesdata data:", response?.data?.data?.postdata);
+      setCategoriesdata(response?.data?.data?.postdata);
+    } catch (error) {
+      console.error("Error Categoriesdata data:", error.message);
+    }
+  };
+
+  const fetchDataAnnouncement = async () => {
+    try {
+      const response = await axiosInstance.get(`getAnnouncements`);
+      setAnnouncementdata(response?.data?.data?.announcement);
+      //console.log("getAnnouncements", response?.data?.data?.announcement);
+    } catch (error) {
+      console.log("getAnnouncements error-->", error);
+    }
+  };
+
+  //const ViewAnnouncement = async (e) => {
+  //  try {
+  //    const response = await axiosInstanceAuth.get(`viewAnnouncement/${e}`);
+  //    console.log("viewAnnouncement response:", response?.data?.data?.data);
+  //  } catch (error) {
+  //    // console.log("viewAnnouncement error:", error);
+  //  }
+  //};
+
+  const optionsdata = [
+    {
+      name: "Wallet-Features",
+      color: "bg-[#0c63e7]",
+      border: "border-[#0c63e7]",
+      link: "wallet-features",
+    },
+    {
+      name: "Metaverse",
+      color: "bg-[#d704b2]",
+      border: "border-[#d704b2]",
+      link: "metaverse",
+    },
+    {
+      name: "Gardens",
+      color: "bg-[#7bd909]",
+      border: "border-[#7bd909]",
+      link: "gardens",
+    },
+    {
+      name: "Gardeners",
+      color: "bg-[#228B22]",
+      border: "border-[#228B22]",
+      link: "gardeners",
+    },
+    {
+      name: "Proposals",
+      color: "bg-[#ffbc0a]",
+      border: "border-[#ffbc0a]",
+      link: "proposals",
+    },
+    {
+      name: "Governance",
+      color: "bg-[#0affc2]",
+      border: "border-[#0affc2]",
+      link: "governance",
+    },
+    {
+      name: "Announcement",
+      color: "bg-[#ff7d00]",
+      border: "border-[#ff7d00]",
+      link: "announcement",
+    },
+  ];
+
   useEffect(() => {
     sendApiRequest();
     viewPostByUsers();
+    fetchDataAnnouncement();
+    if (selectedOption) {
+      Categoriesfetch();
+    }
     if (searchInput) {
       handleKeyDown();
     } else {
@@ -365,12 +474,13 @@ export function Web3AuthSignerProvider({
 
     if (getid) {
       viewSinglePost(getid);
+      //ViewAnnouncement(getid);
     }
     if (Token) {
       PostLikedByUser();
       ViewSavedPostByUser();
     }
-  }, [Token, getid, searchInput]);
+  }, [Token, getid, searchInput, selectedOption]);
 
   return (
     <Web3AuthSigner.Provider
@@ -441,6 +551,13 @@ export function Web3AuthSignerProvider({
         setSearchInput,
         showPopup,
         setShowPopup,
+        optionsdata,
+        selectedOption,
+        setSelectedOption,
+        Categoriesdata,
+        setCategoriesdata,
+        Announcementdata,
+        setAnnouncementdata,
 
         //function
         viewPostByUsers,
@@ -452,6 +569,7 @@ export function Web3AuthSignerProvider({
         CheckCommentLike,
         PostLikedByUser,
         handleKeyDown,
+        //ViewAnnouncement,
       }}
     >
       {children}

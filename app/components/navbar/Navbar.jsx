@@ -28,7 +28,7 @@ import { BsCopy } from "react-icons/bs";
 import axiosInstanceAuth from "../apiInstances/axiosInstanceAuth";
 import Example from "../Editer/Editer";
 import toast, { Toaster } from "react-hot-toast";
-
+import { zeroAddress } from "viem";
 import { BiMenu } from "react-icons/bi";
 import clipboardCopy from "clipboard-copy";
 import { CgClose } from "react-icons/cg";
@@ -64,6 +64,13 @@ const Navbar = () => {
     setIsSidebar,
   } = useWeb3AuthSigner();
 
+  const uiConsole = (...args) => {
+    const el = document.querySelector("#console>p");
+    if (el) {
+      el.innerHTML = JSON.stringify(args || {}, null, 2);
+    }
+    console.log(...args);
+  };
   useEffect(() => {
     const initMPC = async () => {
       try {
@@ -89,7 +96,7 @@ const Navbar = () => {
 
         setCoreKitInstance(coreKitInstance);
         setCoreKitStatus(coreKitInstance.status);
-        //console.log("coreKitInstance.status-->", coreKitInstance.status);
+        //console.log("coreKitInstance-->", coreKitInstance);
         if (coreKitInstance.provider) {
           const web3Instance = new Web3(coreKitInstance.provider);
           setWeb3(web3Instance);
@@ -97,6 +104,10 @@ const Navbar = () => {
           const userdata = coreKitInstance?.getUserInfo();
           setUserinfo(userdata);
           //console.log("userdata-->", userdata);
+
+          //const postboxKey = coreKitInstance.getKeyDetails();
+          //uiConsole(postboxKey);
+          //console.log("coreKitInstance-->", coreKitInstance);
         }
       } catch (error) {
         console.error("Error initializing MPC Core Kit:", error);
@@ -253,7 +264,7 @@ const Navbar = () => {
             owner: getRPCProviderOwner(web3AuthSigner),
           });
           const address = await ecdsaProvider.getAddress();
-          //console.log("address-->", address);
+          //console.log("ecdsaProvider-->", ecdsaProvider);
 
           setAccountAddress(address);
           setEcdsaProvider(ecdsaProvider);
@@ -273,18 +284,17 @@ const Navbar = () => {
           //    validAfter: 0,
           //    validUntil: 0,
           //    permissions: [
-          //      getPermissionFromABI({
-          //        target: contractAddress,
-          //        valueLimit: BigInt(0),
-          //        abi: contractABI,
-          //        functionName: "transfer",
-          //        args: [null, null],
-          //      }),
+          //      //getPermissionFromABI({
+          //      //  target: contractAddress,
+          //      //  valueLimit: BigInt(0),
+          //      //  abi: contractABI,
+          //      //  functionName: "transfer",
+          //      //  args: [null, null],
+          //      //}),
           //    ],
           //    paymaster: zeroAddress,
           //  },
           //});
-          //setSessionKeyProvider(sessionKeyProvider);
         }
       };
       ecdcfunction();
@@ -586,11 +596,11 @@ const Navbar = () => {
       </div>
 
       <div
-        className={`fixed bottom-0 left-0 w-full flex justify-center items-end p-6 transition-transform ease-in-out duration-700  ${
+        className={`fixed bottom-0 left-0 w-full flex justify-center items-end  transition-transform ease-in-out duration-700 z-[999999] ${
           openediter ? "translate-y-10" : "translate-y-full"
         }`}
       >
-        <div className="bg-gray-900 pb-10  p-5 !text-black md:w-4/5 w-3/5 rounded-xl border-t-4 border-rose-400">
+        <div className="bg-gray-900 pb-10  p-5 !text-black md:w-4/5 w-full rounded-xl border-t-4 border-rose-400">
           <Example />
         </div>
       </div>

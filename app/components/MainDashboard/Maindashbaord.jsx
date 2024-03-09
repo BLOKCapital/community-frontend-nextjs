@@ -7,12 +7,12 @@ import Started from "../Started/Started";
 import Optioncatagery from "../Optioncatagery/optioncatagery";
 import Link from "next/link";
 import Searchall from "../Search/Search";
-
+//import Contract from "../Contract/frist/Contract";
 const Maindashbaord = () => {
   const [selectedCategory, setSelectedCategory] = useState(0);
 
   return (
-    <div className=" mx-auto">
+    <div className=" mx-auto md:mt-0 mt-10">
       <div className="bg-gradient-to-r from-indigo-500 via-black to-pink-500 rounded-xl mb-5 text-white">
         <div className="py-14 flex flex-col justify-center items-center space-y-8">
           <div className="flex flex-col justify-center items-center space-y-3">
@@ -24,11 +24,15 @@ const Maindashbaord = () => {
               before posting a new topic.
             </p>
           </div>
-          <div className="flex justify-center items-center w-full">
+          <div className="flex justify-center items-center w-full px-2">
             <Searchall />
           </div>
         </div>
       </div>
+      {/*<div>
+        <Contract />
+      </div>*/}
+
       <div
         className={`md:gap-5 my-8  ${
           selectedCategory === 0

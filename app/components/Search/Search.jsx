@@ -20,6 +20,9 @@ const Searchall = () => {
     setShowcontent,
   } = useWeb3AuthSigner();
 
+  const apis =
+    pathname !== "/search" ? searchResults?.slice(0, 4) : searchResults;
+
   const handleInputChange = (e) => {
     const input = e?.target?.value;
     setSearchInput(input);
@@ -35,6 +38,7 @@ const Searchall = () => {
     setShowcontent(e);
     viewSinglePost(e);
     localStorage?.setItem("_id", e);
+    setSearchResults(false);
   };
 
   const formatTitle = (title) => {
@@ -51,8 +55,8 @@ const Searchall = () => {
   };
 
   return (
-    <div className="flex flex-col w-full justify-center items-center ">
-      <div className={`md:w-[80vh]  w-full  `}>
+    <div className="flex flex-col w-full justify-center items-center relative ">
+      <div className={` md:w-[80vh]  w-full  `}>
         <div className="flex-col space-y-3 items-center ">
           <div
             className={`font-semibold text-2xl ${
@@ -66,7 +70,7 @@ const Searchall = () => {
             )}
           </div>
           <div
-            className={`relative flex items-center justify-between w-full  py-2 bg-white text-black rounded-md `}
+            className={`relative flex items-center justify-between w-full  py-2 bg-white text-black rounded-md`}
           >
             <input
               type="text"
@@ -89,53 +93,54 @@ const Searchall = () => {
       {pathname === "/" && showPopup ? (
         <>
           {searchResults && (
-            <div className="absolute md:top-[46%] lg:top-96 xl:top-80 top-[54%] text-white text-lg  ">
-              <div className="flex justify-center">
-                <div className="bg-slate-800 bg-opacity-100  rounded-lg p-3 md:w-[81vh] ">
-                  <div className="space-y-3">
-                    {searchResults?.map((result, index) => (
-                      <div
-                        key={index}
-                        className="cursor-pointer hover:bg-slate-300 hover:bg-opacity-5 px-3 py-2 rounded-lg text-sm"
-                        onClick={() => Opencontent(result?._id)}
-                      >
-                        <div className="flex justify-between">
-                          <div>
-                            <Link href={`/${formatTitle(result?.title)}`}>
-                              <p>{result?.title}</p>
-                              {result?.content ? (
-                                <div
-                                  dangerouslySetInnerHTML={{
-                                    __html:
-                                      result?.content?.slice(0, 80) + "...",
-                                  }}
-                                />
-                              ) : null}
-                            </Link>
-                          </div>
-                          <div>
-                            {result?.createdAt ? (
-                              <p>{formatDate(result?.createdAt)}</p>
+            <div
+              className={`absolute w-full  flex justify-center items-center    ${
+                searchResults.length > 10 ? "bottom-20" : "top-20"
+              } left-0`}
+            >
+              <div className="bg-slate-800  text-white rounded-lg p-3 md:w-[81vh]">
+                <div className="space-y-3">
+                  {apis?.map((result, index) => (
+                    <div
+                      key={index}
+                      className="cursor-pointer hover:bg-slate-300 hover:bg-opacity-5 px-3 py-2 rounded-lg text-sm"
+                      onClick={() => Opencontent(result?._id)}
+                    >
+                      <div className="flex justify-between">
+                        <div>
+                          <Link href={`/${formatTitle(result?.title)}`}>
+                            <p>{result?.title}</p>
+                            {result?.content ? (
+                              <div
+                                dangerouslySetInnerHTML={{
+                                  __html: result?.content?.slice(0, 80) + "...",
+                                }}
+                              />
                             ) : null}
-                          </div>
+                          </Link>
+                        </div>
+                        <div>
+                          {result?.createdAt ? (
+                            <p>{formatDate(result?.createdAt)}</p>
+                          ) : null}
                         </div>
                       </div>
-                    ))}
-                    {searchResults?.length === 0 && (
-                      <div className="px-3 py-2 text-sm">No results found</div>
-                    )}
-                    {searchResults?.length > 5 && (
-                      <Link href={`/search`}>
-                        <div className="cursor-pointer hover:bg-slate-300 hover:bg-opacity-5 px-3 py-2 rounded-lg text-sm ">
-                          More..
-                        </div>
-                      </Link>
-                    )}
-                  </div>
+                    </div>
+                  ))}
+                  {searchResults?.length === 0 && (
+                    <div className="px-3 py-2 text-sm">No results found</div>
+                  )}
+                  {searchResults?.length >= 4 && (
+                    <Link href={`/search`}>
+                      <div className="cursor-pointer hover:bg-slate-300 hover:bg-opacity-5 px-3 py-2 rounded-lg text-sm " onClick={()=>setSearchResults(false)}>
+                        More..
+                      </div>
+                    </Link>
+                  )}
                 </div>
               </div>
             </div>
-          )}{" "}
+          )}
         </>
       ) : (
         <div className={`w-full ${pathname === "/" ? "hidden" : "block"}`}>
