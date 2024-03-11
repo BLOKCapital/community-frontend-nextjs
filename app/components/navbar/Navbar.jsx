@@ -371,7 +371,7 @@ const Navbar = () => {
             onClick={() => setIsSidebar(!isSidebar)}
             className="cursor-pointer lg:hidden block"
           >
-            <BiMenu size={30} />
+            {isSidebar ? <CgClose size={30} /> : <BiMenu size={30} />}
           </div>
           <div className="flex justify-center items-center space-x-3">
             <Link href="/">

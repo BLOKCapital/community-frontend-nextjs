@@ -218,8 +218,8 @@ const Sidebar = () => {
         </div>
       </div>
 
-      <div
-        className="fixed bottom-3 right-0 flex gap-3 px-5 py-1"
+      {/*<div
+        className="fixed bottom-3 right-0 flex gap-3 px-5 py-1 "
         onClick={toggleSidebar}
       >
         <AiFillSetting
@@ -227,7 +227,7 @@ const Sidebar = () => {
           className={`cursor-pointer ${isSidebar ? "hover:rotate-90" : ""}`}
         />
         <CiKeyboard size={23} className="cursor-pointer" />
-      </div>
+      </div>*/}
     </div>
   );
 };
