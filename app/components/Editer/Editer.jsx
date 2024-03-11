@@ -98,7 +98,7 @@ const Example = () => {
     setBlogsData({ ...BlogsData, subject: option.name });
 
     // Perform custom action with the selected option
-    console.log("Selected category:", option);
+    //console.log("Selected category:", option);
   };
 
   useEffect(() => {
@@ -176,7 +176,7 @@ const Example = () => {
       images: userinfo?.profileImage,
       //id: registerUser?._id,
     };
-    console.log("dataToSend--->", dataToSend);
+    //console.log("dataToSend--->", dataToSend);
     try {
       await axiosInstanceAuth
         .put(`editPost/${postId}`, dataToSend)

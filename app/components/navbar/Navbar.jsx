@@ -216,7 +216,7 @@ const Navbar = () => {
     if (web3) {
       const getChainID = async () => {
         if (!web3) {
-          console.log("web3 not initialized yet");
+          //console.log("web3 not initialized yet");
           return;
         }
         const chainId = await web3.eth.getChainId();
@@ -317,14 +317,14 @@ const Navbar = () => {
             username: userinfo?.name,
             userImage: userinfo?.profileImage,
           };
-          console.log("registerUser dataToSend--->", dataToSend);
+          //console.log("registerUser dataToSend--->", dataToSend);
 
           try {
             await axiosInstanceAuth
               .post(`registerUser`, dataToSend)
               .then((response) => {
-                console.log("registerUser Response:", response);
-                console.log("message-->", response.data.data.checkUser);
+                //console.log("registerUser Response:", response);
+                //console.log("message-->", response.data.data.checkUser);
                 localStorage.setItem("Token", response.data.data.token);
                 setRegisterUser(response.data.data.userData);
                 localStorage.setItem(

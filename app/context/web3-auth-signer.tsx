@@ -266,7 +266,7 @@ export function Web3AuthSignerProvider({
       await axiosInstanceAuth
         .get(`${api}/${e ? e : getid}`)
         .then((response) => {
-          console.log("viewSinglePost API Response:", response.data.data);
+          //console.log("viewSinglePost API Response:", response.data.data);
           SetViewsinglePosts(response.data.data);
           setIsLiked(!isLiked);
           ViewComments(response.data.data._id);
@@ -366,12 +366,12 @@ export function Web3AuthSignerProvider({
       //  throw new Error("Failed to fetch data");
       //}
 
-      console.log("Fetched data:", response?.data?.data);
+      //console.log("Fetched data:", response?.data?.data);
       const mergedResults = [
         ...(response?.data?.data?.postdata || []),
         ...(response?.data?.data?.announcement || []),
       ];
-      console.log("🚀 ~ handleKeyDown ~ mergedResults:", mergedResults);
+      //console.log("🚀 ~ handleKeyDown ~ mergedResults:", mergedResults);
       setSearchResults(mergedResults); // Limit to first 5 results
       setShowPopup(true);
     } catch (error) {
