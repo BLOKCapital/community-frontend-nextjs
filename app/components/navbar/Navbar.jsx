@@ -324,7 +324,7 @@ const Navbar = () => {
               .post(`registerUser`, dataToSend)
               .then((response) => {
                 console.log("registerUser Response:", response);
-                //console.log("message-->", response.data.data.checkUser);
+                console.log("message-->", response.data.data.checkUser);
                 localStorage.setItem("Token", response.data.data.token);
                 setRegisterUser(response.data.data.userData);
                 localStorage.setItem(
