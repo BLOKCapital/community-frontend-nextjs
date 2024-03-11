@@ -75,7 +75,7 @@ const Sidebar = () => {
         </div>
 
         <div>
-          {accountAddress && Token && (
+          {accountAddress && (
             <Link href="/my-posts">
               <div
                 className={`hover:bg-slate-500 hover:bg-opacity-20 text-base cursor-pointer ${
